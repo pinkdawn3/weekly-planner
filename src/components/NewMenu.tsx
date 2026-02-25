@@ -2,12 +2,13 @@ import React, { useContext, useState } from "react";
 import { View, StyleSheet, Pressable, Text } from "react-native";
 import { TextInput, RadioButton, ActivityIndicator } from "react-native-paper";
 import { RecipeContext } from "../contexts/RecipeContext";
-import { Menu, MenuPetition, Preferences, Recipe } from "../types/RecipeType";
-
-import { UserInfoContext } from "../contexts/UserInfoContext";
+import { Preferences, Recipe } from "../types/RecipeType";
 import moment from "moment";
-import RecipeService from "../services/recipes.service";
-import MenuService from "../services/menu.service";
+import {
+  updateRecipe,
+  createMenu,
+  getLastMenu,
+} from "../services/database.service";
 
 const defaultPreferences: Preferences = {
   hidratos: 3,
@@ -22,18 +23,14 @@ interface NewMenuProps {
 
 const NewMenu: React.FC<NewMenuProps> = ({ onCloseModal }) => {
   const { recipes, setCurrentMenu, setMenuCreated } = useContext(RecipeContext);
-  const { currentUser } = useContext(UserInfoContext);
 
-  //State that store preferences and loading state
-  const [loading, setLoading] = useState<boolean>(false); //
+  const [loading, setLoading] = useState<boolean>(false);
   const [menuType, setMenuType] = useState<"predefined" | "custom">(
-    "predefined"
+    "predefined",
   );
   const [preferences, setPreferences] =
     useState<Preferences>(defaultPreferences);
 
-  //Function that will take user input to update preferences on how many times each type of food must be used in the
-  //generator
   const updatePreference = (key: keyof Preferences, value: string) => {
     setPreferences((prev) => ({
       ...prev,
@@ -41,10 +38,9 @@ const NewMenu: React.FC<NewMenuProps> = ({ onCloseModal }) => {
     }));
   };
 
-  //Function that sends to the database the recipes with each assiged day on the menu
-  const updateRecipeDay = async (recipe: Recipe) => {
+  const updateRecipeDay = (recipe: Recipe) => {
     try {
-      await RecipeService.updateRecipe(recipe);
+      updateRecipe(recipe);
     } catch (error) {
       console.error(`Error updating recipe ${recipe.id}:`, error);
     }
@@ -57,17 +53,14 @@ const NewMenu: React.FC<NewMenuProps> = ({ onCloseModal }) => {
     let lastUsedLabels: string[] = [];
     let usedRecipes: Set<number> = new Set();
 
-    // Randomize the order of recipes to ensure variety.
     recipes.sort(() => 0.5 - Math.random());
 
-    // Loop until we have selected 7 recipes.
     while (selectedRecipes.length < 7) {
-      // Filter recipes based on user preferences, recent usage, and avoiding duplicates.
       const availableRecipes = recipes.filter((recipe) => {
         const notUsedRecently = !lastUsedLabels.includes(recipe.label);
-        const notUsedInMenu = !usedRecipes.has(recipe.id!); //
+        const notUsedInMenu = !usedRecipes.has(recipe.id!);
         const labelCount = selectedRecipes.filter(
-          (r) => r.label === recipe.label
+          (r) => r.label === recipe.label,
         ).length;
         return (
           notUsedRecently &&
@@ -78,28 +71,26 @@ const NewMenu: React.FC<NewMenuProps> = ({ onCloseModal }) => {
 
       if (availableRecipes.length > 0) {
         const recipe = availableRecipes[0];
-        selectedRecipes.push(recipe); // Add the recipe to the selected recipes.
-        lastUsedLabels.push(recipe.label); // Track the label of the used recipe.
-        usedRecipes.add(recipe.id!); // Track the recipe ID to avoid duplicates.
-        if (lastUsedLabels.length > 2) lastUsedLabels.shift(); // Keep the last 2 labels in the tracking array.
+        selectedRecipes.push(recipe);
+        lastUsedLabels.push(recipe.label);
+        usedRecipes.add(recipe.id!);
+        if (lastUsedLabels.length > 2) lastUsedLabels.shift();
       } else {
-        // If no recipes fit the criteria, select a fallback recipe.
         const fallbackRecipes = recipes.filter(
-          (recipe) => !usedRecipes.has(recipe.id!)
+          (recipe) => !usedRecipes.has(recipe.id!),
         );
         const randomRecipe =
           fallbackRecipes[Math.floor(Math.random() * fallbackRecipes.length)] ||
-          null; // Select a random recipe from the fallback recipes.
+          null;
         if (randomRecipe) {
-          selectedRecipes.push(randomRecipe); // Add the fallback recipe to the selected recipes.
-          lastUsedLabels.push(randomRecipe.label); // Track the label of the used fallback recipe.
-          usedRecipes.add(randomRecipe.id!); // Track the recipe ID to avoid duplicates.
-          if (lastUsedLabels.length > 2) lastUsedLabels.shift(); // Keep the last 2 labels in the tracking array.
+          selectedRecipes.push(randomRecipe);
+          lastUsedLabels.push(randomRecipe.label);
+          usedRecipes.add(randomRecipe.id!);
+          if (lastUsedLabels.length > 2) lastUsedLabels.shift();
         }
       }
     }
 
-    // Assign days of the week to the recipes starting from today
     const startIndex = moment().day();
     const daysOfWeek = [
       "Sunday",
@@ -113,21 +104,13 @@ const NewMenu: React.FC<NewMenuProps> = ({ onCloseModal }) => {
 
     for (let i = 0; i < selectedRecipes.length; i++) {
       selectedRecipes[i].weekDay = daysOfWeek[(startIndex + i) % 7];
-      await updateRecipeDay(selectedRecipes[i]); // Updates the recipe in the database
+      updateRecipeDay(selectedRecipes[i]);
     }
 
-    const recipeRequest: MenuPetition = {
-      recipeDtoList: selectedRecipes,
-    };
-
     try {
-      // Send the generated menu to the backend service.
-      console.log(recipeRequest);
-      await MenuService.createMenu(recipeRequest, currentUser.id);
-
-      // Obtener el último menú guardado
-      const lastMenu: Menu = await MenuService.getLastMenu(currentUser.id);
-      setCurrentMenu(lastMenu.recipes);
+      createMenu(selectedRecipes);
+      const lastMenu = getLastMenu();
+      setCurrentMenu(lastMenu ?? { id: 0, created: "", recipes: [] });
       setMenuCreated(true);
       onCloseModal();
     } catch (error) {

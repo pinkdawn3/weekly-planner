@@ -5,14 +5,15 @@ import { Recipe, Menu, MenuPetition } from "../types/RecipeType";
 import { Modal, Portal, Provider, Searchbar } from "react-native-paper";
 import NewMenu from "../components/NewMenu";
 import { navigate } from "../navigation/NavigationContainer";
-import RecipeService from "../services/recipes.service";
-import MenuService from "../services/menu.service";
-import { UserInfoContext } from "../contexts/UserInfoContext";
+import {
+  updateRecipe,
+  createMenu,
+  getLastMenu,
+} from "../services/database.service";
 
 const WeeklyMenu = () => {
   const { currentMenu, recipes, setCurrentMenu, setMenuCreated } =
     useContext(RecipeContext);
-  const { currentUser } = useContext(UserInfoContext);
 
   // States that manage the visibility for the modals, the edit mode, the selected recipe, and the search text
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -20,7 +21,6 @@ const WeeklyMenu = () => {
   const [searchVisible, setSearchVisible] = useState<boolean>(false);
   const [newMenuVisible, setNewMenuVisible] = useState<boolean>(false);
   const [searchText, setSearchText] = useState("");
-  const [modifiedMenu, setModifiedMenu] = useState<Menu | null>(null);
 
   // Function to show the search modal for selecting a new recipe
   const showSearchModal = (recipe: Recipe) => {
@@ -43,25 +43,18 @@ const WeeklyMenu = () => {
 
   // Function that handles when the user changes a recipe in the menu, looping through CurrentMenu and only changing the recipe
   // that is selected at that time when pressing on it.
-  const handleRecipeChange = async (newRecipe: Recipe) => {
+  const handleRecipeChange = (newRecipe: Recipe) => {
     if (selectedRecipe && currentMenu && currentMenu.recipes) {
       newRecipe.weekDay = selectedRecipe.weekDay;
       const updatedRecipes = currentMenu.recipes.map((recipe) =>
-        recipe.id === selectedRecipe.id ? newRecipe : recipe
+        recipe.id === selectedRecipe.id ? newRecipe : recipe,
       );
 
-      const updatedMenu: Menu = { ...currentMenu, recipes: updatedRecipes };
-      setModifiedMenu(updatedMenu);
-
-      const recipeRequest: MenuPetition = {
-        recipeDtoList: updatedRecipes,
-      };
-
       try {
-        await RecipeService.updateRecipe(newRecipe);
-        await MenuService.createMenu(recipeRequest, currentUser.id);
-        const lastMenu: Menu = await MenuService.getLastMenu(currentUser.id);
-        setCurrentMenu(lastMenu.recipes);
+        updateRecipe(newRecipe);
+        createMenu(updatedRecipes);
+        const lastMenu = getLastMenu();
+        setCurrentMenu(lastMenu ?? { id: 0, created: "", recipes: [] });
         setMenuCreated(true);
       } catch (error) {
         console.error("Error creating menu:", error);
@@ -79,7 +72,7 @@ const WeeklyMenu = () => {
   // Function that filters recipes based on input text
   const searchRecipe = () => {
     return recipes.filter((recipe) =>
-      recipe.name.toLowerCase().includes(searchText.toLowerCase())
+      recipe.name.toLowerCase().includes(searchText.toLowerCase()),
     );
   };
 

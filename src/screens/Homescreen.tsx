@@ -5,27 +5,26 @@ import NewMenu from "../components/NewMenu";
 import TodayRecipe from "../components/Recipes/TodayRecipe";
 import AddRecipe from "../components/Recipes/AddRecipe";
 import { RecipeContext } from "../contexts/RecipeContext";
-import RecipeService from "../services/recipes.service";
-import MenuService from "../services/menu.service";
-import { UserInfoContext } from "../contexts/UserInfoContext";
 import { Menu, Recipe } from "../types/RecipeType";
+import {
+  getAllRecipes,
+  getLastMenu,
+  createRecipe,
+} from "../services/database.service";
+
+const menuDefault: Menu = { id: 0, created: "", recipes: [] };
 
 const Homescreen = () => {
   const { recipes, setRecipes, setCurrentMenu, menuCreated, setMenuCreated } =
     useContext(RecipeContext);
-  const { currentUser } = useContext(UserInfoContext);
-  const [menuVisible, setMenuVisible] = useState(false); // State to control the visibility of the menu modal
-  const [recipeVisible, setRecipeVisible] = useState(false); // State to control the visibility of the add recipe modal
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [recipeVisible, setRecipeVisible] = useState(false);
 
-  // Functions to show and hide the menu modal
   const showMenuModal = () => setMenuVisible(true);
   const hideMenuModal = () => setMenuVisible(false);
-
-  // Functions to show and hide the add recipe modal
   const showRecipeModal = () => setRecipeVisible(true);
   const hideRecipeModal = () => setRecipeVisible(false);
 
-  // Style for the modals
   const containerStyle = {
     backgroundColor: "white",
     padding: 30,
@@ -33,65 +32,46 @@ const Homescreen = () => {
     borderRadius: 10,
   };
 
-  // useEffect that will retrieve the recipes from the API when the component mounts
   useEffect(() => {
-    async function retrieveData() {
-      if (!currentUser) {
-        return;
-      }
+    try {
+      const recipeData = getAllRecipes();
+      setRecipes(recipeData);
 
-      try {
-        const recipeData = await RecipeService.getAllRecipes(currentUser.id);
-        setRecipes(recipeData);
-
-        const menuData: Menu = await MenuService.getLastMenu(currentUser.id);
-        setCurrentMenu(menuData);
-
-        console.log("Datos obtenidos correctamente");
-      } catch (error) {
-        setRecipes([]);
-        setCurrentMenu(undefined);
-
-        console.log(error);
-      } finally {
-      }
+      const menuData = getLastMenu();
+      setCurrentMenu(menuData ?? menuDefault);
+    } catch (error) {
+      console.log(error);
     }
-
-    retrieveData();
-  }, [currentUser, setRecipes, setCurrentMenu]);
+  }, []);
 
   useEffect(() => {
     if (menuCreated) {
-      async function retrieveData() {
-        try {
-          const menuData: Menu = await MenuService.getLastMenu(currentUser.id);
-          setCurrentMenu(menuData);
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setMenuCreated(false); // Resetear el estado
-        }
+      try {
+        const menuData = getLastMenu();
+        setCurrentMenu(menuData ?? menuDefault);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setMenuCreated(false);
       }
-      retrieveData();
     }
-  }, [menuCreated, setMenuCreated, currentUser.id]);
+  }, [menuCreated]);
 
-  const handleSaveRecipe = async (newRecipe: Recipe) => {
+  const handleSaveRecipe = (newRecipe: Recipe) => {
     try {
-      await RecipeService.createRecipe(newRecipe, currentUser.id);
-      const retrievedRecipes = await RecipeService.getAllRecipes(
-        currentUser.id
-      );
+      createRecipe(newRecipe);
+      const retrievedRecipes = getAllRecipes();
       setRecipes(retrievedRecipes);
     } catch (error) {
       console.error("Error saving recipe:", error);
     }
   };
+
   return (
     <PaperProvider>
       <View style={styles.container}>
         {/* Today's Recipe*/}
-        <TodayRecipe key={currentUser.id} />
+        <TodayRecipe />
         <View>
           <Portal>
             {/* Modal for adding a recipe */}

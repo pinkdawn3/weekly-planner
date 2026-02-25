@@ -3,12 +3,15 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Recipe } from "../types/RecipeType";
 import RecipeDetails from "../components/Recipes/RecipeDetails";
-import RecipeService from "../services/recipes.service";
 import { View } from "react-native";
 import { Modal, Portal } from "react-native-paper";
 import AddRecipe from "../components/Recipes/AddRecipe";
-import { UserInfoContext } from "../contexts/UserInfoContext";
 import { RecipeContext } from "../contexts/RecipeContext";
+import {
+  updateRecipe,
+  deleteRecipe,
+  getAllRecipes,
+} from "../services/database.service";
 
 type RootStackParamList = {
   RecipeDetails: { recipe: Recipe };
@@ -32,7 +35,6 @@ const RecipeDetailsScreen: React.FC = () => {
 
   const { recipe } = route.params;
 
-  const { currentUser } = useContext(UserInfoContext);
   const { setRecipes } = useContext(RecipeContext);
 
   const [editRecipeVisible, setEditRecipeVisible] = useState(false);
@@ -40,16 +42,10 @@ const RecipeDetailsScreen: React.FC = () => {
   const showEditModal = () => setEditRecipeVisible(true);
   const hideEditModal = () => setEditRecipeVisible(false);
 
-  const handleEdit = async (selectedRecipe: Recipe) => {
-    console.log(
-      "Datos de la receta antes de enviar la solicitud:",
-      selectedRecipe
-    );
+  const handleEdit = (selectedRecipe: Recipe) => {
     try {
-      await RecipeService.updateRecipe(selectedRecipe);
-      const retrievedRecipes = await RecipeService.getAllRecipes(
-        currentUser.id
-      );
+      updateRecipe(selectedRecipe);
+      const retrievedRecipes = getAllRecipes();
       setRecipes(retrievedRecipes);
       hideEditModal();
       navigation.goBack();
@@ -58,15 +54,12 @@ const RecipeDetailsScreen: React.FC = () => {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (recipe && recipe.id !== undefined) {
       try {
-        await RecipeService.deleteRecipe(recipe.id);
-        const retrievedRecipes = await RecipeService.getAllRecipes(
-          currentUser.id
-        );
+        deleteRecipe(recipe.id);
+        const retrievedRecipes = getAllRecipes();
         setRecipes(retrievedRecipes);
-        console.log("Recipe deleted");
         navigation.goBack();
       } catch (error) {
         console.error("Error deleting recipe:", error);

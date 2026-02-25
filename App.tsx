@@ -6,7 +6,7 @@ import React from "react";
 import Header from "./src/header/Header";
 import RecipeProvider from "./src/providers/RecipeProvider";
 import AuthHomepage from "./src/navigation/AuthHomepage";
-import UserInfoProvider from "./src/providers/UserInfoProvider";
+
 import AppNavigationContainer from "./src/navigation/NavigationContainer";
 
 // Main App of the application, with all the Providers and the custom NavigationContainer
@@ -14,12 +14,10 @@ export default function App() {
   return (
     <AppNavigationContainer>
       <RecipeProvider>
-        <UserInfoProvider>
-          <PaperProvider>
-            <Header />
-            <AuthHomepage />
-          </PaperProvider>
-        </UserInfoProvider>
+        <PaperProvider>
+          <Header />
+          <AuthHomepage />
+        </PaperProvider>
       </RecipeProvider>
     </AppNavigationContainer>
   );

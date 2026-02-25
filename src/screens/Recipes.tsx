@@ -6,12 +6,10 @@ import { Ionicons } from "@expo/vector-icons";
 import AddRecipe from "../components/Recipes/AddRecipe";
 import { Recipe } from "../types/RecipeType";
 import { navigate } from "../navigation/NavigationContainer";
-import RecipeService from "../services/recipes.service";
-import { UserInfoContext } from "../contexts/UserInfoContext";
+import { createRecipe, getAllRecipes } from "../services/database.service";
 
 const Recipes = () => {
   const { recipes, setRecipes } = useContext(RecipeContext);
-  const { currentUser } = useContext(UserInfoContext);
 
   // States that manage the selected recipe, the text to search and the visibility of the modals
   const [addRecipeVisible, setAddRecipeVisible] = useState(false);
@@ -33,18 +31,15 @@ const Recipes = () => {
   // Function that filters the recipes based on the input text
   const searchRecipe = () => {
     return recipes.filter((recipe) =>
-      recipe.name.toLowerCase().includes(searchText.toLowerCase())
+      recipe.name.toLowerCase().includes(searchText.toLowerCase()),
     );
   };
 
-  const handleSaveRecipe = async (newRecipe: Recipe) => {
+  const handleSaveRecipe = (newRecipe: Recipe) => {
     try {
-      await RecipeService.createRecipe(newRecipe, currentUser.id);
-      const retrievedRecipes = await RecipeService.getAllRecipes(
-        currentUser.id
-      );
+      createRecipe(newRecipe);
+      const retrievedRecipes = getAllRecipes();
       setRecipes(retrievedRecipes);
-     
     } catch (error) {
       console.error("Error saving recipe:", error);
     }

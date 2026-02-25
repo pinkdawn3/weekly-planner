@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { RecipeContext, RecipeTypeContext } from "../contexts/RecipeContext";
 import { Menu, Recipe } from "../types/RecipeType";
+import { initDB } from "../services/database.service";
 
 type RecipeProviderProps = {
-  children: JSX.Element | JSX.Element[];
+  children: React.ReactNode | React.ReactNode[];
 };
 
 function RecipeProvider(props: RecipeProviderProps) {
+  initDB();
+
   const { children } = props;
 
   let recipeDefault: Recipe = {
