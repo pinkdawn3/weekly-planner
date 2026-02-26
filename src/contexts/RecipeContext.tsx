@@ -3,17 +3,17 @@ import { Label, MealType, Menu, Recipe } from "../types/RecipeType";
 
 export type RecipeTypeContext = {
   recipe: Recipe;
-  setRecipe: Function;
+  setRecipe: (recipe: Recipe) => void;
   recipes: Recipe[];
-  setRecipes: Function;
+  setRecipes: (recipes: Recipe[]) => void;
   currentMenu: Menu;
-  setCurrentMenu: Function;
+  setCurrentMenu: (menu: Menu) => void;
   menuCreated: boolean;
-  setMenuCreated: Function;
+  setMenuCreated: (created: boolean) => void;
   mealTypes: MealType[];
-  setMealTypes: Function;
+  setMealTypes: (mealTypes: MealType[]) => void;
   labels: Label[];
-  setLabels: Function;
+  setLabels: (labels: Label[]) => void;
 };
 
 export const RecipeContext = createContext({} as RecipeTypeContext);

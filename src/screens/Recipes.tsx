@@ -7,9 +7,15 @@ import AddRecipe from "../components/Recipes/AddRecipe";
 import { Recipe } from "../types/RecipeType";
 import { navigate } from "../navigation/NavigationContainer";
 import { createRecipe, getAllRecipes } from "../services/database.service";
+import ManageMealTypes from "../components/MenuSettings/ManageMealTypes";
+import ManageLabels from "../components/MenuSettings/ManageLabel";
 
 const Recipes = () => {
-  const { recipes, setRecipes } = useContext(RecipeContext);
+  const { recipes, setRecipes, mealTypes, setMealTypes, labels, setLabels } =
+    useContext(RecipeContext);
+
+  const [mealTypesVisible, setMealTypesVisible] = useState(false);
+  const [labelsVisible, setLabelsVisible] = useState(false);
 
   // States that manage the selected recipe, the text to search and the visibility of the modals
   const [addRecipeVisible, setAddRecipeVisible] = useState(false);
@@ -26,7 +32,7 @@ const Recipes = () => {
     navigate("RecipeDetailsScreen", { recipe });
   };
 
-  const containerStyle = { backgroundColor: "white", margin: 40 };
+  const containerStyle = { backgroundColor: "white", margin: 40, padding: 20 };
 
   // Function that filters the recipes based on the input text
   const searchRecipe = () => {
@@ -53,6 +59,22 @@ const Recipes = () => {
         <Portal>
           {/* Modal for adding or editing a recipe */}
           <Modal
+            visible={mealTypesVisible}
+            onDismiss={() => setMealTypesVisible(false)}
+            contentContainerStyle={containerStyle}
+          >
+            <ManageMealTypes mealTypes={mealTypes} onUpdate={setMealTypes} />
+          </Modal>
+
+          <Modal
+            visible={labelsVisible}
+            onDismiss={() => setLabelsVisible(false)}
+            contentContainerStyle={containerStyle}
+          >
+            <ManageLabels labels={labels} onUpdate={setLabels} />
+          </Modal>
+
+          <Modal
             visible={addRecipeVisible}
             onDismiss={hideAddModal}
             contentContainerStyle={containerStyle}
@@ -64,6 +86,21 @@ const Recipes = () => {
             />
           </Modal>
         </Portal>
+
+        <View style={styles.configButtons}>
+          <Pressable
+            style={styles.configButton}
+            onPress={() => setMealTypesVisible(true)}
+          >
+            <Text style={styles.configButtonText}>Tipos de comida</Text>
+          </Pressable>
+          <Pressable
+            style={styles.configButton}
+            onPress={() => setLabelsVisible(true)}
+          >
+            <Text style={styles.configButtonText}>Categorías</Text>
+          </Pressable>
+        </View>
 
         {/* Search bar to search recipes by name */}
         <Searchbar
@@ -189,5 +226,25 @@ const styles = StyleSheet.create({
     color: "#555",
     textAlign: "center",
     marginBottom: 10,
+  },
+  // estilos
+  configButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 10,
+  },
+  configButton: {
+    flex: 1,
+    marginHorizontal: 5,
+    paddingVertical: 8,
+    alignItems: "center",
+    borderRadius: 8,
+    backgroundColor: "#dbeed0",
+    borderColor: "gray",
+    borderWidth: 1,
+  },
+  configButtonText: {
+    fontWeight: "bold",
+    color: "black",
   },
 });

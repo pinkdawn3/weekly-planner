@@ -77,7 +77,7 @@ const AddRecipe: React.FC<AddRecipeProps> = ({
 
   return (
     <ScrollView>
-      <View style={styles.container}>
+      <View>
         <Text style={styles.label}>Nombre</Text>
         <TextInput
           style={styles.input}
@@ -161,9 +161,6 @@ const AddRecipe: React.FC<AddRecipeProps> = ({
 export default AddRecipe;
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
   label: {
     fontSize: 14,
     fontWeight: "bold",

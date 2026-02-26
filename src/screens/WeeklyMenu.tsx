@@ -3,13 +3,13 @@ import React, { useContext, useState } from "react";
 import { RecipeContext } from "../contexts/RecipeContext";
 import { MenuRecipe, Recipe } from "../types/RecipeType";
 import { Modal, Portal, Provider, Searchbar } from "react-native-paper";
-import NewMenu from "../components/NewMenu";
 import { navigate } from "../navigation/NavigationContainer";
 import {
   updateRecipe,
   createMenu,
   getLastMenu,
 } from "../services/database.service";
+import MenuGenerator from "../components/MenuGenerator";
 
 const daysOfWeekOrder = [
   "Monday",
@@ -29,7 +29,8 @@ const WeeklyMenu = () => {
   const [selectedMenuRecipe, setSelectedMenuRecipe] =
     useState<MenuRecipe | null>(null);
   const [searchVisible, setSearchVisible] = useState<boolean>(false);
-  const [newMenuVisible, setNewMenuVisible] = useState<boolean>(false);
+  const [MenuGeneratorVisible, setMenuGeneratorVisible] =
+    useState<boolean>(false);
   const [searchText, setSearchText] = useState("");
 
   const showSearchModal = (menuRecipe: MenuRecipe) => {
@@ -38,8 +39,8 @@ const WeeklyMenu = () => {
   };
 
   const hideSearchModal = () => setSearchVisible(false);
-  const hideNewMenuModal = () => setNewMenuVisible(false);
-  const showNewMenuModal = () => setNewMenuVisible(true);
+  const hideMenuGeneratorModal = () => setMenuGeneratorVisible(false);
+  const showMenuGeneratorModal = () => setMenuGeneratorVisible(true);
 
   const containerStyle = {
     backgroundColor: "white",
@@ -101,7 +102,7 @@ const WeeklyMenu = () => {
               Añade al menos 7 recetas para crear un menú semanal.
             </Text>
             <Pressable
-              style={[styles.newMenuButton, styles.disabledButton]}
+              style={[styles.MenuGeneratorButton, styles.disabledButton]}
               disabled
             >
               <Text style={styles.buttonText}>Menú nuevo</Text>
@@ -114,7 +115,10 @@ const WeeklyMenu = () => {
                 {editMode ? "Dejar de editar" : "Editar menú"}
               </Text>
             </Pressable>
-            <Pressable style={styles.newMenuButton} onPress={showNewMenuModal}>
+            <Pressable
+              style={styles.MenuGeneratorButton}
+              onPress={showMenuGeneratorModal}
+            >
               <Text style={styles.buttonText}>Menú nuevo</Text>
             </Pressable>
           </View>
@@ -169,11 +173,11 @@ const WeeklyMenu = () => {
 
       <Portal>
         <Modal
-          visible={newMenuVisible}
-          onDismiss={hideNewMenuModal}
+          visible={MenuGeneratorVisible}
+          onDismiss={hideMenuGeneratorModal}
           contentContainerStyle={containerStyle}
         >
-          <NewMenu onCloseModal={hideNewMenuModal} />
+          <MenuGenerator onCloseModal={hideMenuGeneratorModal} />
         </Modal>
       </Portal>
     </Provider>
@@ -225,7 +229,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "gray",
   },
-  newMenuButton: {
+  MenuGeneratorButton: {
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",

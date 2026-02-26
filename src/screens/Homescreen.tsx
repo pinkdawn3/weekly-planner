@@ -1,11 +1,11 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { Modal, PaperProvider, Portal } from "react-native-paper";
-import NewMenu from "../components/NewMenu";
 import TodayRecipe from "../components/Recipes/TodayRecipe";
 import { RecipeContext } from "../contexts/RecipeContext";
 import { Menu } from "../types/RecipeType";
 import { getLastMenu } from "../services/database.service";
+import MenuGenerator from "../components/MenuGenerator";
 
 const menuDefault: Menu = { id: 0, created: "", recipes: [] };
 
@@ -57,13 +57,13 @@ const Homescreen = () => {
             onDismiss={hideMenuModal}
             contentContainerStyle={containerStyle}
           >
-            <NewMenu onCloseModal={hideMenuModal} />
+            <MenuGenerator onCloseModal={hideMenuModal} />
           </Modal>
         </Portal>
 
         <Pressable
           style={[
-            styles.newMenuButton,
+            styles.menuGeneratorButton,
             recipes.length < 7 && styles.disabledButton,
           ]}
           onPress={recipes.length >= 7 ? showMenuModal : null}
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  newMenuButton: {
+  menuGeneratorButton: {
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",

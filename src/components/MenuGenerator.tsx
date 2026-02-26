@@ -1,42 +1,71 @@
 import React, { useContext, useState } from "react";
 import { View, StyleSheet, Pressable, Text, ScrollView } from "react-native";
-import { TextInput, RadioButton, ActivityIndicator } from "react-native-paper";
+import {
+  TextInput,
+  ActivityIndicator,
+  Chip,
+  Portal,
+  Modal,
+} from "react-native-paper";
 import { RecipeContext } from "../contexts/RecipeContext";
-import { MenuRecipe, Recipe, MealType } from "../types/RecipeType";
+import { Label, MealType, MenuRecipe } from "../types/RecipeType";
 import moment from "moment";
 import {
   createMenu,
   getLastMenu,
   getLastMenus,
 } from "../services/database.service";
+import ManageMealTypes from "./MenuSettings/ManageMealTypes";
+import ManageLabels from "./MenuSettings/ManageLabel";
 
-interface NewMenuProps {
+interface MenuGeneratorProps {
   onCloseModal: () => void;
 }
 
-const NewMenu: React.FC<NewMenuProps> = ({ onCloseModal }) => {
+const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
   const { recipes, setCurrentMenu, setMenuCreated, mealTypes, labels } =
     useContext(RecipeContext);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [menuType, setMenuType] = useState<"predefined" | "custom">(
-    "predefined",
-  );
+
+  const [selectedLabels, setSelectedLabels] = useState(labels);
+  const toggleLabel = (label: Label) => {
+    const exists = selectedLabels.some((l) => l.id === label.id);
+    if (exists) {
+      setSelectedLabels((prev) => prev.filter((l) => l.id !== label.id));
+    } else {
+      setSelectedLabels((prev) => [...prev, label]);
+    }
+  };
 
   // Preferencias dinámicas: { labelId: cantidad }
-  const [preferences, setPreferences] = useState<Record<number, number>>(() => {
+  const [labelCount, setLabelCount] = useState<Record<number, number>>(() => {
     const defaults: Record<number, number> = {};
-    labels.forEach((l) => {
-      defaults[l.id] = 2; // 2 por defecto para cada label
+    selectedLabels.forEach((l) => {
+      defaults[l.id] = 2;
     });
     return defaults;
   });
 
-  const updatePreference = (labelId: number, value: string) => {
-    setPreferences((prev) => ({
+  const updateLabelCount = (labelId: number, value: string) => {
+    setLabelCount((prev) => ({
       ...prev,
       [labelId]: value === "" ? 0 : parseInt(value),
     }));
+  };
+
+  const [selectedMealTypes, setSelectedMealTypes] =
+    useState<MealType[]>(mealTypes);
+
+  const toggleMealType = (mealType: MealType) => {
+    const exists = selectedMealTypes.some((mt) => mt.id === mealType.id);
+    if (exists) {
+      setSelectedMealTypes((prev) =>
+        prev.filter((mt) => mt.id !== mealType.id),
+      );
+    } else {
+      setSelectedMealTypes((prev) => [...prev, mealType]);
+    }
   };
 
   // Fisher-Yates shuffle
@@ -50,6 +79,7 @@ const NewMenu: React.FC<NewMenuProps> = ({ onCloseModal }) => {
   };
 
   const generateMenu = () => {
+    if (selectedMealTypes.length === 0) return;
     setLoading(true);
 
     const daysOfWeek = [
@@ -76,7 +106,7 @@ const NewMenu: React.FC<NewMenuProps> = ({ onCloseModal }) => {
     const menuRecipes: MenuRecipe[] = [];
     const usedRecipeIds = new Set<number>();
     const labelUsageCount: Record<number, number> = {};
-    labels.forEach((l) => {
+    selectedLabels.forEach((l) => {
       labelUsageCount[l.id] = 0;
     });
 
@@ -97,7 +127,7 @@ const NewMenu: React.FC<NewMenuProps> = ({ onCloseModal }) => {
               !usedRecipeIds.has(r.id!) &&
               !recentRecipeIds.has(r.id!) &&
               r.labels.some(
-                (l) => labelUsageCount[l.id] < (preferences[l.id] ?? 2),
+                (l) => labelUsageCount[l.id] < (labelCount[l.id] ?? 2),
               ),
           ) ??
           // 2. No usada en este menú, no usada recientemente
@@ -137,32 +167,54 @@ const NewMenu: React.FC<NewMenuProps> = ({ onCloseModal }) => {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <RadioButton.Group
-          onValueChange={(newValue) =>
-            setMenuType(newValue as "predefined" | "custom")
-          }
-          value={menuType}
+        <Text style={styles.sectionTitle}>Tipos de comida</Text>
+        <View style={styles.chipContainer}>
+          {mealTypes.map((mt) => (
+            <Chip
+              key={mt.id}
+              selected={selectedMealTypes.some((s) => s.id === mt.id)}
+              onPress={() => toggleMealType(mt)}
+              style={styles.chip}
+            >
+              {mt.name}
+            </Chip>
+          ))}
+        </View>
+
+        <Text style={styles.sectionTitle}>Categorías</Text>
+        <View style={styles.chipContainer}>
+          {labels.map((l) => (
+            <Chip
+              key={l.id}
+              selected={selectedLabels.some((s) => s.id === l.id)}
+              onPress={() => toggleLabel(l)}
+              style={styles.chip}
+            >
+              {l.name}
+            </Chip>
+          ))}
+        </View>
+
+        <Text style={styles.sectionTitle}>Cantidad por categoría</Text>
+        {selectedLabels.map((l) => (
+          <TextInput
+            key={l.id}
+            label={l.name}
+            value={labelCount[l.id]?.toString() ?? "2"}
+            onChangeText={(value) => updateLabelCount(l.id, value)}
+            keyboardType="numeric"
+            style={styles.input}
+          />
+        ))}
+
+        <Pressable
+          style={[
+            styles.button,
+            selectedMealTypes.length === 0 && styles.disabledButton,
+          ]}
+          onPress={generateMenu}
+          disabled={selectedMealTypes.length === 0}
         >
-          <RadioButton.Item label="Menú Predefinido" value="predefined" />
-          <RadioButton.Item label="Menú Personalizado" value="custom" />
-        </RadioButton.Group>
-
-        {menuType === "custom" && (
-          <View>
-            {labels.map((l) => (
-              <TextInput
-                key={l.id}
-                label={l.name}
-                value={preferences[l.id]?.toString() ?? "2"}
-                onChangeText={(value) => updatePreference(l.id, value)}
-                keyboardType="numeric"
-                style={styles.input}
-              />
-            ))}
-          </View>
-        )}
-
-        <Pressable style={styles.button} onPress={generateMenu}>
           {loading ? (
             <ActivityIndicator animating={true} color="white" />
           ) : (
@@ -178,6 +230,21 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     borderRadius: 10,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 8,
+    marginTop: 10,
+  },
+  chipContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: 15,
+  },
+  chip: {
+    margin: 4,
   },
   input: {
     marginBottom: 10,
@@ -201,6 +268,10 @@ const styles = StyleSheet.create({
     letterSpacing: 0.25,
     color: "black",
   },
+  disabledButton: {
+    backgroundColor: "gray",
+    borderColor: "darkgray",
+  },
 });
 
-export default NewMenu;
+export default MenuGenerator;

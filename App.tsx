@@ -5,9 +5,9 @@ import { StyleSheet } from "react-native";
 import React from "react";
 import Header from "./src/header/Header";
 import RecipeProvider from "./src/providers/RecipeProvider";
-import AuthHomepage from "./src/navigation/AuthHomepage";
 
 import AppNavigationContainer from "./src/navigation/NavigationContainer";
+import BottomTabNav from "./src/navigation/BottomTabNav";
 
 // Main App of the application, with all the Providers and the custom NavigationContainer
 export default function App() {
@@ -16,7 +16,7 @@ export default function App() {
       <RecipeProvider>
         <PaperProvider>
           <Header />
-          <AuthHomepage />
+          <BottomTabNav />
         </PaperProvider>
       </RecipeProvider>
     </AppNavigationContainer>

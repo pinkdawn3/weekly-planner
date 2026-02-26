@@ -4,7 +4,18 @@ import { Label, MealType, Menu, MenuRecipe, Recipe } from "../types/RecipeType";
 const db = SQLite.openDatabaseSync("weeklymeal.db");
 
 export const initDB = () => {
-  // Creación de tablas:
+  // Toggle comment in case of table changes
+  /* db.execSync(`
+    DROP TABLE IF EXISTS menu_recipes;
+    DROP TABLE IF EXISTS recipe_meal_types;
+    DROP TABLE IF EXISTS recipe_labels;
+    DROP TABLE IF EXISTS menus;
+    DROP TABLE IF EXISTS recipes;
+    DROP TABLE IF EXISTS meal_types;
+    DROP TABLE IF EXISTS labels;
+  `); */
+
+  // Tables setup:
   // - Meal Types (desayuno, almuerzo, cena...)
   // - Labels (hidratos, proteina, pescado...)
   // - Recipes (todas las recetas)
@@ -12,7 +23,6 @@ export const initDB = () => {
   // - Relación recetas/label (muchos a muchos)
   // - Menú (guardamos 2, el último y el de la semana anterior)
   // - Relación menú/recetas
-
   db.execSync(`
     CREATE TABLE IF NOT EXISTS meal_types (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
