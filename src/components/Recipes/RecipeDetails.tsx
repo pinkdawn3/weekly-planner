@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
-import { Modal, Portal } from "react-native-paper";
+import { Chip } from "react-native-paper";
 import { Recipe } from "../../types/RecipeType";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -9,9 +9,6 @@ interface RecipeDetailsProps {
   onEdit: () => void;
   onDelete: () => void;
 }
-
-// Card with the details of the selected recipe. It will show every attribute as well as a button for editing and another one
-// for deleting the recipe.
 
 const RecipeDetails: React.FC<RecipeDetailsProps> = ({
   recipe,
@@ -22,12 +19,31 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({
     <View style={styles.detailsContainer}>
       <Text style={styles.modalTitle}>{recipe?.name}</Text>
       <Text style={styles.modalDescription}>{recipe?.description}</Text>
+
+      <Text style={styles.modalSectionTitle}>Tipo de comida</Text>
+      <View style={styles.chipContainer}>
+        {recipe?.mealTypes.map((mt) => (
+          <Chip key={mt.id} style={styles.chip}>
+            {mt.name}
+          </Chip>
+        ))}
+      </View>
+
+      <Text style={styles.modalSectionTitle}>Categoría</Text>
+      <View style={styles.chipContainer}>
+        {recipe?.labels.map((l) => (
+          <Chip key={l.id} style={styles.chip}>
+            {l.name}
+          </Chip>
+        ))}
+      </View>
+
       <Text style={styles.modalSectionTitle}>Ingredientes</Text>
       <Text style={styles.modalText}>{recipe?.ingredients}</Text>
-      <Text style={styles.modalSectionTitle}>Tipo</Text>
-      <Text style={styles.modalText}>{recipe?.label}</Text>
+
       <Text style={styles.modalSectionTitle}>Pasos</Text>
       <Text style={styles.modalText}>{recipe?.steps}</Text>
+
       <View style={styles.buttonContainer}>
         <Pressable style={styles.button} onPress={onEdit}>
           <Ionicons name="pencil" size={24} color="black" />
@@ -42,18 +58,9 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({
   );
 };
 
+export default RecipeDetails;
+
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "white",
-    padding: 20,
-    marginHorizontal: 20,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
-  },
   detailsContainer: {
     alignItems: "center",
     marginTop: 50,
@@ -81,6 +88,15 @@ const styles = StyleSheet.create({
     color: "#555",
     textAlign: "center",
     marginBottom: 10,
+  },
+  chipContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    marginBottom: 10,
+  },
+  chip: {
+    margin: 4,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -112,5 +128,3 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-
-export default RecipeDetails;

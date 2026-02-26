@@ -3,27 +3,19 @@ import React, { useContext, useEffect, useState } from "react";
 import { Modal, PaperProvider, Portal } from "react-native-paper";
 import NewMenu from "../components/NewMenu";
 import TodayRecipe from "../components/Recipes/TodayRecipe";
-import AddRecipe from "../components/Recipes/AddRecipe";
 import { RecipeContext } from "../contexts/RecipeContext";
-import { Menu, Recipe } from "../types/RecipeType";
-import {
-  getAllRecipes,
-  getLastMenu,
-  createRecipe,
-} from "../services/database.service";
+import { Menu } from "../types/RecipeType";
+import { getLastMenu } from "../services/database.service";
 
 const menuDefault: Menu = { id: 0, created: "", recipes: [] };
 
 const Homescreen = () => {
-  const { recipes, setRecipes, setCurrentMenu, menuCreated, setMenuCreated } =
+  const { recipes, setCurrentMenu, menuCreated, setMenuCreated } =
     useContext(RecipeContext);
   const [menuVisible, setMenuVisible] = useState(false);
-  const [recipeVisible, setRecipeVisible] = useState(false);
 
   const showMenuModal = () => setMenuVisible(true);
   const hideMenuModal = () => setMenuVisible(false);
-  const showRecipeModal = () => setRecipeVisible(true);
-  const hideRecipeModal = () => setRecipeVisible(false);
 
   const containerStyle = {
     backgroundColor: "white",
@@ -34,9 +26,6 @@ const Homescreen = () => {
 
   useEffect(() => {
     try {
-      const recipeData = getAllRecipes();
-      setRecipes(recipeData);
-
       const menuData = getLastMenu();
       setCurrentMenu(menuData ?? menuDefault);
     } catch (error) {
@@ -57,39 +46,12 @@ const Homescreen = () => {
     }
   }, [menuCreated]);
 
-  const handleSaveRecipe = (newRecipe: Recipe) => {
-    try {
-      createRecipe(newRecipe);
-      const retrievedRecipes = getAllRecipes();
-      setRecipes(retrievedRecipes);
-    } catch (error) {
-      console.error("Error saving recipe:", error);
-    }
-  };
-
   return (
     <PaperProvider>
       <View style={styles.container}>
-        {/* Today's Recipe*/}
         <TodayRecipe />
-        <View>
-          <Portal>
-            {/* Modal for adding a recipe */}
-            <Modal
-              visible={recipeVisible}
-              onDismiss={hideRecipeModal}
-              contentContainerStyle={containerStyle}
-            >
-              <AddRecipe onClose={hideRecipeModal} onSave={handleSaveRecipe} />
-            </Modal>
-          </Portal>
-          <Pressable style={styles.buttonRecipe} onPress={showRecipeModal}>
-            <Text style={styles.buttonText}>Añadir receta</Text>
-          </Pressable>
-        </View>
 
         <Portal>
-          {/* Modal for creating a new menu */}
           <Modal
             visible={menuVisible}
             onDismiss={hideMenuModal}
@@ -98,7 +60,7 @@ const Homescreen = () => {
             <NewMenu onCloseModal={hideMenuModal} />
           </Modal>
         </Portal>
-        {/* Button to create a new menu, disabled if there are less than 7 recipes */}
+
         <Pressable
           style={[
             styles.newMenuButton,
@@ -127,18 +89,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
-  },
-  buttonRecipe: {
-    backgroundColor: "#dbeed0",
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "center",
-    marginTop: 20,
-    paddingVertical: 15,
-    paddingHorizontal: 60,
-    borderRadius: 15,
-    borderColor: "gray",
-    borderWidth: 1,
   },
   newMenuButton: {
     alignItems: "center",

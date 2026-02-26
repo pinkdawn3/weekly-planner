@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { RecipeContext, RecipeTypeContext } from "../contexts/RecipeContext";
-import { Menu, Recipe } from "../types/RecipeType";
-import { initDB } from "../services/database.service";
+import { Label, MealType, Menu, Recipe } from "../types/RecipeType";
+import {
+  initDB,
+  getAllRecipes,
+  getAllMealTypes,
+  getAllLabels,
+} from "../services/database.service";
 
 type RecipeProviderProps = {
   children: React.ReactNode | React.ReactNode[];
@@ -9,42 +14,44 @@ type RecipeProviderProps = {
 
 function RecipeProvider(props: RecipeProviderProps) {
   initDB();
-
   const { children } = props;
 
-  let recipeDefault: Recipe = {
+  const recipeDefault: Recipe = {
     id: undefined,
     name: "",
     description: "",
-    label: "" as "hidratos" | "fibra" | "proteína" | "pescado",
     ingredients: "",
     steps: "",
-    weekDay: "",
+    mealTypes: [],
+    labels: [],
   };
 
-  let menuDefault: Menu = {
+  const menuDefault: Menu = {
     id: 0,
     created: "",
     recipes: [],
   };
 
-  const [recipe, setRecipe] = useState(recipeDefault);
-  const [todaysRecipe, setTodaysRecipe] = useState(recipeDefault);
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [recipe, setRecipe] = useState<Recipe>(recipeDefault);
+  const [recipes, setRecipes] = useState<Recipe[]>(getAllRecipes());
   const [currentMenu, setCurrentMenu] = useState<Menu>(menuDefault);
   const [menuCreated, setMenuCreated] = useState<boolean>(false);
+  const [mealTypes, setMealTypes] = useState<MealType[]>(getAllMealTypes());
+  const [labels, setLabels] = useState<Label[]>(getAllLabels());
 
   const defaultValue: RecipeTypeContext = {
     recipe,
     setRecipe,
-    todaysRecipe,
-    setTodaysRecipe,
     recipes,
     setRecipes,
     currentMenu,
     setCurrentMenu,
     menuCreated,
     setMenuCreated,
+    mealTypes,
+    setMealTypes,
+    labels,
+    setLabels,
   };
 
   return (

@@ -1,8 +1,8 @@
-import { StyleSheet, TextInput, View, Text, Pressable } from "react-native";
-import React, { useEffect } from "react";
-import { Menu } from "react-native-paper";
-
-import { Recipe } from "../../types/RecipeType";
+import { StyleSheet, View, Text, Pressable, ScrollView } from "react-native";
+import React, { useContext, useEffect } from "react";
+import { TextInput, Chip } from "react-native-paper";
+import { Recipe, MealType, Label } from "../../types/RecipeType";
+import { RecipeContext } from "../../contexts/RecipeContext";
 
 interface AddRecipeProps {
   initialRecipe?: Recipe | null;
@@ -17,123 +17,144 @@ const AddRecipe: React.FC<AddRecipeProps> = ({
   onSave,
   onEdit,
 }) => {
+  const { mealTypes, labels } = useContext(RecipeContext);
   const isEditing = Boolean(initialRecipe);
 
   const [recipe, setRecipe] = React.useState<Recipe>({
     id: undefined,
     name: "",
     description: "",
-    label: "" as "hidratos" | "fibra" | "proteína" | "pescado",
     ingredients: "",
     steps: "",
-    weekDay: "",
+    mealTypes: [],
+    labels: [],
   });
 
-  // If an initialRecipe is provided for its editing, it will set it in setRecipe
   useEffect(() => {
     if (initialRecipe) {
       setRecipe(initialRecipe);
     }
   }, [initialRecipe]);
 
-  const handleSave = async () => {
-    console.log("Datos de la receta antes de guardar:", recipe);
-
+  const handleSave = () => {
     if (isEditing && onEdit) {
-      console.log("Editando receta:", recipe);
       onEdit(recipe);
     } else if (!isEditing && onSave) {
-      console.log("Añadiendo nueva receta:", recipe);
       onSave(recipe);
     }
     onClose();
   };
 
-  const [typeMenuVisible, setTypeMenuVisible] = React.useState(false);
+  const toggleMealType = (mealType: MealType) => {
+    const exists = recipe.mealTypes.some((mt) => mt.id === mealType.id);
+    if (exists) {
+      setRecipe((prev) => ({
+        ...prev,
+        mealTypes: prev.mealTypes.filter((mt) => mt.id !== mealType.id),
+      }));
+    } else {
+      setRecipe((prev) => ({
+        ...prev,
+        mealTypes: [...prev.mealTypes, mealType],
+      }));
+    }
+  };
 
-  // Function that handles selecting a recipe type from the menu
-  const handleTypeSelect = (
-    type: "hidratos" | "fibra" | "proteína" | "pescado"
-  ) => {
-    setRecipe((prevState) => ({
-      ...prevState,
-      label: type,
-    }));
-    setTypeMenuVisible(false);
+  const toggleLabel = (label: Label) => {
+    const exists = recipe.labels.some((l) => l.id === label.id);
+    if (exists) {
+      setRecipe((prev) => ({
+        ...prev,
+        labels: prev.labels.filter((l) => l.id !== label.id),
+      }));
+    } else {
+      setRecipe((prev) => ({
+        ...prev,
+        labels: [...prev.labels, label],
+      }));
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <Text>Nombre</Text>
-      <TextInput
-        style={styles.inputs}
-        placeholder="Inserte nombre..."
-        value={recipe.name}
-        onChangeText={(text) =>
-          setRecipe((prevState) => ({ ...prevState, name: text }))
-        }
-      />
-      <Text>Descripción</Text>
-      <TextInput
-        style={styles.inputs}
-        placeholder="Inserte descripción..."
-        value={recipe.description}
-        onChangeText={(text) =>
-          setRecipe((prevState) => ({ ...prevState, description: text }))
-        }
-      />
-      <Text>Tipo</Text>
-      <Menu
-        visible={typeMenuVisible}
-        onDismiss={() => setTypeMenuVisible(false)}
-        anchor={
-          <Pressable
-            style={styles.inputs}
-            onPress={() => setTypeMenuVisible(true)}
-          >
-            <Text>{recipe.label ? recipe.label : "Seleccionar tipo"}</Text>
-          </Pressable>
-        }
-      >
-        <Menu.Item
-          onPress={() => handleTypeSelect("proteína")}
-          title="Proteína"
+    <ScrollView>
+      <View style={styles.container}>
+        <Text style={styles.label}>Nombre</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Inserte nombre..."
+          value={recipe.name}
+          onChangeText={(text) =>
+            setRecipe((prev) => ({ ...prev, name: text }))
+          }
         />
-        <Menu.Item
-          onPress={() => handleTypeSelect("pescado")}
-          title="Pescado"
+
+        <Text style={styles.label}>Descripción</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Inserte descripción..."
+          value={recipe.description}
+          onChangeText={(text) =>
+            setRecipe((prev) => ({ ...prev, description: text }))
+          }
         />
-        <Menu.Item onPress={() => handleTypeSelect("fibra")} title="Fibra" />
-        <Menu.Item
-          onPress={() => handleTypeSelect("hidratos")}
-          title="Hidratos"
+
+        <Text style={styles.label}>Tipo de comida</Text>
+        <View style={styles.chipContainer}>
+          {mealTypes.map((mt) => (
+            <Chip
+              key={mt.id}
+              selected={recipe.mealTypes.some((r) => r.id === mt.id)}
+              onPress={() => toggleMealType(mt)}
+              style={styles.chip}
+            >
+              {mt.name}
+            </Chip>
+          ))}
+        </View>
+
+        <Text style={styles.label}>Categoría</Text>
+        <View style={styles.chipContainer}>
+          {labels.map((l) => (
+            <Chip
+              key={l.id}
+              selected={recipe.labels.some((r) => r.id === l.id)}
+              onPress={() => toggleLabel(l)}
+              style={styles.chip}
+            >
+              {l.name}
+            </Chip>
+          ))}
+        </View>
+
+        <Text style={styles.label}>Ingredientes</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Inserte ingredientes..."
+          value={recipe.ingredients}
+          onChangeText={(text) =>
+            setRecipe((prev) => ({ ...prev, ingredients: text }))
+          }
+          multiline
         />
-      </Menu>
 
-      <Text>Ingredientes</Text>
-      <TextInput
-        style={styles.inputs}
-        placeholder="Inserte ingredientes..."
-        value={recipe.ingredients}
-        onChangeText={(text) =>
-          setRecipe((prevState) => ({ ...prevState, ingredients: text }))
-        }
-      />
+        <Text style={styles.label}>Pasos</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Inserte pasos..."
+          value={recipe.steps}
+          onChangeText={(text) =>
+            setRecipe((prev) => ({ ...prev, steps: text }))
+          }
+          multiline
+        />
 
-      <Text>Pasos</Text>
-      <TextInput
-        style={styles.inputs}
-        placeholder="Inserte pasos..."
-        value={recipe.steps}
-        onChangeText={(text) =>
-          setRecipe((prevState) => ({ ...prevState, steps: text }))
-        }
-      />
-
-      <Pressable style={styles.button} onPress={handleSave}>
-        <Text>{isEditing ? "Guardar" : "Añadir"}</Text>
-      </Pressable>
-    </View>
+        <Pressable style={styles.button} onPress={handleSave}>
+          <Text style={styles.buttonText}>
+            {isEditing ? "Guardar" : "Añadir"}
+          </Text>
+        </Pressable>
+      </View>
+    </ScrollView>
   );
 };
 
@@ -141,8 +162,25 @@ export default AddRecipe;
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "flex-start",
-    margin: 50,
+    padding: 20,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 5,
+  },
+  input: {
+    marginBottom: 15,
+    backgroundColor: "white",
+  },
+  chipContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: 15,
+  },
+  chip: {
+    margin: 4,
   },
   button: {
     alignItems: "center",
@@ -155,13 +193,8 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 1,
   },
-  inputs: {
-    marginTop: 10,
-    marginBottom: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    borderColor: "gray",
-    borderWidth: 1,
+  buttonText: {
+    fontWeight: "bold",
+    color: "black",
   },
 });

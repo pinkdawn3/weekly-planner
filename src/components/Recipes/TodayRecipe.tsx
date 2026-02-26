@@ -2,44 +2,41 @@ import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import moment from "moment";
 import { RecipeContext } from "../../contexts/RecipeContext";
-import { Recipe } from "../../types/RecipeType";
+import { MenuRecipe } from "../../types/RecipeType";
 import { navigate } from "../../navigation/NavigationContainer";
 
 const TodayRecipe = () => {
   const { currentMenu } = useContext(RecipeContext);
-  const [todaysRecipe, setTodaysRecipe] = useState<Recipe | null>(null);
+  const [todaysRecipes, setTodaysRecipes] = useState<MenuRecipe[]>([]);
+  const currentDate = moment().format("dddd");
 
-  const currentDate = moment().format("dddd"); //Current day
-
-  //Load the current menu and compare the weekDay attribute to the currentDay. When it finds it, sets it on the todayRecipe state.
   useEffect(() => {
     if (currentMenu && currentMenu.recipes && currentMenu.recipes.length > 0) {
-      const todayRecipe = currentMenu.recipes.find(
-        (recipe) => recipe.weekDay === currentDate
+      const todayRecipes = currentMenu.recipes.filter(
+        (mr) => mr.weekDay === currentDate,
       );
-      setTodaysRecipe(todayRecipe || null);
+      setTodaysRecipes(todayRecipes);
     }
   }, [currentMenu]);
 
-  //Function that navigates towards the screen that shows the details of today's recipe
-  const handlePress = () => {
-    if (todaysRecipe) {
-      navigate("RecipeDetailsScreen", { recipe: todaysRecipe });
-    }
+  const handlePress = (menuRecipe: MenuRecipe) => {
+    navigate("RecipeDetailsScreen", { recipe: menuRecipe.recipe });
   };
 
   return (
     <View style={styles.card}>
-      {todaysRecipe ? (
+      {todaysRecipes.length > 0 ? (
         <>
-          <Pressable onPress={handlePress}>
-            <Text style={styles.title}>Receta de Hoy</Text>
-            <Text style={styles.recipeName}>{todaysRecipe.name}</Text>
-            <Text style={styles.recipeDescription}>
-              {todaysRecipe.description}
-            </Text>
-            <Text style={styles.recipeLabel}>{todaysRecipe.label}</Text>
-          </Pressable>
+          <Text style={styles.title}>Recetas de Hoy</Text>
+          {todaysRecipes.map((mr) => (
+            <Pressable key={mr.mealType.id} onPress={() => handlePress(mr)}>
+              <Text style={styles.mealType}>{mr.mealType.name}</Text>
+              <Text style={styles.recipeName}>{mr.recipe.name}</Text>
+              <Text style={styles.recipeDescription}>
+                {mr.recipe.description}
+              </Text>
+            </Pressable>
+          ))}
         </>
       ) : (
         <Text style={styles.noMenuText}>No se ha generado menú</Text>
@@ -51,10 +48,9 @@ const TodayRecipe = () => {
 export default TodayRecipe;
 
 const { height } = Dimensions.get("window");
-
 const styles = StyleSheet.create({
   card: {
-    height: height / 3, // Occupies at most one third of the screen height
+    height: height / 3,
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
@@ -65,7 +61,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 4,
-    marginBottom: 20, // Margin to separate from buttons below
+    marginBottom: 20,
   },
   title: {
     fontSize: 24,
@@ -73,21 +69,23 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: "#333",
   },
-  recipeName: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 8,
-  },
-  recipeDescription: {
-    fontSize: 16,
-    color: "#666",
-    marginBottom: 12,
-  },
-  recipeLabel: {
+  mealType: {
     fontSize: 14,
+    fontWeight: "bold",
     color: "#888",
     fontStyle: "italic",
+    marginTop: 10,
+  },
+  recipeName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 4,
+  },
+  recipeDescription: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 8,
   },
   noMenuText: {
     fontSize: 18,

@@ -1,97 +1,57 @@
 import React, { useContext, useState } from "react";
-import { View, StyleSheet, Pressable, Text } from "react-native";
+import { View, StyleSheet, Pressable, Text, ScrollView } from "react-native";
 import { TextInput, RadioButton, ActivityIndicator } from "react-native-paper";
 import { RecipeContext } from "../contexts/RecipeContext";
-import { Preferences, Recipe } from "../types/RecipeType";
+import { MenuRecipe, Recipe, MealType } from "../types/RecipeType";
 import moment from "moment";
 import {
-  updateRecipe,
   createMenu,
   getLastMenu,
+  getLastMenus,
 } from "../services/database.service";
-
-const defaultPreferences: Preferences = {
-  hidratos: 3,
-  fibra: 2,
-  proteína: 2,
-  pescado: 1,
-};
 
 interface NewMenuProps {
   onCloseModal: () => void;
 }
 
 const NewMenu: React.FC<NewMenuProps> = ({ onCloseModal }) => {
-  const { recipes, setCurrentMenu, setMenuCreated } = useContext(RecipeContext);
+  const { recipes, setCurrentMenu, setMenuCreated, mealTypes, labels } =
+    useContext(RecipeContext);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [menuType, setMenuType] = useState<"predefined" | "custom">(
     "predefined",
   );
-  const [preferences, setPreferences] =
-    useState<Preferences>(defaultPreferences);
 
-  const updatePreference = (key: keyof Preferences, value: string) => {
+  // Preferencias dinámicas: { labelId: cantidad }
+  const [preferences, setPreferences] = useState<Record<number, number>>(() => {
+    const defaults: Record<number, number> = {};
+    labels.forEach((l) => {
+      defaults[l.id] = 2; // 2 por defecto para cada label
+    });
+    return defaults;
+  });
+
+  const updatePreference = (labelId: number, value: string) => {
     setPreferences((prev) => ({
       ...prev,
-      [key]: value === "" ? "" : parseInt(value),
+      [labelId]: value === "" ? 0 : parseInt(value),
     }));
   };
 
-  const updateRecipeDay = (recipe: Recipe) => {
-    try {
-      updateRecipe(recipe);
-    } catch (error) {
-      console.error(`Error updating recipe ${recipe.id}:`, error);
+  // Fisher-Yates shuffle
+  const shuffle = <T,>(array: T[]): T[] => {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
     }
+    return arr;
   };
 
-  const generateMenu = async () => {
+  const generateMenu = () => {
     setLoading(true);
 
-    let selectedRecipes: Recipe[] = [];
-    let lastUsedLabels: string[] = [];
-    let usedRecipes: Set<number> = new Set();
-
-    recipes.sort(() => 0.5 - Math.random());
-
-    while (selectedRecipes.length < 7) {
-      const availableRecipes = recipes.filter((recipe) => {
-        const notUsedRecently = !lastUsedLabels.includes(recipe.label);
-        const notUsedInMenu = !usedRecipes.has(recipe.id!);
-        const labelCount = selectedRecipes.filter(
-          (r) => r.label === recipe.label,
-        ).length;
-        return (
-          notUsedRecently &&
-          notUsedInMenu &&
-          labelCount < (preferences[recipe.label] || 0)
-        );
-      });
-
-      if (availableRecipes.length > 0) {
-        const recipe = availableRecipes[0];
-        selectedRecipes.push(recipe);
-        lastUsedLabels.push(recipe.label);
-        usedRecipes.add(recipe.id!);
-        if (lastUsedLabels.length > 2) lastUsedLabels.shift();
-      } else {
-        const fallbackRecipes = recipes.filter(
-          (recipe) => !usedRecipes.has(recipe.id!),
-        );
-        const randomRecipe =
-          fallbackRecipes[Math.floor(Math.random() * fallbackRecipes.length)] ||
-          null;
-        if (randomRecipe) {
-          selectedRecipes.push(randomRecipe);
-          lastUsedLabels.push(randomRecipe.label);
-          usedRecipes.add(randomRecipe.id!);
-          if (lastUsedLabels.length > 2) lastUsedLabels.shift();
-        }
-      }
-    }
-
-    const startIndex = moment().day();
     const daysOfWeek = [
       "Sunday",
       "Monday",
@@ -101,14 +61,68 @@ const NewMenu: React.FC<NewMenuProps> = ({ onCloseModal }) => {
       "Friday",
       "Saturday",
     ];
+    const startIndex = moment().day();
+    const weekDays = Array.from(
+      { length: 7 },
+      (_, i) => daysOfWeek[(startIndex + i) % 7],
+    );
 
-    for (let i = 0; i < selectedRecipes.length; i++) {
-      selectedRecipes[i].weekDay = daysOfWeek[(startIndex + i) % 7];
-      updateRecipeDay(selectedRecipes[i]);
+    // Recetas usadas en el menú anterior para evitar repeticiones
+    const lastMenus = getLastMenus(1);
+    const recentRecipeIds = new Set(
+      lastMenus.flatMap((m) => m.recipes.map((mr) => mr.recipe.id!)),
+    );
+
+    const menuRecipes: MenuRecipe[] = [];
+    const usedRecipeIds = new Set<number>();
+    const labelUsageCount: Record<number, number> = {};
+    labels.forEach((l) => {
+      labelUsageCount[l.id] = 0;
+    });
+
+    for (const day of weekDays) {
+      for (const mealType of mealTypes) {
+        // Recetas válidas para este meal type
+        const validRecipes = recipes.filter((r) =>
+          r.mealTypes.some((mt) => mt.id === mealType.id),
+        );
+
+        const shuffled = shuffle(validRecipes);
+
+        // Intentamos encontrar la mejor receta según prioridad
+        const selected =
+          // 1. No usada en este menú, no usada recientemente, respeta preferencias
+          shuffled.find(
+            (r) =>
+              !usedRecipeIds.has(r.id!) &&
+              !recentRecipeIds.has(r.id!) &&
+              r.labels.some(
+                (l) => labelUsageCount[l.id] < (preferences[l.id] ?? 2),
+              ),
+          ) ??
+          // 2. No usada en este menú, no usada recientemente
+          shuffled.find(
+            (r) => !usedRecipeIds.has(r.id!) && !recentRecipeIds.has(r.id!),
+          ) ??
+          // 3. No usada en este menú
+          shuffled.find((r) => !usedRecipeIds.has(r.id!)) ??
+          // 4. Fallback: cualquier receta válida (repetición permitida)
+          shuffled[0];
+
+        if (selected) {
+          menuRecipes.push({ recipe: selected, mealType, weekDay: day });
+          usedRecipeIds.add(selected.id!);
+          selected.labels.forEach((l) => {
+            if (labelUsageCount[l.id] !== undefined) {
+              labelUsageCount[l.id]++;
+            }
+          });
+        }
+      }
     }
 
     try {
-      createMenu(selectedRecipes);
+      createMenu(menuRecipes);
       const lastMenu = getLastMenu();
       setCurrentMenu(lastMenu ?? { id: 0, created: "", recipes: [] });
       setMenuCreated(true);
@@ -121,58 +135,42 @@ const NewMenu: React.FC<NewMenuProps> = ({ onCloseModal }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <RadioButton.Group
-        onValueChange={(newValue) =>
-          setMenuType(newValue as "predefined" | "custom")
-        }
-        value={menuType}
-      >
-        <RadioButton.Item label="Menú Predefinido" value="predefined" />
-        <RadioButton.Item label="Menú Personalizado" value="custom" />
-      </RadioButton.Group>
+    <ScrollView>
+      <View style={styles.container}>
+        <RadioButton.Group
+          onValueChange={(newValue) =>
+            setMenuType(newValue as "predefined" | "custom")
+          }
+          value={menuType}
+        >
+          <RadioButton.Item label="Menú Predefinido" value="predefined" />
+          <RadioButton.Item label="Menú Personalizado" value="custom" />
+        </RadioButton.Group>
 
-      {menuType === "custom" && (
-        <View>
-          <TextInput
-            label="Hidratos"
-            value={preferences.hidratos.toString()}
-            onChangeText={(value) => updatePreference("hidratos", value)}
-            keyboardType="numeric"
-            style={styles.input}
-          />
-          <TextInput
-            label="Fibra"
-            value={preferences.fibra.toString()}
-            onChangeText={(value) => updatePreference("fibra", value)}
-            keyboardType="numeric"
-            style={styles.input}
-          />
-          <TextInput
-            label="Proteína"
-            value={preferences.proteína.toString()}
-            onChangeText={(value) => updatePreference("proteína", value)}
-            keyboardType="numeric"
-            style={styles.input}
-          />
-          <TextInput
-            label="Pescado"
-            value={preferences.pescado.toString()}
-            onChangeText={(value) => updatePreference("pescado", value)}
-            keyboardType="numeric"
-            style={styles.input}
-          />
-        </View>
-      )}
-
-      <Pressable style={styles.button} onPress={generateMenu}>
-        {loading ? (
-          <ActivityIndicator animating={true} color="white" />
-        ) : (
-          <Text style={styles.buttonText}>Generar Menú</Text>
+        {menuType === "custom" && (
+          <View>
+            {labels.map((l) => (
+              <TextInput
+                key={l.id}
+                label={l.name}
+                value={preferences[l.id]?.toString() ?? "2"}
+                onChangeText={(value) => updatePreference(l.id, value)}
+                keyboardType="numeric"
+                style={styles.input}
+              />
+            ))}
+          </View>
         )}
-      </Pressable>
-    </View>
+
+        <Pressable style={styles.button} onPress={generateMenu}>
+          {loading ? (
+            <ActivityIndicator animating={true} color="white" />
+          ) : (
+            <Text style={styles.buttonText}>Generar Menú</Text>
+          )}
+        </Pressable>
+      </View>
+    </ScrollView>
   );
 };
 

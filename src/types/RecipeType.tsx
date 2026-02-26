@@ -1,26 +1,35 @@
+export type MealType = {
+  id: number;
+  name: string;
+};
+
+export type Label = {
+  id: number;
+  name: string;
+};
+
 export type Recipe = {
   id: number | undefined;
   name: string;
   description: string;
-  label: "hidratos" | "fibra" | "proteína" | "pescado";
   ingredients: string;
   steps: string;
+  mealTypes: MealType[];
+  labels: Label[];
+};
+
+export type MenuRecipe = {
+  recipe: Recipe;
+  mealType: MealType;
   weekDay: string;
-};
-
-export type Preferences = {
-  hidratos: number;
-  fibra: number;
-  proteína: number;
-  pescado: number;
-};
-
-export type MenuPetition = {
-  recipeDtoList: Recipe[];
 };
 
 export type Menu = {
   id: number;
   created: string;
-  recipes: Recipe[];
+  recipes: MenuRecipe[];
+};
+
+export type Preferences = {
+  [labelId: number]: number;
 };

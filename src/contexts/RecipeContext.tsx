@@ -1,9 +1,7 @@
 import { createContext } from "react";
-import { Menu, Recipe } from "../types/RecipeType";
+import { Label, MealType, Menu, Recipe } from "../types/RecipeType";
 
 export type RecipeTypeContext = {
-  todaysRecipe: Recipe;
-  setTodaysRecipe: Function;
   recipe: Recipe;
   setRecipe: Function;
   recipes: Recipe[];
@@ -12,6 +10,10 @@ export type RecipeTypeContext = {
   setCurrentMenu: Function;
   menuCreated: boolean;
   setMenuCreated: Function;
+  mealTypes: MealType[];
+  setMealTypes: Function;
+  labels: Label[];
+  setLabels: Function;
 };
 
 export const RecipeContext = createContext({} as RecipeTypeContext);
