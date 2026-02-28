@@ -9,6 +9,9 @@ import { navigate } from "../navigation/NavigationContainer";
 import { createRecipe, getAllRecipes } from "../services/database.service";
 import ManageMealTypes from "../components/MenuSettings/ManageMealTypes";
 import ManageLabels from "../components/MenuSettings/ManageLabel";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../navigation/RootNavigator";
 
 const Recipes = () => {
   const { recipes, setRecipes, mealTypes, setMealTypes, labels, setLabels } =
@@ -28,10 +31,11 @@ const Recipes = () => {
   const hideAddModal = () => setAddRecipeVisible(false);
 
   // Functions to show and hide the "RecipeDetails" modal
-  const showDetailsScreen = (recipe: Recipe) => {
-    navigate("RecipeDetailsScreen", { recipe });
-  };
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
+  const showDetailsScreen = (recipe: Recipe) => {
+    navigation.navigate("RecipeDetailsScreen", { recipe });
+  };
   const containerStyle = { backgroundColor: "white", margin: 40, padding: 20 };
 
   // Function that filters the recipes based on the input text

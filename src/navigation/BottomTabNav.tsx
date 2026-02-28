@@ -1,4 +1,3 @@
-import { StyleSheet } from "react-native";
 import React from "react";
 import { BottomNavigation } from "react-native-paper";
 import Homescreen from "../screens/Homescreen";
@@ -31,10 +30,9 @@ const BottomTabNav = () => {
       navigationState={{ index, routes }}
       onIndexChange={setIndex}
       renderScene={renderScene}
+      barStyle={{ backgroundColor: "#FFF0E7" }}
     />
   );
 };
 
 export default BottomTabNav;
-
-const styles = StyleSheet.create({});

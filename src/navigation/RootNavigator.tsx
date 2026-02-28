@@ -2,19 +2,16 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import BottomTabNav from "./BottomTabNav";
 import RecipeDetailsScreen from "../screens/RecipeDetailsScreen";
+import { Recipe } from "../types/RecipeType";
 
 export type RootStackParamList = {
   BottomTabNav: undefined;
-  AuthStack: undefined;
-  ButtonGroup: undefined;
-  Login: undefined;
-  Signup: undefined;
-  RecipeDetailsScreen: undefined;
+  RecipeDetailsScreen: { recipe: Recipe };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-const AuthHomepage = () => {
+const RootNavigator = () => {
   return (
     <Stack.Navigator
       initialRouteName="BottomTabNav"
@@ -31,4 +28,4 @@ const AuthHomepage = () => {
   );
 };
 
-export default AuthHomepage;
+export default RootNavigator;

@@ -13,18 +13,15 @@ import {
   getAllRecipes,
 } from "../services/database.service";
 
-type RootStackParamList = {
-  RecipeDetails: { recipe: Recipe };
-};
-
-type RecipeDetailsScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  "RecipeDetails"
->;
+import { RootStackParamList } from "../navigation/RootNavigator";
 
 type RecipeDetailsScreenRouteProp = RouteProp<
   RootStackParamList,
-  "RecipeDetails"
+  "RecipeDetailsScreen"
+>;
+type RecipeDetailsScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "RecipeDetailsScreen"
 >;
 
 //Screen with the logic for navigating to this screen from other parts of the application, and also handles the logic of editing,

@@ -1,83 +1,45 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import { Modal, PaperProvider, Portal } from "react-native-paper";
+import Svg, { Defs, Pattern, Rect, Line } from "react-native-svg";
+import { View, StyleSheet } from "react-native";
 import TodayRecipe from "../components/Recipes/TodayRecipe";
-import { RecipeContext } from "../contexts/RecipeContext";
-import { Menu } from "../types/RecipeType";
-import { getLastMenu } from "../services/database.service";
-import MenuGenerator from "../components/MenuGenerator";
-
-const menuDefault: Menu = { id: 0, created: "", recipes: [] };
 
 const Homescreen = () => {
-  const { recipes, setCurrentMenu, menuCreated, setMenuCreated } =
-    useContext(RecipeContext);
-  const [menuVisible, setMenuVisible] = useState(false);
-
-  const showMenuModal = () => setMenuVisible(true);
-  const hideMenuModal = () => setMenuVisible(false);
-
-  const containerStyle = {
-    backgroundColor: "white",
-    padding: 30,
-    margin: 20,
-    borderRadius: 10,
-  };
-
-  useEffect(() => {
-    try {
-      const menuData = getLastMenu();
-      setCurrentMenu(menuData ?? menuDefault);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (menuCreated) {
-      try {
-        const menuData = getLastMenu();
-        setCurrentMenu(menuData ?? menuDefault);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setMenuCreated(false);
-      }
-    }
-  }, [menuCreated]);
-
   return (
-    <PaperProvider>
-      <View style={styles.container}>
-        <TodayRecipe />
-
-        <Portal>
-          <Modal
-            visible={menuVisible}
-            onDismiss={hideMenuModal}
-            contentContainerStyle={containerStyle}
+    <View style={styles.container}>
+      <Svg style={StyleSheet.absoluteFill}>
+        <Defs>
+          <Pattern
+            id="grid"
+            width="25"
+            height="25"
+            patternUnits="userSpaceOnUse"
           >
-            <MenuGenerator onCloseModal={hideMenuModal} />
-          </Modal>
-        </Portal>
+            {/* Fondo del patrón */}
+            {/* <Rect width="20" height="20" fill="#e5e5f7" /> */}
+            {/* Línea horizontal */}
+            <Line
+              x1="0"
+              y1="0"
+              x2="25"
+              y2="0"
+              stroke="#ffd9cc"
+              strokeWidth="2"
+            />
+            {/* Línea vertical */}
+            <Line
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="25"
+              stroke="#ffd9cc"
+              strokeWidth="2"
+            />
+          </Pattern>
+        </Defs>
 
-        <Pressable
-          style={[
-            styles.menuGeneratorButton,
-            recipes.length < 7 && styles.disabledButton,
-          ]}
-          onPress={recipes.length >= 7 ? showMenuModal : null}
-          disabled={recipes.length < 7}
-        >
-          <Text style={styles.buttonText}>Crear menú nuevo</Text>
-        </Pressable>
-        {recipes.length < 7 && (
-          <Text style={styles.infoText}>
-            Añade al menos 7 recetas para crear un menú nuevo.
-          </Text>
-        )}
-      </View>
-    </PaperProvider>
+        <Rect width="100%" height="100%" fill="url(#grid)" opacity={0.8} />
+      </Svg>
+      <TodayRecipe />
+    </View>
   );
 };
 
@@ -89,33 +51,5 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
-  },
-  menuGeneratorButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "center",
-    marginTop: 20,
-    paddingVertical: 15,
-    paddingHorizontal: 50,
-    borderRadius: 15,
-    backgroundColor: "#dbeed0",
-    borderColor: "gray",
-    borderWidth: 1,
-  },
-  disabledButton: {
-    backgroundColor: "gray",
-    borderColor: "darkgray",
-  },
-  buttonText: {
-    fontSize: 16,
-    lineHeight: 21,
-    fontWeight: "bold",
-    letterSpacing: 0.25,
-    color: "black",
-  },
-  infoText: {
-    marginTop: 10,
-    fontSize: 14,
-    color: "red",
   },
 });

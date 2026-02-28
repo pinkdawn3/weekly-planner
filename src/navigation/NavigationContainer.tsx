@@ -3,7 +3,7 @@ import {
   NavigationContainer,
   NavigationContainerRef,
 } from "@react-navigation/native";
-import { RootStackParamList } from "./AuthHomepage";
+import { RootStackParamList } from "./RootNavigator";
 
 //This is a custom navigation reference to be able to use the navigation methods with React Paper's Bottom
 //Tab Navigator.
@@ -11,7 +11,10 @@ export const navigationRef =
   createRef<NavigationContainerRef<RootStackParamList>>();
 
 export function navigate(name: keyof RootStackParamList, params?: any) {
-  navigationRef.current?.navigate(name, params);
+  console.log("isReady:", navigationRef.current?.isReady());
+  if (navigationRef.current?.isReady()) {
+    navigationRef.current.navigate(name, params);
+  }
 }
 
 export function reset(name: keyof RootStackParamList) {

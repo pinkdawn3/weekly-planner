@@ -3,12 +3,16 @@ import React, { useState, useContext, useEffect } from "react";
 import moment from "moment";
 import { RecipeContext } from "../../contexts/RecipeContext";
 import { MenuRecipe } from "../../types/RecipeType";
-import { navigate } from "../../navigation/NavigationContainer";
+import { useNavigation } from "@react-navigation/native";
+
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../../navigation/RootNavigator";
 
 const TodayRecipe = () => {
   const { currentMenu } = useContext(RecipeContext);
   const [todaysRecipes, setTodaysRecipes] = useState<MenuRecipe[]>([]);
   const currentDate = moment().format("dddd");
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   useEffect(() => {
     if (currentMenu && currentMenu.recipes && currentMenu.recipes.length > 0) {
@@ -20,7 +24,8 @@ const TodayRecipe = () => {
   }, [currentMenu]);
 
   const handlePress = (menuRecipe: MenuRecipe) => {
-    navigate("RecipeDetailsScreen", { recipe: menuRecipe.recipe });
+    console.log("handlePress called", menuRecipe.recipe.name);
+    navigation.navigate("RecipeDetailsScreen", { recipe: menuRecipe.recipe });
   };
 
   return (
@@ -51,16 +56,11 @@ const { height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   card: {
     height: height / 3,
-    justifyContent: "center",
-    alignItems: "center",
     padding: 20,
     backgroundColor: "#fff",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
+    borderRadius: 25,
+    borderColor: "#b69485",
+    borderWidth: 2,
     marginBottom: 20,
   },
   title: {
