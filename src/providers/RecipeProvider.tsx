@@ -6,6 +6,7 @@ import {
   getAllRecipes,
   getAllMealTypes,
   getAllLabels,
+  getLastMenu,
 } from "../services/database.service";
 
 type RecipeProviderProps = {
@@ -34,7 +35,10 @@ function RecipeProvider(props: RecipeProviderProps) {
 
   const [recipe, setRecipe] = useState<Recipe>(recipeDefault);
   const [recipes, setRecipes] = useState<Recipe[]>(getAllRecipes());
-  const [currentMenu, setCurrentMenu] = useState<Menu>(menuDefault);
+  const [currentMenu, setCurrentMenu] = useState<Menu>(() => {
+    const lastMenu = getLastMenu();
+    return lastMenu ?? menuDefault;
+  });
   const [menuCreated, setMenuCreated] = useState<boolean>(false);
   const [mealTypes, setMealTypes] = useState<MealType[]>(getAllMealTypes());
   const [labels, setLabels] = useState<Label[]>(getAllLabels());

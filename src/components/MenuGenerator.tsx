@@ -1,12 +1,6 @@
 import React, { useContext, useState } from "react";
 import { View, StyleSheet, Pressable, Text, ScrollView } from "react-native";
-import {
-  TextInput,
-  ActivityIndicator,
-  Chip,
-  Portal,
-  Modal,
-} from "react-native-paper";
+import { TextInput, ActivityIndicator, Chip } from "react-native-paper";
 import { RecipeContext } from "../contexts/RecipeContext";
 import { Label, MealType, MenuRecipe } from "../types/RecipeType";
 import moment from "moment";
@@ -15,8 +9,6 @@ import {
   getLastMenu,
   getLastMenus,
 } from "../services/database.service";
-import ManageMealTypes from "./MenuSettings/ManageMealTypes";
-import ManageLabels from "./MenuSettings/ManageLabel";
 
 interface MenuGeneratorProps {
   onCloseModal: () => void;
@@ -111,7 +103,7 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
     });
 
     for (const day of weekDays) {
-      for (const mealType of mealTypes) {
+      for (const mealType of selectedMealTypes) {
         // Recetas válidas para este meal type
         const validRecipes = recipes.filter((r) =>
           r.mealTypes.some((mt) => mt.id === mealType.id),

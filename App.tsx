@@ -23,7 +23,8 @@ const theme = {
   fonts: configureFonts({ config: fontConfig }),
   colors: {
     ...MD3LightTheme.colors,
-    secondaryContainer: "#ffcea3",
+    secondaryContainer: "#eab295",
+
     onSurface: "#624942", // primary text color
     onSurfaceVariant: "#666", // secondary text color
   },

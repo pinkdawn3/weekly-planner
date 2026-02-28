@@ -36,6 +36,7 @@ const Recipes = () => {
   const showDetailsScreen = (recipe: Recipe) => {
     navigation.navigate("RecipeDetailsScreen", { recipe });
   };
+
   const containerStyle = { backgroundColor: "white", margin: 40, padding: 20 };
 
   // Function that filters the recipes based on the input text

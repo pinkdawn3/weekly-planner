@@ -11,6 +11,7 @@ import {
   updateRecipe,
   deleteRecipe,
   getAllRecipes,
+  getLastMenu,
 } from "../services/database.service";
 
 import { RootStackParamList } from "../navigation/RootNavigator";
@@ -32,7 +33,7 @@ const RecipeDetailsScreen: React.FC = () => {
 
   const { recipe } = route.params;
 
-  const { setRecipes } = useContext(RecipeContext);
+  const { setRecipes, setCurrentMenu } = useContext(RecipeContext);
 
   const [editRecipeVisible, setEditRecipeVisible] = useState(false);
 
@@ -42,15 +43,15 @@ const RecipeDetailsScreen: React.FC = () => {
   const handleEdit = (selectedRecipe: Recipe) => {
     try {
       updateRecipe(selectedRecipe);
-      const retrievedRecipes = getAllRecipes();
-      setRecipes(retrievedRecipes);
+      setRecipes(getAllRecipes());
+      const updatedMenu = getLastMenu();
+      setCurrentMenu(updatedMenu ?? { id: 0, created: "", recipes: [] });
       hideEditModal();
       navigation.goBack();
     } catch (error) {
       console.error("Error updating recipe:", error);
     }
   };
-
   const handleDelete = () => {
     if (recipe && recipe.id !== undefined) {
       try {

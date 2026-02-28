@@ -33,12 +33,14 @@ const TodayRecipe = () => {
       {todaysRecipes.length > 0 ? (
         <>
           <Text style={styles.title}>Recetas de Hoy</Text>
-          {todaysRecipes.map((mr) => (
-            <Pressable key={mr.mealType.id} onPress={() => handlePress(mr)}>
-              <Text style={styles.mealType}>{mr.mealType.name}</Text>
-              <Text style={styles.recipeName}>{mr.recipe.name}</Text>
-            </Pressable>
-          ))}
+          <View style={styles.recipeContainer}>
+            {todaysRecipes.map((mr) => (
+              <Pressable key={mr.mealType.id} onPress={() => handlePress(mr)}>
+                <Text style={styles.mealType}>{mr.mealType.name}</Text>
+                <Text style={styles.recipeName}>{mr.recipe.name}</Text>
+              </Pressable>
+            ))}
+          </View>
         </>
       ) : (
         <Text style={styles.noMenuText}>No se ha generado menú</Text>
@@ -49,34 +51,40 @@ const TodayRecipe = () => {
 
 export default TodayRecipe;
 
-const { height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   card: {
-    height: height / 3,
-    padding: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
     backgroundColor: "#ffe2dc",
     borderRadius: 25,
     borderColor: "#b69485",
     borderWidth: 2,
     marginBottom: 20,
   },
+  recipeContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
   title: {
     fontSize: 24,
     marginBottom: 10,
     color: "#624942",
     fontFamily: "ShantellSans-Bold",
+    alignItems: "center",
   },
   mealType: {
     fontSize: 14,
     color: "#888",
     marginTop: 10,
     fontFamily: "ShantellSans-SemiBoldItalic",
+    textAlign: "center",
   },
   recipeName: {
     fontSize: 18,
     color: "#624942",
     marginBottom: 4,
     fontFamily: "ShantellSans-SemiBold",
+    textAlign: "center",
   },
   noMenuText: {
     fontSize: 18,

@@ -68,31 +68,32 @@ const styles = StyleSheet.create({
   detailsContainer: {
     alignItems: "center",
     marginTop: 50,
-    fontFamily: "ShantellSans-Regular",
   },
   modalTitle: {
     fontSize: 24,
-    fontWeight: "bold",
     color: "#333",
     marginBottom: 10,
+    fontFamily: "ShantellSans-Bold",
   },
   modalDescription: {
     fontSize: 18,
     color: "#666",
     marginBottom: 20,
+    fontFamily: "ShantellSans-Regular",
   },
   modalSectionTitle: {
     fontSize: 20,
-    fontWeight: "bold",
     color: "#333",
     marginTop: 10,
     marginBottom: 6,
+    fontFamily: "ShantellSans-SemiBold",
   },
   modalText: {
     fontSize: 16,
     color: "#555",
     textAlign: "center",
     marginBottom: 10,
+    fontFamily: "ShantellSans-Regular",
   },
   chipContainer: {
     flexDirection: "row",

@@ -31,6 +31,8 @@ const BottomTabNav = () => {
       onIndexChange={setIndex}
       renderScene={renderScene}
       barStyle={{ backgroundColor: "#ffcea3" }}
+      activeColor="#624942"
+      inactiveColor="#97746b"
     />
   );
 };
