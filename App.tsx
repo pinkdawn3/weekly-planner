@@ -1,42 +1,68 @@
 import "react-native-gesture-handler";
-
-import { MD3LightTheme, PaperProvider } from "react-native-paper";
-import { StyleSheet } from "react-native";
+import {
+  configureFonts,
+  MD3LightTheme,
+  PaperProvider,
+} from "react-native-paper";
+import { KeyboardAvoidingView, Platform } from "react-native";
 import React from "react";
 import Header from "./src/header/Header";
 import RecipeProvider from "./src/providers/RecipeProvider";
-
 import AppNavigationContainer from "./src/navigation/NavigationContainer";
-import BottomTabNav from "./src/navigation/BottomTabNav";
 import RootNavigator from "./src/navigation/RootNavigator";
+import { useFonts } from "expo-font";
+import { Text } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+const fontConfig = {
+  fontFamily: "ShantellSans-Regular",
+};
 
 const theme = {
   ...MD3LightTheme,
+  fonts: configureFonts({ config: fontConfig }),
   colors: {
     ...MD3LightTheme.colors,
-    secondaryContainer: "#ffd9cc",
+    secondaryContainer: "#ffcea3",
+    onSurface: "#624942", // primary text color
+    onSurfaceVariant: "#666", // secondary text color
   },
+};
+
+(Text as any).defaultProps = (Text as any).defaultProps || {};
+(Text as any).defaultProps.style = {
+  fontFamily: "ShantellSans-Regular",
+  color: "#624942",
 };
 
 // Main App of the application, with all the Providers and the custom NavigationContainer
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    "ShantellSans-Regular": require("./assets/fonts/static/ShantellSans-Regular.ttf"),
+    "ShantellSans-Bold": require("./assets/fonts/static/ShantellSans-Bold.ttf"),
+    "ShantellSans-Italic": require("./assets/fonts/static/ShantellSans-Italic.ttf"),
+    "ShantellSans-BoldItalic": require("./assets/fonts/static/ShantellSans-BoldItalic.ttf"),
+    "ShantellSans-SemiBold": require("./assets/fonts/static/ShantellSans-SemiBold.ttf"),
+    "ShantellSans-SemiBoldItalic": require("./assets/fonts/static/ShantellSans-SemiBoldItalic.ttf"),
+  });
+
+  if (!fontsLoaded) return null;
+
   return (
-    <AppNavigationContainer>
-      <RecipeProvider>
-        <PaperProvider theme={theme}>
-          <Header />
-          <RootNavigator />
-        </PaperProvider>
-      </RecipeProvider>
-    </AppNavigationContainer>
+    <SafeAreaProvider>
+      <AppNavigationContainer>
+        <RecipeProvider>
+          <PaperProvider theme={theme}>
+            <KeyboardAvoidingView
+              style={{ flex: 1 }}
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+            >
+              <Header />
+              <RootNavigator />
+            </KeyboardAvoidingView>
+          </PaperProvider>
+        </RecipeProvider>
+      </AppNavigationContainer>
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

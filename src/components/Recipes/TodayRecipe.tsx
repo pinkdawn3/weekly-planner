@@ -37,9 +37,6 @@ const TodayRecipe = () => {
             <Pressable key={mr.mealType.id} onPress={() => handlePress(mr)}>
               <Text style={styles.mealType}>{mr.mealType.name}</Text>
               <Text style={styles.recipeName}>{mr.recipe.name}</Text>
-              <Text style={styles.recipeDescription}>
-                {mr.recipe.description}
-              </Text>
             </Pressable>
           ))}
         </>
@@ -57,7 +54,7 @@ const styles = StyleSheet.create({
   card: {
     height: height / 3,
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#ffe2dc",
     borderRadius: 25,
     borderColor: "#b69485",
     borderWidth: 2,
@@ -65,27 +62,21 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
     marginBottom: 10,
-    color: "#333",
+    color: "#624942",
+    fontFamily: "ShantellSans-Bold",
   },
   mealType: {
     fontSize: 14,
-    fontWeight: "bold",
     color: "#888",
-    fontStyle: "italic",
     marginTop: 10,
+    fontFamily: "ShantellSans-SemiBoldItalic",
   },
   recipeName: {
     fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
+    color: "#624942",
     marginBottom: 4,
-  },
-  recipeDescription: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 8,
+    fontFamily: "ShantellSans-SemiBold",
   },
   noMenuText: {
     fontSize: 18,

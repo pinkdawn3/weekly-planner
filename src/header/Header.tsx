@@ -7,7 +7,7 @@ const Header = () => {
   return (
     <Appbar.Header
       mode={"center-aligned"}
-      style={{ backgroundColor: "#FFF0e7" }}
+      style={{ backgroundColor: "#ffcea3" }}
     >
       <Appbar.Content title="Weekly Meal" />
     </Appbar.Header>

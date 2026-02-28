@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Chip } from "react-native-paper";
 import { Recipe } from "../../types/RecipeType";
 import { Ionicons } from "@expo/vector-icons";
+import { ScrollView } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface RecipeDetailsProps {
   recipe: Recipe | null;
@@ -16,45 +18,47 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({
   onDelete,
 }) => {
   return (
-    <View style={styles.detailsContainer}>
-      <Text style={styles.modalTitle}>{recipe?.name}</Text>
-      <Text style={styles.modalDescription}>{recipe?.description}</Text>
+    <ScrollView>
+      <SafeAreaView style={styles.detailsContainer}>
+        <Text style={styles.modalTitle}>{recipe?.name}</Text>
+        <Text style={styles.modalDescription}>{recipe?.description}</Text>
 
-      <Text style={styles.modalSectionTitle}>Tipo de comida</Text>
-      <View style={styles.chipContainer}>
-        {recipe?.mealTypes.map((mt) => (
-          <Chip key={mt.id} style={styles.chip}>
-            {mt.name}
-          </Chip>
-        ))}
-      </View>
+        <Text style={styles.modalSectionTitle}>Tipo de comida</Text>
+        <View style={styles.chipContainer}>
+          {recipe?.mealTypes.map((mt) => (
+            <Chip key={mt.id} style={styles.chip}>
+              {mt.name}
+            </Chip>
+          ))}
+        </View>
 
-      <Text style={styles.modalSectionTitle}>Categoría</Text>
-      <View style={styles.chipContainer}>
-        {recipe?.labels.map((l) => (
-          <Chip key={l.id} style={styles.chip}>
-            {l.name}
-          </Chip>
-        ))}
-      </View>
+        <Text style={styles.modalSectionTitle}>Categoría</Text>
+        <View style={styles.chipContainer}>
+          {recipe?.labels.map((l) => (
+            <Chip key={l.id} style={styles.chip}>
+              {l.name}
+            </Chip>
+          ))}
+        </View>
 
-      <Text style={styles.modalSectionTitle}>Ingredientes</Text>
-      <Text style={styles.modalText}>{recipe?.ingredients}</Text>
+        <Text style={styles.modalSectionTitle}>Ingredientes</Text>
+        <Text style={styles.modalText}>{recipe?.ingredients}</Text>
 
-      <Text style={styles.modalSectionTitle}>Pasos</Text>
-      <Text style={styles.modalText}>{recipe?.steps}</Text>
+        <Text style={styles.modalSectionTitle}>Pasos</Text>
+        <Text style={styles.modalText}>{recipe?.steps}</Text>
 
-      <View style={styles.buttonContainer}>
-        <Pressable style={styles.button} onPress={onEdit}>
-          <Ionicons name="pencil" size={24} color="black" />
-          <Text style={styles.buttonText}>Editar</Text>
-        </Pressable>
-        <Pressable style={styles.buttonDelete} onPress={onDelete}>
-          <Ionicons name="trash" size={24} color="black" />
-          <Text style={styles.buttonText}>Eliminar</Text>
-        </Pressable>
-      </View>
-    </View>
+        <View style={styles.buttonContainer}>
+          <Pressable style={styles.button} onPress={onEdit}>
+            <Ionicons name="pencil" size={24} color="black" />
+            <Text style={styles.buttonText}>Editar</Text>
+          </Pressable>
+          <Pressable style={styles.buttonDelete} onPress={onDelete}>
+            <Ionicons name="trash" size={24} color="black" />
+            <Text style={styles.buttonText}>Eliminar</Text>
+          </Pressable>
+        </View>
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 
@@ -64,6 +68,7 @@ const styles = StyleSheet.create({
   detailsContainer: {
     alignItems: "center",
     marginTop: 50,
+    fontFamily: "ShantellSans-Regular",
   },
   modalTitle: {
     fontSize: 24,

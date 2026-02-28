@@ -1,7 +1,7 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useContext, useState } from "react";
 import { RecipeContext } from "../contexts/RecipeContext";
-import { Modal, PaperProvider, Portal, Searchbar } from "react-native-paper";
+import { Modal, Portal, Searchbar } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 import AddRecipe from "../components/Recipes/AddRecipe";
 import { Recipe } from "../types/RecipeType";
@@ -58,89 +58,87 @@ const Recipes = () => {
   const filteredRecipes = searchRecipe();
 
   return (
-    <PaperProvider>
-      <View style={styles.container}>
-        <Portal>
-          {/* Modal for adding or editing a recipe */}
-          <Modal
-            visible={mealTypesVisible}
-            onDismiss={() => setMealTypesVisible(false)}
-            contentContainerStyle={containerStyle}
-          >
-            <ManageMealTypes mealTypes={mealTypes} onUpdate={setMealTypes} />
-          </Modal>
-
-          <Modal
-            visible={labelsVisible}
-            onDismiss={() => setLabelsVisible(false)}
-            contentContainerStyle={containerStyle}
-          >
-            <ManageLabels labels={labels} onUpdate={setLabels} />
-          </Modal>
-
-          <Modal
-            visible={addRecipeVisible}
-            onDismiss={hideAddModal}
-            contentContainerStyle={containerStyle}
-          >
-            <AddRecipe
-              initialRecipe={selectedRecipe}
-              onClose={hideAddModal}
-              onSave={handleSaveRecipe}
-            />
-          </Modal>
-        </Portal>
-
-        <View style={styles.configButtons}>
-          <Pressable
-            style={styles.configButton}
-            onPress={() => setMealTypesVisible(true)}
-          >
-            <Text style={styles.configButtonText}>Tipos de comida</Text>
-          </Pressable>
-          <Pressable
-            style={styles.configButton}
-            onPress={() => setLabelsVisible(true)}
-          >
-            <Text style={styles.configButtonText}>Categorías</Text>
-          </Pressable>
-        </View>
-
-        {/* Search bar to search recipes by name */}
-        <Searchbar
-          placeholder="Busque el nombre de una receta..."
-          onChangeText={setSearchText}
-          value={searchText}
-        />
-
-        {/* Floating button to show the add recipe modal */}
-        <Pressable
-          style={styles.floatingButtonContainer}
-          onPress={() => {
-            setSelectedRecipe(null);
-            showAddModal();
-          }}
+    <View style={styles.container}>
+      <Portal>
+        {/* Modal for adding or editing a recipe */}
+        <Modal
+          visible={mealTypesVisible}
+          onDismiss={() => setMealTypesVisible(false)}
+          contentContainerStyle={containerStyle}
         >
-          <Ionicons name="add-outline" size={20} color="white" />
+          <ManageMealTypes mealTypes={mealTypes} onUpdate={setMealTypes} />
+        </Modal>
+
+        <Modal
+          visible={labelsVisible}
+          onDismiss={() => setLabelsVisible(false)}
+          contentContainerStyle={containerStyle}
+        >
+          <ManageLabels labels={labels} onUpdate={setLabels} />
+        </Modal>
+
+        <Modal
+          visible={addRecipeVisible}
+          onDismiss={hideAddModal}
+          contentContainerStyle={containerStyle}
+        >
+          <AddRecipe
+            initialRecipe={selectedRecipe}
+            onClose={hideAddModal}
+            onSave={handleSaveRecipe}
+          />
+        </Modal>
+      </Portal>
+
+      <View style={styles.configButtons}>
+        <Pressable
+          style={styles.configButton}
+          onPress={() => setMealTypesVisible(true)}
+        >
+          <Text style={styles.configButtonText}>Tipos de comida</Text>
         </Pressable>
-
-        {/* Scroll view to display filtered recipes */}
-        <ScrollView>
-          {filteredRecipes &&
-            filteredRecipes.map((recipe, index) => (
-              <View key={index} style={styles.card}>
-                <Text style={styles.title}>{recipe.name}</Text>
-                <Text style={styles.description}>{recipe.description}</Text>
-                <Pressable onPress={() => showDetailsScreen(recipe)}>
-                  <Text style={styles.detailsLink}>Ver detalles</Text>
-                </Pressable>
-              </View>
-            ))}
-        </ScrollView>
-
-        {/* Modal for recipe details with options to edit or delete */}
+        <Pressable
+          style={styles.configButton}
+          onPress={() => setLabelsVisible(true)}
+        >
+          <Text style={styles.configButtonText}>Categorías</Text>
+        </Pressable>
       </View>
-    </PaperProvider>
+
+      {/* Search bar to search recipes by name */}
+      <Searchbar
+        placeholder="Busque el nombre de una receta..."
+        onChangeText={setSearchText}
+        value={searchText}
+      />
+
+      {/* Floating button to show the add recipe modal */}
+      <Pressable
+        style={styles.floatingButtonContainer}
+        onPress={() => {
+          setSelectedRecipe(null);
+          showAddModal();
+        }}
+      >
+        <Ionicons name="add-outline" size={20} color="white" />
+      </Pressable>
+
+      {/* Scroll view to display filtered recipes */}
+      <ScrollView>
+        {filteredRecipes &&
+          filteredRecipes.map((recipe, index) => (
+            <View key={index} style={styles.card}>
+              <Text style={styles.title}>{recipe.name}</Text>
+              <Text style={styles.description}>{recipe.description}</Text>
+              <Pressable onPress={() => showDetailsScreen(recipe)}>
+                <Text style={styles.detailsLink}>Ver detalles</Text>
+              </Pressable>
+            </View>
+          ))}
+      </ScrollView>
+
+      {/* Modal for recipe details with options to edit or delete */}
+    </View>
   );
 };
 

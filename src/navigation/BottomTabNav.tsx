@@ -30,7 +30,7 @@ const BottomTabNav = () => {
       navigationState={{ index, routes }}
       onIndexChange={setIndex}
       renderScene={renderScene}
-      barStyle={{ backgroundColor: "#FFF0E7" }}
+      barStyle={{ backgroundColor: "#ffcea3" }}
     />
   );
 };
