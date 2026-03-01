@@ -10,6 +10,7 @@ import {
   getLastMenu,
 } from "../services/database.service";
 import MenuGenerator from "../components/MenuGenerator";
+import { colors } from "../theme/colors";
 
 const daysOfWeekOrder = [
   "Monday",
@@ -93,6 +94,17 @@ const WeeklyMenu = () => {
     navigate("RecipeDetailsScreen", { recipe });
   };
 
+  const recipesByDay = daysOfWeekOrder.reduce(
+    (acc, day) => {
+      const dayRecipes = sortedMenuRecipes.filter((mr) => mr.weekDay === day);
+      if (dayRecipes.length > 0) {
+        acc[day] = dayRecipes;
+      }
+      return acc;
+    },
+    {} as Record<string, MenuRecipe[]>,
+  );
+
   return (
     <Provider>
       <View style={styles.container}>
@@ -102,7 +114,7 @@ const WeeklyMenu = () => {
               Añade al menos 7 recetas para crear un menú semanal.
             </Text>
             <Pressable
-              style={[styles.MenuGeneratorButton, styles.disabledButton]}
+              style={[styles.menuGeneratorButton, styles.disabledButton]}
               disabled
             >
               <Text style={styles.buttonText}>Menú nuevo</Text>
@@ -116,7 +128,7 @@ const WeeklyMenu = () => {
               </Text>
             </Pressable>
             <Pressable
-              style={styles.MenuGeneratorButton}
+              style={styles.menuGeneratorButton}
               onPress={showMenuGeneratorModal}
             >
               <Text style={styles.buttonText}>Menú nuevo</Text>
@@ -125,23 +137,29 @@ const WeeklyMenu = () => {
         )}
 
         {sortedMenuRecipes.length > 0 && (
-          <ScrollView style={{ width: "100%" }}>
-            {sortedMenuRecipes.map((mr, index) => (
-              <Pressable
-                key={index}
-                onPress={() =>
-                  editMode ? showSearchModal(mr) : handleDetails(mr.recipe)
-                }
-              >
-                <View style={styles.card}>
-                  <Text style={styles.weekDay}>{mr.weekDay}</Text>
-                  <Text style={styles.mealType}>{mr.mealType.name}</Text>
-                  <Text style={styles.recipeName}>{mr.recipe.name}</Text>
-                  <Text style={styles.recipeLabel}>
-                    {mr.recipe.labels.map((l) => l.name).join(", ")}
-                  </Text>
+          <ScrollView
+            style={{ width: "100%" }}
+            contentContainerStyle={{ paddingHorizontal: 30, paddingBottom: 30 }}
+          >
+            {Object.entries(recipesByDay).map(([day, recipes]) => (
+              <View key={day} style={styles.dayCard}>
+                <View style={styles.weekDayContainer}>
+                  <Text style={styles.weekDay}>{day}</Text>
                 </View>
-              </Pressable>
+
+                {recipes.map((mr) => (
+                  <Pressable
+                    key={mr.mealType.id}
+                    style={styles.recipeCard}
+                    onPress={() =>
+                      editMode ? showSearchModal(mr) : handleDetails(mr.recipe)
+                    }
+                  >
+                    <Text style={styles.mealType}>{mr.mealType.name}</Text>
+                    <Text style={styles.recipeName}>{mr.recipe.name}</Text>
+                  </Pressable>
+                ))}
+              </View>
             ))}
           </ScrollView>
         )}
@@ -191,45 +209,49 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingTop: 20,
+    backgroundColor: colors.yellow,
   },
-  card: {
-    width: "90%",
-    alignSelf: "center",
-    marginTop: 15,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    backgroundColor: "#f8d7d2",
-    borderColor: "gray",
-    borderWidth: 1,
-  },
-  weekDay: {
-    fontSize: 12,
-    color: "#888",
-    marginBottom: 2,
-  },
-  mealType: {
-    fontSize: 13,
-    fontWeight: "bold",
-    color: "#666",
-    marginBottom: 4,
-  },
-  recipeName: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  recipeLabel: {
-    fontSize: 12,
-    color: "#888",
-    marginTop: 4,
+  dayCard: {
+    borderColor: colors.lightBrown,
+    borderWidth: 2,
+    borderRadius: 25,
+    marginTop: 20,
+    backgroundColor: "#faeeee",
+    paddingBottom: 10,
   },
   recipeCard: {
     padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "gray",
+    marginTop: 10,
   },
-  MenuGeneratorButton: {
+  weekDayContainer: {
+    backgroundColor: colors.pink,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    borderBottomColor: colors.lightBrown,
+    borderBottomWidth: 2,
+  },
+
+  weekDay: {
+    fontSize: 20,
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    fontFamily: "ShantellSans-SemiBold",
+    color: colors.darkBrown,
+  },
+  mealType: {
+    fontSize: 13,
+    color: colors.lightBrown,
+    marginBottom: 4,
+    fontFamily: "ShantellSans-Regular",
+  },
+  recipeName: {
+    fontSize: 16,
+    fontFamily: "ShantellSans-SemiBold",
+    color: colors.darkBrown,
+  },
+  menuGeneratorButton: {
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
