@@ -8,6 +8,8 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../navigation/RootNavigator";
 
+import { colors } from "../../theme/colors";
+
 const TodayRecipe = () => {
   const { currentMenu } = useContext(RecipeContext);
   const [todaysRecipes, setTodaysRecipes] = useState<MenuRecipe[]>([]);
@@ -32,15 +34,14 @@ const TodayRecipe = () => {
     <View style={styles.card}>
       {todaysRecipes.length > 0 ? (
         <>
-          <Text style={styles.title}>Recetas de Hoy</Text>
-          <View style={styles.recipeContainer}>
-            {todaysRecipes.map((mr) => (
-              <Pressable key={mr.mealType.id} onPress={() => handlePress(mr)}>
-                <Text style={styles.mealType}>{mr.mealType.name}</Text>
-                <Text style={styles.recipeName}>{mr.recipe.name}</Text>
-              </Pressable>
-            ))}
-          </View>
+          <Text style={styles.title}>Hoy toca...</Text>
+
+          {todaysRecipes.map((mr) => (
+            <Pressable key={mr.mealType.id} onPress={() => handlePress(mr)}>
+              <Text style={styles.mealType}>{mr.mealType.name}</Text>
+              <Text style={styles.recipeName}>{mr.recipe.name}</Text>
+            </Pressable>
+          ))}
         </>
       ) : (
         <Text style={styles.noMenuText}>No se ha generado menú</Text>
@@ -53,38 +54,32 @@ export default TodayRecipe;
 
 const styles = StyleSheet.create({
   card: {
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    backgroundColor: "#ffe2dc",
-    borderRadius: 25,
-    borderColor: "#b69485",
+    paddingVertical: 30,
+    paddingHorizontal: 50,
+    backgroundColor: colors.pink,
+    borderRadius: 30,
+    borderColor: colors.lightBrown,
     borderWidth: 2,
     marginBottom: 20,
-  },
-  recipeContainer: {
-    justifyContent: "center",
-    alignItems: "center",
   },
   title: {
     fontSize: 24,
     marginBottom: 10,
     color: "#624942",
     fontFamily: "ShantellSans-Bold",
-    alignItems: "center",
+    textAlign: "center",
   },
   mealType: {
     fontSize: 14,
     color: "#888",
     marginTop: 10,
     fontFamily: "ShantellSans-SemiBoldItalic",
-    textAlign: "center",
   },
   recipeName: {
     fontSize: 18,
     color: "#624942",
     marginBottom: 4,
     fontFamily: "ShantellSans-SemiBold",
-    textAlign: "center",
   },
   noMenuText: {
     fontSize: 18,

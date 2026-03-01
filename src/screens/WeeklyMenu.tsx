@@ -11,6 +11,7 @@ import {
 } from "../services/database.service";
 import MenuGenerator from "../components/MenuGenerator";
 import { colors } from "../theme/colors";
+import { Entypo, Feather, Ionicons } from "@expo/vector-icons";
 
 const daysOfWeekOrder = [
   "Monday",
@@ -122,16 +123,14 @@ const WeeklyMenu = () => {
           </>
         ) : (
           <View style={styles.buttonGroup}>
-            <Pressable style={styles.editMenu} onPress={toggleEditMode}>
-              <Text style={styles.buttonText}>
-                {editMode ? "Dejar de editar" : "Editar menú"}
-              </Text>
-            </Pressable>
             <Pressable
               style={styles.menuGeneratorButton}
               onPress={showMenuGeneratorModal}
             >
-              <Text style={styles.buttonText}>Menú nuevo</Text>
+              <Entypo name="plus" size={24} color={colors.lightBrown} />
+            </Pressable>
+            <Pressable style={styles.editMenu} onPress={toggleEditMode}>
+              <Feather name="edit-3" size={24} color={colors.lightBrown} />
             </Pressable>
           </View>
         )}
@@ -216,12 +215,14 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 25,
     marginTop: 20,
-    backgroundColor: "#faeeee",
+    backgroundColor: colors.offWhite,
     paddingBottom: 10,
   },
   recipeCard: {
-    padding: 10,
-    marginTop: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   weekDayContainer: {
     backgroundColor: colors.pink,
@@ -229,14 +230,15 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     borderBottomColor: colors.lightBrown,
     borderBottomWidth: 2,
+    marginBottom: 10,
   },
 
   weekDay: {
     fontSize: 20,
     paddingTop: 5,
     paddingBottom: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
     fontFamily: "ShantellSans-SemiBold",
     color: colors.darkBrown,
   },
@@ -258,10 +260,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingVertical: 15,
     paddingHorizontal: 20,
-    borderRadius: 15,
-    backgroundColor: "#dbeed0",
-    borderColor: "gray",
-    borderWidth: 1,
+    borderRadius: 20,
+    backgroundColor: colors.orange,
+    borderColor: colors.lightBrown,
+    borderWidth: 2,
   },
   editMenu: {
     alignItems: "center",
@@ -270,10 +272,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingVertical: 15,
     paddingHorizontal: 20,
-    borderRadius: 15,
-    backgroundColor: "#dbeed0",
-    borderColor: "gray",
-    borderWidth: 1,
+    borderRadius: 20,
+    backgroundColor: colors.orange,
+    borderColor: colors.lightBrown,
+    borderWidth: 2,
   },
   buttonText: {
     fontSize: 16,
