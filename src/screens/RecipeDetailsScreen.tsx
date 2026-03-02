@@ -56,17 +56,20 @@ const EditableField = ({
 }: EditableFieldProps) => {
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(fieldsRef.current[field] ?? "");
+  const [focused, setFocused] = useState(false);
 
   if (editing) {
     return (
       <TextInput
         value={text}
         onChangeText={setText}
+        onFocus={() => setFocused(true)}
         onBlur={() => {
           if (text.trim().length > 0) {
             fieldsRef.current[field] = text;
             onSave(field, text);
             setEditing(false);
+            setFocused(false);
           }
         }}
         autoFocus
@@ -79,6 +82,7 @@ const EditableField = ({
             minHeight: 100,
             textAlignVertical: "top",
           },
+          focused && styles.inputFocused,
         ]}
       />
     );
@@ -141,21 +145,21 @@ const RecipeDetailsScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView>
-      <View style={styles.buttonContainer}>
-        <Pressable
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Feather name="arrow-left" size={24} color={colors.darkBrown} />
-          <Text style={styles.buttonText}>Volver</Text>
-        </Pressable>
-        <Pressable style={styles.buttonDelete} onPress={handleDelete}>
-          <Ionicons name="trash" size={24} color={colors.darkBrown} />
-        </Pressable>
-      </View>
-
+    <ScrollView style={{ backgroundColor: colors.offWhite }}>
       <SafeAreaView style={styles.detailsContainer}>
+        <View style={styles.buttonContainer}>
+          <Pressable
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Feather name="arrow-left" size={24} color={colors.darkBrown} />
+            <Text style={styles.buttonText}>Volver</Text>
+          </Pressable>
+          <Pressable style={styles.buttonDelete} onPress={handleDelete}>
+            <Ionicons name="trash" size={24} color={colors.darkBrown} />
+          </Pressable>
+        </View>
+
         <EditableField
           field="name"
           fieldsRef={fieldsRef}
@@ -164,15 +168,7 @@ const RecipeDetailsScreen: React.FC = () => {
           style={styles.modalTitle}
         />
 
-        <EditableField
-          field="description"
-          fieldsRef={fieldsRef}
-          onSave={handleFieldSave}
-          placeholder="Descripción"
-          style={styles.modalDescription}
-        />
-
-        <Text style={styles.modalSectionTitle}>Tipo de comida</Text>
+        <Text style={styles.sectionHeader}>Tipo de comida</Text>
         <View style={styles.chipContainer}>
           {currentRecipe.mealTypes.map((mt) => (
             <Chip key={mt.id} style={styles.chip}>
@@ -181,7 +177,7 @@ const RecipeDetailsScreen: React.FC = () => {
           ))}
         </View>
 
-        <Text style={styles.modalSectionTitle}>Categoría</Text>
+        <Text style={styles.sectionHeader}>Categoría</Text>
         <View style={styles.chipContainer}>
           {currentRecipe.labels.map((l) => (
             <Chip key={l.id} style={styles.chip}>
@@ -190,22 +186,22 @@ const RecipeDetailsScreen: React.FC = () => {
           ))}
         </View>
 
-        <Text style={styles.modalSectionTitle}>Ingredientes</Text>
+        <Text style={styles.sectionHeader}>Ingredientes</Text>
         <EditableField
           field="ingredients"
           fieldsRef={fieldsRef}
           onSave={handleFieldSave}
           placeholder="Ingredientes"
-          style={styles.modalText}
+          style={styles.detailsText}
         />
 
-        <Text style={styles.modalSectionTitle}>Pasos</Text>
+        <Text style={styles.sectionHeader}>Pasos</Text>
         <EditableField
           field="steps"
           fieldsRef={fieldsRef}
           onSave={handleFieldSave}
           placeholder="Pasos"
-          style={styles.modalText}
+          style={styles.detailsText}
         />
       </SafeAreaView>
     </ScrollView>
@@ -218,9 +214,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 20,
-    marginHorizontal: 10,
     alignItems: "center",
+    width: "100%",
   },
   buttonDelete: {
     flexDirection: "row",
@@ -240,7 +235,7 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     alignItems: "center",
-    backgroundColor: colors.offWhite,
+    marginHorizontal: 20,
   },
   modalTitle: {
     fontSize: 24,
@@ -254,18 +249,20 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontFamily: "ShantellSans-Regular",
   },
-  modalSectionTitle: {
+  sectionHeader: {
     fontSize: 20,
     color: "#333",
     marginTop: 10,
     marginBottom: 6,
     fontFamily: "ShantellSans-SemiBold",
   },
-  modalText: {
+  detailsText: {
     fontSize: 16,
-    color: "#555",
-    textAlign: "center",
+    color: colors.darkBrown,
+    textAlign: "left",
+    padding: 10,
     marginBottom: 10,
+    marginHorizontal: 20,
     fontFamily: "ShantellSans-Regular",
   },
   chipContainer: {
@@ -276,5 +273,11 @@ const styles = StyleSheet.create({
   },
   chip: {
     margin: 4,
+  },
+  inputFocused: {
+    borderWidth: 1,
+    borderColor: colors.darkOrange,
+    borderRadius: 15,
+    paddingHorizontal: 10,
   },
 });
