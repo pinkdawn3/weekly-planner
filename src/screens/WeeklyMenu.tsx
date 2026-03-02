@@ -11,7 +11,7 @@ import {
 } from "../services/database.service";
 import MenuGenerator from "../components/MenuGenerator";
 import { colors } from "../theme/colors";
-import { Entypo, Feather, Ionicons } from "@expo/vector-icons";
+import { Entypo, Feather } from "@expo/vector-icons";
 
 const daysOfWeekOrder = [
   "Monday",
@@ -45,11 +45,15 @@ const WeeklyMenu = () => {
   const showMenuGeneratorModal = () => setMenuGeneratorVisible(true);
 
   const containerStyle = {
-    backgroundColor: "white",
+    backgroundColor: colors.offWhite,
     padding: 30,
     margin: 20,
-    borderRadius: 10,
+    borderRadius: 25,
+    borderColor: colors.lightBrown,
+    borderWidth: 2,
   };
+
+  const cardStyle = editMode ? styles.dayCardEdit : styles.dayCard;
 
   const handleRecipeChange = (newRecipe: Recipe) => {
     if (selectedMenuRecipe && currentMenu && currentMenu.recipes) {
@@ -130,7 +134,15 @@ const WeeklyMenu = () => {
               <Entypo name="plus" size={24} color={colors.lightBrown} />
             </Pressable>
             <Pressable style={styles.editMenu} onPress={toggleEditMode}>
-              <Feather name="edit-3" size={24} color={colors.lightBrown} />
+              {editMode ? (
+                <Feather
+                  name="check-circle"
+                  size={24}
+                  color={colors.lightBrown}
+                />
+              ) : (
+                <Feather name="edit-3" size={24} color={colors.lightBrown} />
+              )}
             </Pressable>
           </View>
         )}
@@ -141,7 +153,7 @@ const WeeklyMenu = () => {
             contentContainerStyle={{ paddingHorizontal: 30, paddingBottom: 30 }}
           >
             {Object.entries(recipesByDay).map(([day, recipes]) => (
-              <View key={day} style={styles.dayCard}>
+              <View key={day} style={cardStyle}>
                 <View style={styles.weekDayContainer}>
                   <Text style={styles.weekDay}>{day}</Text>
                 </View>
@@ -175,12 +187,33 @@ const WeeklyMenu = () => {
             placeholder="Buscar..."
             onChangeText={setSearchText}
             value={searchText}
+            style={{
+              borderColor: colors.lightBrown,
+              borderWidth: 2,
+            }}
+            inputStyle={{
+              color: colors.darkBrown,
+              fontFamily: "ShantellSans-Regular",
+            }}
+            theme={{
+              colors: {
+                onSurface: colors.lightBrown,
+                onSurfaceVariant: colors.lightBrown,
+              },
+            }}
           />
           <ScrollView>
             {filteredRecipes.map((recipe, index) => (
               <Pressable key={index} onPress={() => handleRecipeChange(recipe)}>
                 <View style={styles.recipeCard}>
-                  <Text>{recipe.name}</Text>
+                  <Text
+                    style={{
+                      color: colors.lightBrown,
+                      fontFamily: "ShantellSans-Regular",
+                    }}
+                  >
+                    {recipe.name}
+                  </Text>
                 </View>
               </Pressable>
             ))}
@@ -218,11 +251,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.offWhite,
     paddingBottom: 10,
   },
-  recipeCard: {
-    paddingLeft: 15,
-    paddingRight: 15,
-    paddingTop: 10,
+  dayCardEdit: {
+    borderColor: colors.lightBrown,
+    borderWidth: 2,
+    borderRadius: 25,
+    marginTop: 20,
+    backgroundColor: colors.offWhite,
     paddingBottom: 10,
+    elevation: 10,
+  },
+  recipeCard: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
   },
   weekDayContainer: {
     backgroundColor: colors.pink,

@@ -9,6 +9,7 @@ import {
   getLastMenu,
   getLastMenus,
 } from "../services/database.service";
+import { colors } from "../theme/colors";
 
 interface MenuGeneratorProps {
   onCloseModal: () => void;
@@ -225,7 +226,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: "ShantellSans-SemiBold",
     color: "#333",
     marginBottom: 8,
     marginTop: 10,
@@ -237,10 +238,17 @@ const styles = StyleSheet.create({
   },
   chip: {
     margin: 4,
+    backgroundColor: colors.blue,
+    borderWidth: 1.5,
+    borderRadius: 12,
+    borderColor: colors.lightBrown,
+    fontFamily: "ShantellSans-Regular",
   },
   input: {
     marginBottom: 10,
     backgroundColor: "white",
+    borderRadius: 12,
+    fontFamily: "ShantellSans-Regular",
   },
   button: {
     marginTop: 20,
@@ -248,17 +256,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 32,
-    borderRadius: 10,
-    backgroundColor: "#f28966",
-    borderWidth: 1,
-    borderColor: "gray",
+    borderRadius: 15,
+    backgroundColor: colors.orange,
+    borderWidth: 2,
+    borderColor: colors.lightBrown,
   },
   buttonText: {
     fontSize: 16,
     lineHeight: 21,
-    fontWeight: "bold",
+    fontFamily: "ShantellSans-SemiBold",
     letterSpacing: 0.25,
-    color: "black",
+    color: colors.lightBrown,
   },
   disabledButton: {
     backgroundColor: "gray",

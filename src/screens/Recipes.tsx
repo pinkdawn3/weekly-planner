@@ -2,16 +2,16 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useContext, useState } from "react";
 import { RecipeContext } from "../contexts/RecipeContext";
 import { Modal, Portal, Searchbar } from "react-native-paper";
-import { Ionicons } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import AddRecipe from "../components/Recipes/AddRecipe";
 import { Recipe } from "../types/RecipeType";
-import { navigate } from "../navigation/NavigationContainer";
 import { createRecipe, getAllRecipes } from "../services/database.service";
 import ManageMealTypes from "../components/MenuSettings/ManageMealTypes";
 import ManageLabels from "../components/MenuSettings/ManageLabel";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
+import { colors } from "../theme/colors";
 
 const Recipes = () => {
   const { recipes, setRecipes, mealTypes, setMealTypes, labels, setLabels } =
@@ -108,9 +108,21 @@ const Recipes = () => {
 
       {/* Search bar to search recipes by name */}
       <Searchbar
-        placeholder="Busque el nombre de una receta..."
+        placeholder="Buscar receta..."
         onChangeText={setSearchText}
         value={searchText}
+        style={{
+          borderWidth: 2,
+          borderColor: colors.lightBrown,
+          marginBottom: 10,
+        }}
+        inputStyle={{ color: colors.darkBrown }}
+        theme={{
+          colors: {
+            onSurface: colors.lightBrown,
+            onSurfaceVariant: colors.lightBrown,
+          },
+        }}
       />
 
       {/* Floating button to show the add recipe modal */}
@@ -121,7 +133,7 @@ const Recipes = () => {
           showAddModal();
         }}
       >
-        <Ionicons name="add-outline" size={20} color="white" />
+        <Entypo name="plus" size={24} color={colors.darkBrown} />
       </Pressable>
 
       {/* Scroll view to display filtered recipes */}
@@ -130,7 +142,6 @@ const Recipes = () => {
           filteredRecipes.map((recipe, index) => (
             <View key={index} style={styles.card}>
               <Text style={styles.title}>{recipe.name}</Text>
-              <Text style={styles.description}>{recipe.description}</Text>
               <Pressable onPress={() => showDetailsScreen(recipe)}>
                 <Text style={styles.detailsLink}>Ver detalles</Text>
               </Pressable>
@@ -149,38 +160,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: colors.yellow,
   },
   card: {
     width: "100%",
-    backgroundColor: "#fff",
-    borderRadius: 8,
+    backgroundColor: colors.offWhite,
+    borderRadius: 20,
     padding: 20,
     marginTop: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
+    borderWidth: 2,
+    borderColor: colors.lightBrown,
   },
   title: {
     fontSize: 22,
-    fontWeight: "bold",
-    color: "#333",
+    fontFamily: "ShantellSans-SemiBold",
+    color: colors.darkBrown,
     marginBottom: 8,
-  },
-  description: {
-    fontSize: 16,
-    color: "#666",
-    marginBottom: 12,
   },
   floatingButtonContainer: {
     position: "absolute",
     bottom: 50,
     right: 30,
     padding: 15,
-    backgroundColor: "#f28966",
+    backgroundColor: colors.darkOrange,
     borderRadius: 50,
+    borderColor: colors.lightBrown,
+    borderWidth: 2,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -189,11 +194,12 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   detailsLink: {
-    color: "green",
+    color: colors.darkOrange,
+    fontFamily: "ShantellSans-Regular",
     marginTop: 10,
   },
   modalContainer: {
-    backgroundColor: "white",
+    backgroundColor: colors.offWhite,
     padding: 20,
     marginHorizontal: 20,
     borderRadius: 10,
@@ -230,24 +236,24 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 10,
   },
-  // estilos
+
   configButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 10,
+    marginBottom: 20,
   },
   configButton: {
     flex: 1,
     marginHorizontal: 5,
     paddingVertical: 8,
     alignItems: "center",
-    borderRadius: 8,
+    borderRadius: 20,
     backgroundColor: "#dbeed0",
-    borderColor: "gray",
-    borderWidth: 1,
+    borderColor: colors.lightBrown,
+    borderWidth: 2,
   },
   configButtonText: {
-    fontWeight: "bold",
-    color: "black",
+    fontFamily: "ShantellSans-Regular",
+    color: colors.darkBrown,
   },
 });
