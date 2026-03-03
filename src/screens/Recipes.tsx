@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import { RecipeContext } from "../contexts/RecipeContext";
 import { Modal, Portal, Searchbar } from "react-native-paper";
 import { Entypo } from "@expo/vector-icons";
-import AddRecipe from "../components/Recipes/AddRecipe";
+import AddRecipe from "./AddRecipe";
 import { Recipe } from "../types/RecipeType";
 import { createRecipe, getAllRecipes } from "../services/database.service";
 import ManageMealTypes from "../components/MenuSettings/ManageMealTypes";
@@ -14,46 +14,32 @@ import { RootStackParamList } from "../navigation/RootNavigator";
 import { colors } from "../theme/colors";
 
 const Recipes = () => {
-  const { recipes, setRecipes, mealTypes, setMealTypes, labels, setLabels } =
+  const { recipes, mealTypes, setMealTypes, labels, setLabels } =
     useContext(RecipeContext);
 
   const [mealTypesVisible, setMealTypesVisible] = useState(false);
   const [labelsVisible, setLabelsVisible] = useState(false);
 
-  // States that manage the selected recipe, the text to search and the visibility of the modals
-  const [addRecipeVisible, setAddRecipeVisible] = useState(false);
-
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
-  const [searchText, setSearchText] = useState("");
-
-  // Functions to show and hide the "AddRecipe" modal
-  const showAddModal = () => setAddRecipeVisible(true);
-  const hideAddModal = () => setAddRecipeVisible(false);
-
-  // Functions to show and hide the "RecipeDetails" modal
+  // Navigation for Details and AddRecipe screens
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const showDetailsScreen = (recipe: Recipe) => {
     navigation.navigate("RecipeDetailsScreen", { recipe });
   };
 
+  const showAddRecipeScreen = () => {
+    navigation.navigate("AddRecipe");
+  };
+
   const containerStyle = { backgroundColor: "white", margin: 40, padding: 20 };
 
   // Function that filters the recipes based on the input text
+  const [searchText, setSearchText] = useState("");
+
   const searchRecipe = () => {
     return recipes.filter((recipe) =>
       recipe.name.toLowerCase().includes(searchText.toLowerCase()),
     );
-  };
-
-  const handleSaveRecipe = (newRecipe: Recipe) => {
-    try {
-      createRecipe(newRecipe);
-      const retrievedRecipes = getAllRecipes();
-      setRecipes(retrievedRecipes);
-    } catch (error) {
-      console.error("Error saving recipe:", error);
-    }
   };
 
   const filteredRecipes = searchRecipe();
@@ -61,7 +47,7 @@ const Recipes = () => {
   return (
     <View style={styles.container}>
       <Portal>
-        {/* Modal for adding or editing a recipe */}
+        {/* Modals for editing meal types and meal labels */}
         <Modal
           visible={mealTypesVisible}
           onDismiss={() => setMealTypesVisible(false)}
@@ -77,20 +63,9 @@ const Recipes = () => {
         >
           <ManageLabels labels={labels} onUpdate={setLabels} />
         </Modal>
-
-        <Modal
-          visible={addRecipeVisible}
-          onDismiss={hideAddModal}
-          contentContainerStyle={containerStyle}
-        >
-          <AddRecipe
-            initialRecipe={selectedRecipe}
-            onClose={hideAddModal}
-            onSave={handleSaveRecipe}
-          />
-        </Modal>
       </Portal>
 
+      {/* Buttons for editing meal types and meal labels */}
       <View style={styles.configButtons}>
         <Pressable
           style={styles.configButton}
@@ -129,8 +104,7 @@ const Recipes = () => {
       <Pressable
         style={styles.floatingButtonContainer}
         onPress={() => {
-          setSelectedRecipe(null);
-          showAddModal();
+          showAddRecipeScreen();
         }}
       >
         <Entypo name="plus" size={24} color={colors.darkBrown} />

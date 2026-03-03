@@ -1,24 +1,18 @@
 import { StyleSheet, View, Text, Pressable, ScrollView } from "react-native";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { TextInput, Chip } from "react-native-paper";
-import { Recipe, MealType, Label } from "../../types/RecipeType";
-import { RecipeContext } from "../../contexts/RecipeContext";
+import { Recipe, MealType, Label } from "../types/RecipeType";
+import { RecipeContext } from "../contexts/RecipeContext";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../navigation/RootNavigator";
+import { createRecipe, getAllRecipes } from "../services/database.service";
 
-interface AddRecipeProps {
-  initialRecipe?: Recipe | null;
-  onClose: () => void;
-  onSave?: (recipe: Recipe) => void;
-  onEdit?: (recipe: Recipe) => void;
-}
+type AddRecipeNavProp = StackNavigationProp<RootStackParamList, "AddRecipe">;
 
-const AddRecipe: React.FC<AddRecipeProps> = ({
-  initialRecipe,
-  onClose,
-  onSave,
-  onEdit,
-}) => {
-  const { mealTypes, labels } = useContext(RecipeContext);
-  const isEditing = Boolean(initialRecipe);
+const AddRecipe: React.FC = () => {
+  const { mealTypes, labels, setRecipes } = useContext(RecipeContext);
+  const navigation = useNavigation<AddRecipeNavProp>();
 
   const [recipe, setRecipe] = React.useState<Recipe>({
     id: undefined,
@@ -30,19 +24,10 @@ const AddRecipe: React.FC<AddRecipeProps> = ({
     labels: [],
   });
 
-  useEffect(() => {
-    if (initialRecipe) {
-      setRecipe(initialRecipe);
-    }
-  }, [initialRecipe]);
-
   const handleSave = () => {
-    if (isEditing && onEdit) {
-      onEdit(recipe);
-    } else if (!isEditing && onSave) {
-      onSave(recipe);
-    }
-    onClose();
+    createRecipe(recipe);
+    setRecipes(getAllRecipes());
+    navigation.goBack();
   };
 
   const toggleMealType = (mealType: MealType) => {

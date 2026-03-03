@@ -4,7 +4,6 @@ import {
   MD3LightTheme,
   PaperProvider,
 } from "react-native-paper";
-import { KeyboardAvoidingView, Platform } from "react-native";
 import React from "react";
 import Header from "./src/header/Header";
 import RecipeProvider from "./src/providers/RecipeProvider";
@@ -54,14 +53,8 @@ export default function App() {
       <AppNavigationContainer>
         <RecipeProvider>
           <PaperProvider theme={theme}>
-            <KeyboardAvoidingView
-              style={{ flex: 1 }}
-              behavior={Platform.OS === "ios" ? "padding" : "height"}
-              keyboardVerticalOffset={20}
-            >
-              <Header />
-              <RootNavigator />
-            </KeyboardAvoidingView>
+            <Header />
+            <RootNavigator />
           </PaperProvider>
         </RecipeProvider>
       </AppNavigationContainer>
