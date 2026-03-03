@@ -12,8 +12,8 @@ export type Recipe = {
   id: number | undefined;
   name: string;
   description: string;
-  ingredients: string;
-  steps: string;
+  ingredients: string[];
+  steps: string[];
   mealTypes: MealType[];
   labels: Label[];
 };

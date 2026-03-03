@@ -24,8 +24,8 @@ const AddRecipe: React.FC<AddRecipeProps> = ({
     id: undefined,
     name: "",
     description: "",
-    ingredients: "",
-    steps: "",
+    ingredients: [],
+    steps: [],
     mealTypes: [],
     labels: [],
   });
@@ -127,31 +127,102 @@ const AddRecipe: React.FC<AddRecipeProps> = ({
         </View>
 
         <Text style={styles.label}>Ingredientes</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Inserte ingredientes..."
-          value={recipe.ingredients}
-          onChangeText={(text) =>
-            setRecipe((prev) => ({ ...prev, ingredients: text }))
+        {recipe.ingredients.map((ingredient, index) => (
+          <View
+            key={index}
+            style={{ flexDirection: "row", alignItems: "center" }}
+          >
+            <TextInput
+              style={[styles.input, { flex: 1 }]}
+              placeholder="Añadir ingrediente..."
+              value={ingredient}
+              onChangeText={(text) =>
+                setRecipe((prev) => {
+                  const newIngredients = [...prev.ingredients];
+                  newIngredients[index] = text;
+                  return { ...prev, ingredients: newIngredients };
+                })
+              }
+              onBlur={() => {
+                if (!ingredient.trim()) {
+                  setRecipe((prev) => ({
+                    ...prev,
+                    ingredients: prev.ingredients.filter((_, i) => i !== index),
+                  }));
+                }
+              }}
+            />
+            <Pressable
+              onPress={() =>
+                setRecipe((prev) => ({
+                  ...prev,
+                  ingredients: prev.ingredients.filter((_, i) => i !== index),
+                }))
+              }
+            >
+              <Text>🗑</Text>
+            </Pressable>
+          </View>
+        ))}
+        <Pressable
+          onPress={() =>
+            setRecipe((prev) => ({
+              ...prev,
+              ingredients: [...prev.ingredients, ""],
+            }))
           }
-          multiline
-        />
+        >
+          <Text>+ Añadir ingrediente</Text>
+        </Pressable>
 
         <Text style={styles.label}>Pasos</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Inserte pasos..."
-          value={recipe.steps}
-          onChangeText={(text) =>
-            setRecipe((prev) => ({ ...prev, steps: text }))
+        {recipe.steps.map((step, index) => (
+          <View
+            key={index}
+            style={{ flexDirection: "row", alignItems: "center" }}
+          >
+            <TextInput
+              style={[styles.input, { flex: 1 }]}
+              placeholder="Inserte paso..."
+              value={step}
+              onChangeText={(text) =>
+                setRecipe((prev) => {
+                  const newSteps = [...prev.steps];
+                  newSteps[index] = text;
+                  return { ...prev, steps: newSteps };
+                })
+              }
+              onBlur={() => {
+                if (!step.trim()) {
+                  setRecipe((prev) => ({
+                    ...prev,
+                    ingredients: prev.ingredients.filter((_, i) => i !== index),
+                  }));
+                }
+              }}
+            />
+            <Pressable
+              onPress={() =>
+                setRecipe((prev) => ({
+                  ...prev,
+                  steps: prev.steps.filter((_, i) => i !== index),
+                }))
+              }
+            >
+              <Text>🗑</Text>
+            </Pressable>
+          </View>
+        ))}
+        <Pressable
+          onPress={() =>
+            setRecipe((prev) => ({ ...prev, steps: [...prev.steps, ""] }))
           }
-          multiline
-        />
+        >
+          <Text>+ Añadir paso</Text>
+        </Pressable>
 
         <Pressable style={styles.button} onPress={handleSave}>
-          <Text style={styles.buttonText}>
-            {isEditing ? "Guardar" : "Añadir"}
-          </Text>
+          <Text style={styles.buttonText}>Añadir</Text>
         </Pressable>
       </View>
     </ScrollView>

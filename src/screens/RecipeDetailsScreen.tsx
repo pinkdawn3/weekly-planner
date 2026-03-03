@@ -35,8 +35,6 @@ type RecipeDetailsScreenNavigationProp = StackNavigationProp<
 type RecipeFields = {
   name: string;
   description: string;
-  ingredients: string;
-  steps: string;
 };
 
 interface EditableFieldProps {
@@ -76,12 +74,7 @@ const EditableField = ({
         multiline
         style={[
           style,
-          {
-            borderWidth: 0,
-            padding: 0,
-            minHeight: 100,
-            textAlignVertical: "top",
-          },
+          { borderWidth: 0, padding: 0, textAlignVertical: "top" },
           focused && styles.inputFocused,
         ]}
       />
@@ -103,23 +96,82 @@ const EditableField = ({
   );
 };
 
+interface EditableArrayItemProps {
+  value: string;
+  onSave: (value: string) => void;
+  onDelete: () => void;
+  style?: any;
+}
+
+const EditableArrayItem = ({
+  value,
+  onSave,
+  onDelete,
+  style,
+}: EditableArrayItemProps) => {
+  const [editing, setEditing] = useState(!value);
+  const [text, setText] = useState(value);
+  const [focused, setFocused] = useState(false);
+
+  if (editing) {
+    return (
+      <View style={styles.arrayItemContainer}>
+        <TextInput
+          value={text}
+          onChangeText={setText}
+          onFocus={() => setFocused(true)}
+          onBlur={() => {
+            if (text.trim().length > 0) {
+              onSave(text);
+              setEditing(false);
+              setFocused(false);
+            } else {
+              setTimeout(() => onDelete(), 0);
+            }
+          }}
+          autoFocus
+          style={[
+            style,
+            { flex: 1, borderWidth: 0, padding: 0 },
+            focused && styles.inputFocused,
+          ]}
+        />
+        <Pressable onPress={onDelete}>
+          <Ionicons name="trash-outline" size={16} color={colors.darkOrange} />
+        </Pressable>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.arrayItemContainer}>
+      <Pressable style={{ flex: 1 }} onPress={() => setEditing(true)}>
+        <Text style={style}>{text}</Text>
+      </Pressable>
+      <Pressable onPress={onDelete}>
+        <Ionicons name="trash-outline" size={16} color={colors.darkOrange} />
+      </Pressable>
+    </View>
+  );
+};
+
 const RecipeDetailsScreen: React.FC = () => {
   const navigation = useNavigation<RecipeDetailsScreenNavigationProp>();
   const route = useRoute<RecipeDetailsScreenRouteProp>();
   const { setRecipes, setCurrentMenu } = useContext(RecipeContext);
 
-  const [currentRecipe, setCurrentRecipe] = useState<Recipe>(
-    route.params.recipe,
-  );
+  const [currentRecipe, setCurrentRecipe] = useState<Recipe>({
+    ...route.params.recipe,
+    ingredients: route.params.recipe.ingredients ?? [],
+    steps: route.params.recipe.steps ?? [],
+  });
 
   const fieldsRef = useRef<RecipeFields>({
     name: route.params.recipe.name ?? "",
     description: route.params.recipe.description ?? "",
-    ingredients: route.params.recipe.ingredients ?? "",
-    steps: route.params.recipe.steps ?? "",
   });
 
-  const handleFieldSave = (field: keyof RecipeFields, value: string) => {
+  const handleSave = (field: keyof Recipe, value: any) => {
     const updated = { ...currentRecipe, [field]: value };
     setCurrentRecipe(updated);
     try {
@@ -163,9 +215,17 @@ const RecipeDetailsScreen: React.FC = () => {
         <EditableField
           field="name"
           fieldsRef={fieldsRef}
-          onSave={handleFieldSave}
+          onSave={(field, value) => handleSave(field, value)}
           placeholder="Nombre"
           style={styles.modalTitle}
+        />
+
+        <EditableField
+          field="description"
+          fieldsRef={fieldsRef}
+          onSave={(field, value) => handleSave(field, value)}
+          placeholder="Añadir descripción"
+          style={styles.detailsText}
         />
 
         <Text style={styles.sectionHeader}>Tipo de comida</Text>
@@ -187,22 +247,56 @@ const RecipeDetailsScreen: React.FC = () => {
         </View>
 
         <Text style={styles.sectionHeader}>Ingredientes</Text>
-        <EditableField
-          field="ingredients"
-          fieldsRef={fieldsRef}
-          onSave={handleFieldSave}
-          placeholder="Ingredientes"
-          style={styles.detailsText}
-        />
+        {currentRecipe.ingredients.map((ingredient, index) => (
+          <EditableArrayItem
+            key={index}
+            value={ingredient}
+            onSave={(value) => {
+              const newArray = [...currentRecipe.ingredients];
+              newArray[index] = value;
+              handleSave("ingredients", newArray);
+            }}
+            onDelete={() =>
+              handleSave(
+                "ingredients",
+                currentRecipe.ingredients.filter((_, i) => i !== index),
+              )
+            }
+            style={styles.detailsText}
+          />
+        ))}
+        <Pressable
+          onPress={() =>
+            handleSave("ingredients", [...currentRecipe.ingredients, ""])
+          }
+        >
+          <Text style={styles.addButton}>+ Añadir ingrediente</Text>
+        </Pressable>
 
         <Text style={styles.sectionHeader}>Pasos</Text>
-        <EditableField
-          field="steps"
-          fieldsRef={fieldsRef}
-          onSave={handleFieldSave}
-          placeholder="Pasos"
-          style={styles.detailsText}
-        />
+        {currentRecipe.steps.map((step, index) => (
+          <EditableArrayItem
+            key={index}
+            value={step}
+            onSave={(value) => {
+              const newArray = [...currentRecipe.steps];
+              newArray[index] = value;
+              handleSave("steps", newArray);
+            }}
+            onDelete={() =>
+              handleSave(
+                "steps",
+                currentRecipe.steps.filter((_, i) => i !== index),
+              )
+            }
+            style={styles.detailsText}
+          />
+        ))}
+        <Pressable
+          onPress={() => handleSave("steps", [...currentRecipe.steps, ""])}
+        >
+          <Text style={styles.addButton}>+ Añadir paso</Text>
+        </Pressable>
       </SafeAreaView>
     </ScrollView>
   );
@@ -243,12 +337,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontFamily: "ShantellSans-Bold",
   },
-  modalDescription: {
-    fontSize: 18,
-    color: "#666",
-    marginBottom: 20,
-    fontFamily: "ShantellSans-Regular",
-  },
   sectionHeader: {
     fontSize: 20,
     color: "#333",
@@ -262,7 +350,6 @@ const styles = StyleSheet.create({
     textAlign: "left",
     padding: 10,
     marginBottom: 10,
-    marginHorizontal: 20,
     fontFamily: "ShantellSans-Regular",
   },
   chipContainer: {
@@ -279,5 +366,15 @@ const styles = StyleSheet.create({
     borderColor: colors.darkOrange,
     borderRadius: 15,
     paddingHorizontal: 10,
+  },
+  arrayItemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+  },
+  addButton: {
+    color: colors.orange,
+    fontFamily: "ShantellSans-Regular",
+    marginVertical: 8,
   },
 });

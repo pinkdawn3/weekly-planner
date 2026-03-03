@@ -128,14 +128,27 @@ export const getAllRecipes = (): Recipe[] => {
        WHERE rl.recipe_id = ?`,
       [recipe.id!],
     );
-    return { ...recipe, mealTypes, labels };
+    return {
+      ...recipe,
+      ingredients: JSON.parse(
+        (recipe.ingredients as unknown as string) || "[]",
+      ),
+      steps: JSON.parse((recipe.steps as unknown as string) || "[]"),
+      mealTypes,
+      labels,
+    };
   });
 };
 
 export const createRecipe = (recipe: Recipe): void => {
   db.runSync(
     "INSERT INTO recipes (name, description, ingredients, steps) VALUES (?, ?, ?, ?)",
-    [recipe.name, recipe.description, recipe.ingredients, recipe.steps],
+    [
+      recipe.name,
+      recipe.description,
+      JSON.stringify(recipe.ingredients),
+      JSON.stringify(recipe.steps),
+    ],
   );
 
   const newRecipe = db.getFirstSync<{ id: number }>(
@@ -166,9 +179,8 @@ export const updateRecipe = (recipe: Recipe): void => {
     [
       recipe.name,
       recipe.description,
-      recipe.ingredients,
-      recipe.steps,
-      recipe.id,
+      JSON.stringify(recipe.ingredients),
+      JSON.stringify(recipe.steps),
     ],
   );
 
@@ -238,7 +250,15 @@ export const getLastMenu = (): Menu | null => {
     )!;
 
     return {
-      recipe: { ...recipe, mealTypes, labels },
+      recipe: {
+        ...recipe,
+        ingredients: JSON.parse(
+          (recipe.ingredients as unknown as string) || "[]",
+        ),
+        steps: JSON.parse((recipe.steps as unknown as string) || "[]"),
+        mealTypes,
+        labels,
+      },
       mealType,
       weekDay: mr.week_day,
     };
@@ -289,7 +309,15 @@ export const getLastMenus = (count: number): Menu[] => {
       )!;
 
       return {
-        recipe: { ...recipe, mealTypes, labels },
+        recipe: {
+          ...recipe,
+          ingredients: JSON.parse(
+            (recipe.ingredients as unknown as string) || "[]",
+          ),
+          steps: JSON.parse((recipe.steps as unknown as string) || "[]"),
+          mealTypes,
+          labels,
+        },
         mealType,
         weekDay: mr.week_day,
       };
