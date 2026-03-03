@@ -22,7 +22,6 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../theme/colors";
 import { Chip } from "react-native-paper";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 type RecipeDetailsScreenRouteProp = RouteProp<
   RootStackParamList,
@@ -198,10 +197,7 @@ const RecipeDetailsScreen: React.FC = () => {
   };
 
   return (
-    <KeyboardAwareScrollView
-      extraScrollHeight={20}
-      style={{ backgroundColor: colors.offWhite }}
-    >
+    <ScrollView style={{ backgroundColor: colors.offWhite }}>
       <SafeAreaView style={styles.detailsContainer}>
         <View style={styles.buttonContainer}>
           <Pressable
@@ -302,7 +298,7 @@ const RecipeDetailsScreen: React.FC = () => {
           <Text style={styles.addButton}>+ Añadir paso</Text>
         </Pressable>
       </SafeAreaView>
-    </KeyboardAwareScrollView>
+    </ScrollView>
   );
 };
 

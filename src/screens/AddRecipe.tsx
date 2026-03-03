@@ -1,12 +1,24 @@
-import { StyleSheet, View, Text, Pressable, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+  ScrollView,
+  TextInput,
+} from "react-native";
 import React, { useContext } from "react";
-import { TextInput, Chip } from "react-native-paper";
+import { Chip } from "react-native-paper";
 import { Recipe, MealType, Label } from "../types/RecipeType";
 import { RecipeContext } from "../contexts/RecipeContext";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
 import { createRecipe, getAllRecipes } from "../services/database.service";
+import { colors } from "../theme/colors";
+import { Entypo } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 
 type AddRecipeNavProp = StackNavigationProp<RootStackParamList, "AddRecipe">;
 
@@ -14,202 +26,262 @@ const AddRecipe: React.FC = () => {
   const { mealTypes, labels, setRecipes } = useContext(RecipeContext);
   const navigation = useNavigation<AddRecipeNavProp>();
 
-  const [recipe, setRecipe] = React.useState<Recipe>({
-    id: undefined,
-    name: "",
-    description: "",
-    ingredients: [],
-    steps: [],
-    mealTypes: [],
-    labels: [],
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<Recipe>({
+    defaultValues: {
+      name: "",
+      ingredients: [],
+      steps: [],
+      mealTypes: [],
+      labels: [],
+    },
   });
 
-  const handleSave = () => {
-    createRecipe(recipe);
+  const ingredients = watch("ingredients");
+  const appendIngredient = () => setValue("ingredients", [...ingredients, ""]);
+  const removeIngredient = (index: number) =>
+    setValue(
+      "ingredients",
+      ingredients.filter((_, i) => i !== index),
+    );
+
+  const steps = watch("steps");
+  const appendStep = () => setValue("steps", [...steps, ""]);
+  const removeStep = (index: number) =>
+    setValue(
+      "steps",
+      steps.filter((_, i) => i !== index),
+    );
+
+  const onSubmit = (data: Recipe) => {
+    createRecipe(data);
     setRecipes(getAllRecipes());
     navigation.goBack();
   };
 
-  const toggleMealType = (mealType: MealType) => {
-    const exists = recipe.mealTypes.some((mt) => mt.id === mealType.id);
-    if (exists) {
-      setRecipe((prev) => ({
-        ...prev,
-        mealTypes: prev.mealTypes.filter((mt) => mt.id !== mealType.id),
-      }));
-    } else {
-      setRecipe((prev) => ({
-        ...prev,
-        mealTypes: [...prev.mealTypes, mealType],
-      }));
-    }
-  };
-
-  const toggleLabel = (label: Label) => {
-    const exists = recipe.labels.some((l) => l.id === label.id);
-    if (exists) {
-      setRecipe((prev) => ({
-        ...prev,
-        labels: prev.labels.filter((l) => l.id !== label.id),
-      }));
-    } else {
-      setRecipe((prev) => ({
-        ...prev,
-        labels: [...prev.labels, label],
-      }));
-    }
-  };
-
   return (
-    <ScrollView>
-      <View>
+    <ScrollView style={styles.container}>
+      <SafeAreaView>
         <Text style={styles.label}>Nombre</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Inserte nombre..."
-          value={recipe.name}
-          onChangeText={(text) =>
-            setRecipe((prev) => ({ ...prev, name: text }))
-          }
+        <Controller
+          name="name"
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              placeholder="Añadir nombre..."
+              placeholderTextColor={colors.lightBrown}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              style={styles.input}
+            />
+          )}
         />
-
-        <Text style={styles.label}>Descripción</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Inserte descripción..."
-          value={recipe.description}
-          onChangeText={(text) =>
-            setRecipe((prev) => ({ ...prev, description: text }))
-          }
-        />
+        {errors.name && <Text>This is required.</Text>}
 
         <Text style={styles.label}>Tipo de comida</Text>
         <View style={styles.chipContainer}>
-          {mealTypes.map((mt) => (
-            <Chip
-              key={mt.id}
-              selected={recipe.mealTypes.some((r) => r.id === mt.id)}
-              onPress={() => toggleMealType(mt)}
-              style={styles.chip}
-            >
-              {mt.name}
-            </Chip>
-          ))}
+          <Controller
+            name="mealTypes"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { onChange, value } }) => (
+              <View style={styles.chipContainer}>
+                {mealTypes.map((mt) => {
+                  const isSelected = value?.some((v) => v.id === mt.id);
+                  return (
+                    <Chip
+                      key={mt.id}
+                      selected={isSelected}
+                      onPress={() => {
+                        const newValue = isSelected
+                          ? value.filter((v) => v.id !== mt.id)
+                          : [...(value || []), mt];
+                        onChange(newValue);
+                      }}
+                      style={styles.chip}
+                    >
+                      {mt.name}
+                    </Chip>
+                  );
+                })}
+              </View>
+            )}
+          />
         </View>
-
         <Text style={styles.label}>Categoría</Text>
         <View style={styles.chipContainer}>
-          {labels.map((l) => (
-            <Chip
-              key={l.id}
-              selected={recipe.labels.some((r) => r.id === l.id)}
-              onPress={() => toggleLabel(l)}
-              style={styles.chip}
-            >
-              {l.name}
-            </Chip>
-          ))}
+          <Controller
+            name="labels"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { onChange, value } }) => (
+              <View style={styles.chipContainer}>
+                {labels.map((label) => {
+                  const isSelected = value?.some((v) => v.id === label.id);
+                  return (
+                    <Chip
+                      key={label.id}
+                      selected={isSelected}
+                      onPress={() => {
+                        const newValue = isSelected
+                          ? value.filter((v) => v.id !== label.id)
+                          : [...(value || []), label];
+                        onChange(newValue); //
+                      }}
+                      style={styles.chip}
+                    >
+                      {label.name}
+                    </Chip>
+                  );
+                })}
+              </View>
+            )}
+          />
         </View>
-
+        {/* Ingredientes */}
         <Text style={styles.label}>Ingredientes</Text>
-        {recipe.ingredients.map((ingredient, index) => (
-          <View
+
+        {ingredients.map((ingredient, index) => (
+          <Controller
             key={index}
-            style={{ flexDirection: "row", alignItems: "center" }}
-          >
-            <TextInput
-              style={[styles.input, { flex: 1 }]}
-              placeholder="Añadir ingrediente..."
-              value={ingredient}
-              onChangeText={(text) =>
-                setRecipe((prev) => {
-                  const newIngredients = [...prev.ingredients];
-                  newIngredients[index] = text;
-                  return { ...prev, ingredients: newIngredients };
-                })
-              }
-              onBlur={() => {
-                if (!ingredient.trim()) {
-                  setRecipe((prev) => ({
-                    ...prev,
-                    ingredients: prev.ingredients.filter((_, i) => i !== index),
-                  }));
-                }
-              }}
-            />
-            <Pressable
-              onPress={() =>
-                setRecipe((prev) => ({
-                  ...prev,
-                  ingredients: prev.ingredients.filter((_, i) => i !== index),
-                }))
-              }
-            >
-              <Text>🗑</Text>
-            </Pressable>
-          </View>
+            name={`ingredients.${index}`}
+            control={control}
+            rules={{
+              required: false,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <View
+                key={index}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 10,
+                }}
+              >
+                {/* Padding bottom to match the native padding of the text input
+            component */}
+                <View style={{ paddingBottom: 15 }}>
+                  <Entypo
+                    name="triangle-right"
+                    size={24}
+                    color={colors.lightBrown}
+                  />
+                </View>
+                <TextInput
+                  style={[styles.input, { flex: 1 }]}
+                  placeholder="Añadir ingrediente..."
+                  value={value}
+                  autoFocus
+                  onChangeText={onChange}
+                  onBlur={() => {
+                    if (!ingredient.trim()) {
+                      onBlur();
+                    }
+                  }}
+                />
+                <Pressable onPress={() => removeIngredient(index)}>
+                  <View style={{ paddingBottom: 15 }}>
+                    <Entypo name="trash" size={24} color={colors.lightBrown} />
+                  </View>
+                </Pressable>
+              </View>
+            )}
+          />
         ))}
+        {/*  Boton para añadir ingrediente */}
         <Pressable
-          onPress={() =>
-            setRecipe((prev) => ({
-              ...prev,
-              ingredients: [...prev.ingredients, ""],
-            }))
-          }
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onPress={appendIngredient}
         >
-          <Text>+ Añadir ingrediente</Text>
+          <Entypo
+            name="plus"
+            size={24}
+            color={colors.lightBrown}
+            style={styles.addButton}
+          />
+          <Text style={styles.text}>Añadir ingrediente</Text>
         </Pressable>
 
+        {/* Pasos */}
         <Text style={styles.label}>Pasos</Text>
-        {recipe.steps.map((step, index) => (
-          <View
+        {steps.map((step, index) => (
+          <Controller
             key={index}
-            style={{ flexDirection: "row", alignItems: "center" }}
-          >
-            <TextInput
-              style={[styles.input, { flex: 1 }]}
-              placeholder="Inserte paso..."
-              value={step}
-              onChangeText={(text) =>
-                setRecipe((prev) => {
-                  const newSteps = [...prev.steps];
-                  newSteps[index] = text;
-                  return { ...prev, steps: newSteps };
-                })
-              }
-              onBlur={() => {
-                if (!step.trim()) {
-                  setRecipe((prev) => ({
-                    ...prev,
-                    ingredients: prev.ingredients.filter((_, i) => i !== index),
-                  }));
-                }
-              }}
-            />
-            <Pressable
-              onPress={() =>
-                setRecipe((prev) => ({
-                  ...prev,
-                  steps: prev.steps.filter((_, i) => i !== index),
-                }))
-              }
-            >
-              <Text>🗑</Text>
-            </Pressable>
-          </View>
+            name={`steps.${index}`}
+            control={control}
+            rules={{
+              required: false,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <View
+                key={index}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 10,
+                }}
+              >
+                {/* Padding bottom to match the native padding of the text input
+            component */}
+                <View style={{ paddingBottom: 15 }}>
+                  <Text style={styles.enum}>{index + 1 + "."}</Text>
+                </View>
+                <TextInput
+                  style={[styles.input, { flex: 1 }]}
+                  placeholder="Añadir paso..."
+                  value={value}
+                  autoFocus
+                  multiline
+                  onChangeText={onChange}
+                  onBlur={() => {
+                    if (!step.trim()) {
+                      onBlur();
+                    }
+                  }}
+                />
+                <Pressable onPress={() => removeStep(index)}>
+                  <View style={{ paddingBottom: 15 }}>
+                    <Entypo name="trash" size={24} color={colors.lightBrown} />
+                  </View>
+                </Pressable>
+              </View>
+            )}
+          />
         ))}
         <Pressable
-          onPress={() =>
-            setRecipe((prev) => ({ ...prev, steps: [...prev.steps, ""] }))
-          }
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onPress={appendStep}
         >
-          <Text>+ Añadir paso</Text>
+          <Entypo
+            name="plus"
+            size={24}
+            color={colors.lightBrown}
+            style={styles.addButton}
+          />
+          <Text style={styles.text}>Añadir paso</Text>
         </Pressable>
 
-        <Pressable style={styles.button} onPress={handleSave}>
+        <Pressable style={styles.button} onPress={handleSubmit(onSubmit)}>
           <Text style={styles.buttonText}>Añadir</Text>
         </Pressable>
-      </View>
+      </SafeAreaView>
     </ScrollView>
   );
 };
@@ -217,15 +289,35 @@ const AddRecipe: React.FC = () => {
 export default AddRecipe;
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.yellow,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+  },
   label: {
     fontSize: 14,
-    fontWeight: "bold",
-    color: "#333",
+    fontFamily: "ShantellSans-SemiBold",
+    color: colors.darkBrown,
     marginBottom: 5,
+  },
+  enum: {
+    fontFamily: "ShantellSans-Italic",
+    color: colors.lightBrown,
+    fontSize: 20,
+  },
+  text: {
+    fontFamily: "ShantellSans-Italic",
+    color: colors.darkBrown,
   },
   input: {
     marginBottom: 15,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: colors.lightBrown,
+    paddingHorizontal: 10,
     backgroundColor: "white",
+    color: colors.darkBrown,
+    fontFamily: "ShantellSans-Regular",
   },
   chipContainer: {
     flexDirection: "row",
@@ -234,20 +326,30 @@ const styles = StyleSheet.create({
   },
   chip: {
     margin: 4,
+    borderWidth: 2,
+    borderColor: colors.lightBrown,
+  },
+  addButton: {
+    backgroundColor: colors.pink,
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: colors.lightBrown,
+    marginRight: 10,
   },
   button: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 20,
+    alignSelf: "center",
+    marginTop: 50,
     paddingVertical: 12,
     paddingHorizontal: 60,
-    borderRadius: 10,
-    backgroundColor: "#dbeed0",
-    borderColor: "gray",
-    borderWidth: 1,
+    borderRadius: 25,
+    backgroundColor: colors.green,
+    borderColor: colors.lightBrown,
+    borderWidth: 2,
   },
   buttonText: {
-    fontWeight: "bold",
-    color: "black",
+    fontFamily: "ShantellSans-SemiBold",
+    color: colors.darkBrown,
   },
 });
