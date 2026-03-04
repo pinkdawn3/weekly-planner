@@ -8,7 +8,7 @@ import {
   updateRecipe,
   createMenu,
   getLastMenu,
-} from "../services/database.service";
+} from "../services/db/database.service";
 import MenuGenerator from "../components/MenuGenerator";
 import { colors } from "../theme/colors";
 import { Entypo, Feather } from "@expo/vector-icons";

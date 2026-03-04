@@ -7,18 +7,18 @@ import {
   TextInput,
 } from "react-native";
 import React, { useContext } from "react";
-import { Chip } from "react-native-paper";
-import { Recipe, MealType, Label } from "../types/RecipeType";
+import { Chip, HelperText } from "react-native-paper";
+import { Recipe } from "../types/RecipeType";
 import { RecipeContext } from "../contexts/RecipeContext";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
-import { createRecipe, getAllRecipes } from "../services/database.service";
+import { createRecipe, getAllRecipes } from "../services/db/database.service";
 import { colors } from "../theme/colors";
 import { Entypo } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 type AddRecipeNavProp = StackNavigationProp<RootStackParamList, "AddRecipe">;
 
@@ -41,6 +41,8 @@ const AddRecipe: React.FC = () => {
       labels: [],
     },
   });
+
+  console.log(errors.name?.message);
 
   const ingredients = watch("ingredients");
   const appendIngredient = () => setValue("ingredients", [...ingredients, ""]);
@@ -72,7 +74,7 @@ const AddRecipe: React.FC = () => {
           name="name"
           control={control}
           rules={{
-            required: true,
+            required: { value: true, message: "This field is required." },
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
@@ -85,14 +87,17 @@ const AddRecipe: React.FC = () => {
             />
           )}
         />
-        {errors.name && <Text>This is required.</Text>}
+
+        <HelperText type="error">{errors.name?.message}</HelperText>
 
         <Text style={styles.label}>Tipo de comida</Text>
         <View style={styles.chipContainer}>
           <Controller
             name="mealTypes"
             control={control}
-            rules={{ required: true }}
+            rules={{
+              required: { value: true, message: "This field is required." },
+            }}
             render={({ field: { onChange, value } }) => (
               <View style={styles.chipContainer}>
                 {mealTypes.map((mt) => {
@@ -117,12 +122,17 @@ const AddRecipe: React.FC = () => {
             )}
           />
         </View>
+
+        <HelperText type="error">{errors.name?.message}</HelperText>
+
         <Text style={styles.label}>Categoría</Text>
         <View style={styles.chipContainer}>
           <Controller
             name="labels"
             control={control}
-            rules={{ required: true }}
+            rules={{
+              required: { value: true, message: "This field is required." },
+            }}
             render={({ field: { onChange, value } }) => (
               <View style={styles.chipContainer}>
                 {labels.map((label) => {

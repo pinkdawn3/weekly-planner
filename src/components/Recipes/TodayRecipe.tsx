@@ -1,10 +1,9 @@
-import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import moment from "moment";
 import { RecipeContext } from "../../contexts/RecipeContext";
 import { MenuRecipe } from "../../types/RecipeType";
 import { useNavigation } from "@react-navigation/native";
-
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../navigation/RootNavigator";
 

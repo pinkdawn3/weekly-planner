@@ -2,13 +2,13 @@ import React, { useContext, useState } from "react";
 import { View, StyleSheet, Pressable, Text, ScrollView } from "react-native";
 import { TextInput, ActivityIndicator, Chip } from "react-native-paper";
 import { RecipeContext } from "../contexts/RecipeContext";
-import { Label, MealType, MenuRecipe } from "../types/RecipeType";
+import { Label, MealType, Menu, MenuRecipe, Recipe } from "../types/RecipeType";
 import moment from "moment";
 import {
   createMenu,
   getLastMenu,
   getLastMenus,
-} from "../services/database.service";
+} from "../services/db/database.service";
 import { colors } from "../theme/colors";
 
 interface MenuGeneratorProps {
@@ -93,7 +93,9 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
     // Recetas usadas en el menú anterior para evitar repeticiones
     const lastMenus = getLastMenus(1);
     const recentRecipeIds = new Set(
-      lastMenus.flatMap((m) => m.recipes.map((mr) => mr.recipe.id!)),
+      lastMenus.flatMap((m: Menu) =>
+        m.recipes.map((mr: MenuRecipe) => mr.recipe.id!),
+      ),
     );
 
     const menuRecipes: MenuRecipe[] = [];

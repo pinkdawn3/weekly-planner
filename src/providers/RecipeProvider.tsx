@@ -7,7 +7,7 @@ import {
   getAllMealTypes,
   getAllLabels,
   getLastMenu,
-} from "../services/database.service";
+} from "../services/db/database.service";
 
 type RecipeProviderProps = {
   children: React.ReactNode | React.ReactNode[];
@@ -21,8 +21,8 @@ function RecipeProvider(props: RecipeProviderProps) {
     id: undefined,
     name: "",
     description: "",
-    ingredients: "",
-    steps: "",
+    ingredients: [],
+    steps: [],
     mealTypes: [],
     labels: [],
   };

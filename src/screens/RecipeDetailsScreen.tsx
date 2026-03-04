@@ -16,7 +16,7 @@ import {
   deleteRecipe,
   getAllRecipes,
   getLastMenu,
-} from "../services/database.service";
+} from "../services/db/database.service";
 import { RootStackParamList } from "../navigation/RootNavigator";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
