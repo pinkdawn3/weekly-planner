@@ -10,7 +10,7 @@ import { colors } from "../../theme/colors";
 
 interface DashedButtonProps {
   title: string;
-  onPress: () => void; // Solo sin parámetros
+  onPress: () => void;
   color: string;
   background: string;
   size?: StyleProp<ViewStyle>;

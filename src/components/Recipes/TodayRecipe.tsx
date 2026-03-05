@@ -64,19 +64,19 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginBottom: 10,
-    color: "#624942",
+    color: colors.darkBrown,
     fontFamily: "ShantellSans-Bold",
     textAlign: "center",
   },
   mealType: {
     fontSize: 14,
-    color: "#888",
+    color: colors.lightBrown,
     marginTop: 10,
     fontFamily: "ShantellSans-SemiBoldItalic",
   },
   recipeName: {
     fontSize: 18,
-    color: "#624942",
+    color: colors.darkBrown,
     marginBottom: 4,
     fontFamily: "ShantellSans-SemiBold",
   },

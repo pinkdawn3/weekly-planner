@@ -15,7 +15,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
 import { createRecipe, getAllRecipes } from "../services/db/database.service";
 import { colors } from "../theme/colors";
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Controller, useForm } from "react-hook-form";
@@ -68,6 +68,13 @@ const AddRecipe: React.FC = () => {
   return (
     <ScrollView style={styles.container}>
       <SafeAreaView>
+        <Pressable
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Feather name="arrow-left" size={24} color={colors.darkOrange} />
+          <Text style={styles.buttonText}>Volver</Text>
+        </Pressable>
         <Text style={styles.label}>Nombre</Text>
         <Controller
           name="name"
@@ -87,7 +94,9 @@ const AddRecipe: React.FC = () => {
           )}
         />
 
-        <HelperText type="error">{errors.name?.message}</HelperText>
+        {errors.name && (
+          <HelperText type="error">{errors.name?.message}</HelperText>
+        )}
 
         <Text style={styles.label}>Tipo de comida</Text>
         <View style={styles.chipContainer}>
@@ -112,6 +121,7 @@ const AddRecipe: React.FC = () => {
                         onChange(newValue);
                       }}
                       style={styles.chip}
+                      textStyle={{ color: colors.darkBrown }}
                     >
                       {mt.name}
                     </Chip>
@@ -122,7 +132,9 @@ const AddRecipe: React.FC = () => {
           />
         </View>
 
-        <HelperText type="error">{errors.name?.message}</HelperText>
+        {errors.mealTypes && (
+          <HelperText type="error">{errors.mealTypes?.message}</HelperText>
+        )}
 
         <Text style={styles.label}>Categoría</Text>
         <View style={styles.chipContainer}>
@@ -147,6 +159,7 @@ const AddRecipe: React.FC = () => {
                         onChange(newValue); //
                       }}
                       style={styles.chip}
+                      textStyle={{ color: colors.darkBrown }}
                     >
                       {label.name}
                     </Chip>
@@ -289,11 +302,11 @@ const AddRecipe: React.FC = () => {
 
         <DashedButton
           title="Añadir"
-          color={colors.green}
+          color={colors.purple}
           background={colors.transparentYellow}
           style={{ alignSelf: "center", marginTop: 50 }}
           size={{ paddingHorizontal: 50 }}
-          onPress={() => handleSubmit(onSubmit)}
+          onPress={handleSubmit(onSubmit)}
         />
       </SafeAreaView>
     </ScrollView>
@@ -306,7 +319,17 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.transparentYellow,
     paddingHorizontal: 20,
-    paddingVertical: 20,
+  },
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+    alignSelf: "flex-start",
+  },
+  buttonText: {
+    marginLeft: 5,
+    fontFamily: "ShantellSans-SemiBold",
+    color: colors.darkOrange,
   },
   label: {
     fontSize: 14,
@@ -324,7 +347,7 @@ const styles = StyleSheet.create({
     color: colors.darkBrown,
   },
   input: {
-    marginBottom: 15,
+    marginBottom: 20,
     borderRadius: 20,
     borderWidth: 2,
     borderColor: colors.lightBrown,
@@ -336,12 +359,11 @@ const styles = StyleSheet.create({
   chipContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginBottom: 15,
+    marginBottom: 20,
   },
   chip: {
     margin: 4,
-    borderWidth: 2,
-    borderColor: colors.lightBrown,
+    backgroundColor: colors.orange,
   },
   addButton: {
     backgroundColor: colors.pink,

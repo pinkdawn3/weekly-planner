@@ -21,7 +21,7 @@ import { RootStackParamList } from "../navigation/RootNavigator";
 import { Entypo, Feather, Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../theme/colors";
-import { Chip } from "react-native-paper";
+import { Chip, Portal } from "react-native-paper";
 import SettingsModal from "../components/SettingsModal";
 
 type RecipeDetailsScreenRouteProp = RouteProp<
@@ -209,7 +209,7 @@ const RecipeDetailsScreen: React.FC = () => {
             style={styles.backButton}
             onPress={() => navigation.goBack()}
           >
-            <Feather name="arrow-left" size={24} color={colors.darkBrown} />
+            <Feather name="arrow-left" size={24} color={colors.darkOrange} />
             <Text style={styles.buttonText}>Volver</Text>
           </Pressable>
           <Pressable style={styles.buttonDelete} onPress={handleDelete}>
@@ -231,26 +231,32 @@ const RecipeDetailsScreen: React.FC = () => {
           onPress={() => setIsMealTypeVisible(true)}
         >
           {currentRecipe.mealTypes.map((mt) => (
-            <Chip key={mt.id} style={styles.chip}>
+            <Chip
+              key={mt.id}
+              style={styles.chip}
+              textStyle={{ color: colors.darkBrown }}
+            >
               {mt.name}
             </Chip>
           ))}
         </Pressable>
 
-        <SettingsModal
-          items={mealTypes}
-          selected={currentRecipe.mealTypes}
-          onClose={async (newMealTypes) => {
-            setIsMealTypeVisible(false);
-            setCurrentRecipe((prev) => ({
-              ...prev,
-              mealTypes: newMealTypes,
-            }));
-            await updateRecipe({ ...currentRecipe, mealTypes: newMealTypes });
-            setRecipes(getAllRecipes());
-          }}
-          visible={isMealTypeVisible}
-        />
+        <Portal>
+          <SettingsModal
+            items={mealTypes}
+            selected={currentRecipe.mealTypes}
+            onClose={async (newMealTypes) => {
+              setIsMealTypeVisible(false);
+              setCurrentRecipe((prev) => ({
+                ...prev,
+                mealTypes: newMealTypes,
+              }));
+              await updateRecipe({ ...currentRecipe, mealTypes: newMealTypes });
+              setRecipes(getAllRecipes());
+            }}
+            visible={isMealTypeVisible}
+          />
+        </Portal>
 
         <Text style={styles.sectionHeader}>Categoría</Text>
         <Pressable
@@ -258,26 +264,32 @@ const RecipeDetailsScreen: React.FC = () => {
           onPress={() => setIsLabelVisible(true)}
         >
           {currentRecipe.labels.map((l) => (
-            <Chip key={l.id} style={styles.chip}>
+            <Chip
+              key={l.id}
+              style={styles.chip}
+              textStyle={{ color: colors.darkBrown }}
+            >
               {l.name}
             </Chip>
           ))}
         </Pressable>
 
-        <SettingsModal
-          items={labels}
-          selected={currentRecipe.labels}
-          visible={isLabelVisible}
-          onClose={async (newLabel) => {
-            setIsLabelVisible(false);
-            setCurrentRecipe((prev) => ({
-              ...prev,
-              labels: newLabel,
-            }));
-            await updateRecipe({ ...currentRecipe, labels: newLabel });
-            setRecipes(getAllRecipes());
-          }}
-        />
+        <Portal>
+          <SettingsModal
+            items={labels}
+            selected={currentRecipe.labels}
+            visible={isLabelVisible}
+            onClose={async (newLabel) => {
+              setIsLabelVisible(false);
+              setCurrentRecipe((prev) => ({
+                ...prev,
+                labels: newLabel,
+              }));
+              await updateRecipe({ ...currentRecipe, labels: newLabel });
+              setRecipes(getAllRecipes());
+            }}
+          />
+        </Portal>
 
         <Text style={styles.sectionHeader}>Ingredientes</Text>
         {currentRecipe.ingredients.map((ingredient, index) => (
@@ -379,11 +391,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 15,
-    backgroundColor: "#f28966",
+    backgroundColor: colors.darkOrange,
   },
   buttonText: {
     marginLeft: 5,
-    color: "black",
+    fontFamily: "ShantellSans-Regular",
+    color: colors.darkOrange,
   },
   backButton: {
     flexDirection: "row",
@@ -421,6 +434,7 @@ const styles = StyleSheet.create({
   },
   chip: {
     margin: 4,
+    backgroundColor: colors.orange,
   },
   inputFocused: {
     borderWidth: 1,

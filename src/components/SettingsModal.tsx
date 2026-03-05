@@ -1,7 +1,8 @@
-import { View, StyleSheet, Modal, Pressable, Text } from "react-native";
-import { Chip } from "react-native-paper";
+import { View, StyleSheet, Pressable, Text } from "react-native";
+import { Chip, Modal } from "react-native-paper";
 import { colors } from "../theme/colors";
 import { useEffect, useState } from "react";
+import DashedButton from "./Core/DashedButton";
 
 interface SettingsModalProps<T extends { id: number; name: string }> {
   items: T[];
@@ -25,38 +26,39 @@ const SettingsModal = <T extends { id: number; name: string }>({
   if (!visible) return null;
 
   return (
-    <Modal visible={visible} transparent statusBarTranslucent>
-      <View style={styles.overlay}>
-        <View style={styles.container}>
-          <View style={styles.chipContainer}>
-            {items.map((item) => {
-              const isSelected = tempSelected.some((s) => s.id === item.id);
-              return (
-                <Chip
-                  key={item.id}
-                  selected={isSelected}
-                  onPress={() => {
-                    setTempSelected((prev) =>
-                      isSelected
-                        ? prev.filter((s) => s.id !== item.id)
-                        : [...prev, item],
-                    );
-                  }}
-                  style={styles.chip}
-                  textStyle={{ color: colors.darkBrown }}
-                >
-                  {item.name}
-                </Chip>
-              );
-            })}
-          </View>
-          <Pressable
-            style={styles.closeButton}
-            onPress={() => onClose(tempSelected)}
-          >
-            <Text style={styles.textButton}>Cerrar</Text>
-          </Pressable>
+    <Modal visible={visible} onDismiss={() => onClose(tempSelected)}>
+      <View style={styles.container}>
+        <View style={styles.chipContainer}>
+          {items.map((item) => {
+            const isSelected = tempSelected.some((s) => s.id === item.id);
+            return (
+              <Chip
+                key={item.id}
+                selected={isSelected}
+                onPress={() => {
+                  setTempSelected((prev) =>
+                    isSelected
+                      ? prev.filter((s) => s.id !== item.id)
+                      : [...prev, item],
+                  );
+                }}
+                style={styles.chip}
+                textStyle={{ color: colors.darkBrown }}
+              >
+                {item.name}
+              </Chip>
+            );
+          })}
         </View>
+
+        <DashedButton
+          title="Cerrar"
+          color={colors.purple}
+          background={colors.offWhite}
+          style={{ alignSelf: "center", marginTop: 20 }}
+          size={{ paddingHorizontal: 30 }}
+          onPress={() => onClose(tempSelected)}
+        />
       </View>
     </Modal>
   );
@@ -65,19 +67,14 @@ const SettingsModal = <T extends { id: number; name: string }>({
 export default SettingsModal;
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   container: {
     backgroundColor: colors.offWhite,
     padding: 40,
     borderWidth: 2,
     borderColor: colors.lightBrown,
-    borderRadius: 20,
+    borderRadius: 25,
     maxWidth: "90%",
+    alignSelf: "center",
   },
   chipContainer: {
     flexDirection: "row",
@@ -86,8 +83,7 @@ const styles = StyleSheet.create({
   },
   chip: {
     margin: 4,
-    borderWidth: 2,
-    borderColor: colors.lightBrown,
+    backgroundColor: colors.orange,
   },
 
   closeButton: {

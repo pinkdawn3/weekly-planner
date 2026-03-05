@@ -45,7 +45,7 @@ const Recipes = () => {
   return (
     <View style={styles.container}>
       <DottedBackground />
-      <View style={{ padding: 20, flex: 1 }}>
+      <View style={{ paddingTop: 20, paddingHorizontal: 20, flex: 1 }}>
         <Portal>
           {/* Modals for editing meal types and meal labels */}
           <Modal
@@ -68,14 +68,14 @@ const Recipes = () => {
         <View style={styles.configButtons}>
           <DashedButton
             title="Tipos de comida"
-            color={colors.green}
+            color={colors.purple}
             background={colors.transparentYellow}
             onPress={() => setMealTypesVisible(true)}
           />
 
           <DashedButton
             title="Categorías"
-            color={colors.green}
+            color={colors.purple}
             background={colors.transparentYellow}
             size={{ paddingHorizontal: 30 }}
             onPress={() => setLabelsVisible(true)}
@@ -112,7 +112,7 @@ const Recipes = () => {
         </Pressable>
 
         {/* Scroll view to display filtered recipes */}
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {filteredRecipes &&
             filteredRecipes.map((recipe, index) => (
               <Pressable key={index} onPress={() => showDetailsScreen(recipe)}>

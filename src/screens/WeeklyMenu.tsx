@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    paddingTop: 20,
+    paddingTop: 15,
     backgroundColor: colors.transparentYellow,
   },
   dayCard: {
@@ -328,6 +328,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     width: "90%",
+    marginBottom: 10,
   },
   disabledButton: {
     backgroundColor: "gray",
