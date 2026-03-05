@@ -8,6 +8,7 @@ import {
   getAllLabels,
 } from "../../services/db/database.service";
 import { colors } from "../../theme/colors";
+import DashedButton from "../Core/DashedButton";
 
 interface ManageLabelsProps {
   labels: Label[];
@@ -47,9 +48,15 @@ const ManageLabels: React.FC<ManageLabelsProps> = ({ labels, onUpdate }) => {
         onChangeText={setNewName}
         style={styles.input}
       />
-      <Pressable style={styles.button} onPress={handleAdd}>
-        <Text style={styles.buttonText}>Añadir</Text>
-      </Pressable>
+
+      <DashedButton
+        title="Añadir"
+        color={colors.green}
+        style={{ alignSelf: "center", marginTop: 20 }}
+        size={{ paddingHorizontal: 30 }}
+        background={colors.offWhite}
+        onPress={handleAdd}
+      />
     </View>
   );
 };

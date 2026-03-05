@@ -10,6 +10,8 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
 import { colors } from "../theme/colors";
+import DashedButton from "../components/Core/DashedButton";
+import DottedBackground from "../components/Core/DottedBackground";
 
 const Recipes = () => {
   const { recipes, mealTypes, setMealTypes, labels, setLabels } =
@@ -42,82 +44,86 @@ const Recipes = () => {
 
   return (
     <View style={styles.container}>
-      <Portal>
-        {/* Modals for editing meal types and meal labels */}
-        <Modal
-          visible={mealTypesVisible}
-          onDismiss={() => setMealTypesVisible(false)}
-        >
-          <ManageMealTypes mealTypes={mealTypes} onUpdate={setMealTypes} />
-        </Modal>
+      <DottedBackground />
+      <View style={{ padding: 20, flex: 1 }}>
+        <Portal>
+          {/* Modals for editing meal types and meal labels */}
+          <Modal
+            visible={mealTypesVisible}
+            onDismiss={() => setMealTypesVisible(false)}
+          >
+            <ManageMealTypes mealTypes={mealTypes} onUpdate={setMealTypes} />
+          </Modal>
 
-        <Modal
-          visible={labelsVisible}
-          onDismiss={() => setLabelsVisible(false)}
-        >
-          <ManageLabels labels={labels} onUpdate={setLabels} />
-        </Modal>
-      </Portal>
+          <Modal
+            visible={labelsVisible}
+            onDismiss={() => setLabelsVisible(false)}
+          >
+            <ManageLabels labels={labels} onUpdate={setLabels} />
+          </Modal>
+        </Portal>
 
-      {/* Buttons for editing meal types and meal labels */}
-      <View style={styles.configButtons}>
+        {/* Buttons for editing meal types and meal labels */}
+
+        <View style={styles.configButtons}>
+          <DashedButton
+            title="Tipos de comida"
+            color={colors.green}
+            background={colors.transparentYellow}
+            onPress={() => setMealTypesVisible(true)}
+          />
+
+          <DashedButton
+            title="Categorías"
+            color={colors.green}
+            background={colors.transparentYellow}
+            size={{ paddingHorizontal: 30 }}
+            onPress={() => setLabelsVisible(true)}
+          />
+        </View>
+
+        {/* Search bar to search recipes by name */}
+        <Searchbar
+          placeholder="Buscar receta..."
+          onChangeText={setSearchText}
+          value={searchText}
+          style={{
+            borderWidth: 2,
+            borderColor: colors.lightBrown,
+            marginBottom: 10,
+          }}
+          inputStyle={{ color: colors.darkBrown }}
+          theme={{
+            colors: {
+              onSurface: colors.lightBrown,
+              onSurfaceVariant: colors.lightBrown,
+            },
+          }}
+        />
+
+        {/* Floating button to show the add recipe modal */}
         <Pressable
-          style={styles.configButton}
-          onPress={() => setMealTypesVisible(true)}
+          style={styles.floatingButtonContainer}
+          onPress={() => {
+            showAddRecipeScreen();
+          }}
         >
-          <Text style={styles.configButtonText}>Tipos de comida</Text>
+          <Entypo name="plus" size={24} color={colors.darkBrown} />
         </Pressable>
-        <Pressable
-          style={styles.configButton}
-          onPress={() => setLabelsVisible(true)}
-        >
-          <Text style={styles.configButtonText}>Categorías</Text>
-        </Pressable>
+
+        {/* Scroll view to display filtered recipes */}
+        <ScrollView>
+          {filteredRecipes &&
+            filteredRecipes.map((recipe, index) => (
+              <Pressable key={index} onPress={() => showDetailsScreen(recipe)}>
+                <View style={styles.card}>
+                  <Text style={styles.title}>{recipe.name}</Text>
+                  <Text style={styles.detailsLink}>Ver detalles</Text>
+                </View>
+              </Pressable>
+            ))}
+        </ScrollView>
       </View>
-
-      {/* Search bar to search recipes by name */}
-      <Searchbar
-        placeholder="Buscar receta..."
-        onChangeText={setSearchText}
-        value={searchText}
-        style={{
-          borderWidth: 2,
-          borderColor: colors.lightBrown,
-          marginBottom: 10,
-        }}
-        inputStyle={{ color: colors.darkBrown }}
-        theme={{
-          colors: {
-            onSurface: colors.lightBrown,
-            onSurfaceVariant: colors.lightBrown,
-          },
-        }}
-      />
-
-      {/* Floating button to show the add recipe modal */}
-      <Pressable
-        style={styles.floatingButtonContainer}
-        onPress={() => {
-          showAddRecipeScreen();
-        }}
-      >
-        <Entypo name="plus" size={24} color={colors.darkBrown} />
-      </Pressable>
-
-      {/* Scroll view to display filtered recipes */}
-      <ScrollView>
-        {filteredRecipes &&
-          filteredRecipes.map((recipe, index) => (
-            <Pressable key={index} onPress={() => showDetailsScreen(recipe)}>
-              <View style={styles.card}>
-                <Text style={styles.title}>{recipe.name}</Text>
-                <Text style={styles.detailsLink}>Ver detalles</Text>
-              </View>
-            </Pressable>
-          ))}
-      </ScrollView>
-
-      {/* Modal for recipe details with options to edit or delete */}
     </View>
   );
 };
@@ -127,8 +133,6 @@ export default Recipes;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: colors.yellow,
   },
   card: {
     width: "100%",
@@ -217,9 +221,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 20,
     backgroundColor: "#dbeed0",
-    borderColor: colors.lightBrown,
+    borderColor: colors.green,
     borderWidth: 2,
   },
+  innerBorder: {
+    backgroundColor: "#dbeed0",
+    borderWidth: 2,
+    borderStyle: "dashed",
+    borderColor: colors.yellow,
+  },
+
   configButtonText: {
     fontFamily: "ShantellSans-Regular",
     color: colors.darkBrown,

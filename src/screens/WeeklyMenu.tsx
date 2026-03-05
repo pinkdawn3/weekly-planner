@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingTop: 20,
-    backgroundColor: colors.yellow,
+    backgroundColor: colors.transparentYellow,
   },
   dayCard: {
     borderColor: colors.lightBrown,

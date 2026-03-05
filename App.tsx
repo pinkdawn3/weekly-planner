@@ -10,8 +10,9 @@ import RecipeProvider from "./src/providers/RecipeProvider";
 import AppNavigationContainer from "./src/navigation/NavigationContainer";
 import RootNavigator from "./src/navigation/RootNavigator";
 import { useFonts } from "expo-font";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { colors } from "./src/theme/colors";
 
 const fontConfig = {
   fontFamily: "ShantellSans-Regular",
@@ -49,15 +50,17 @@ export default function App() {
   if (!fontsLoaded) return null;
 
   return (
-    <SafeAreaProvider>
-      <AppNavigationContainer>
-        <RecipeProvider>
-          <PaperProvider theme={theme}>
-            <Header />
-            <RootNavigator />
-          </PaperProvider>
-        </RecipeProvider>
-      </AppNavigationContainer>
-    </SafeAreaProvider>
+    <View style={{ flex: 1, backgroundColor: colors.transparentYellow }}>
+      <SafeAreaProvider>
+        <AppNavigationContainer>
+          <RecipeProvider>
+            <PaperProvider theme={theme}>
+              <Header />
+              <RootNavigator />
+            </PaperProvider>
+          </RecipeProvider>
+        </AppNavigationContainer>
+      </SafeAreaProvider>
+    </View>
   );
 }

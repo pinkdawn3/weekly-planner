@@ -19,6 +19,7 @@ import { Entypo } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Controller, useForm } from "react-hook-form";
+import DashedButton from "../components/Core/DashedButton";
 
 type AddRecipeNavProp = StackNavigationProp<RootStackParamList, "AddRecipe">;
 
@@ -41,8 +42,6 @@ const AddRecipe: React.FC = () => {
       labels: [],
     },
   });
-
-  console.log(errors.name?.message);
 
   const ingredients = watch("ingredients");
   const appendIngredient = () => setValue("ingredients", [...ingredients, ""]);
@@ -288,9 +287,14 @@ const AddRecipe: React.FC = () => {
           <Text style={styles.text}>Añadir paso</Text>
         </Pressable>
 
-        <Pressable style={styles.button} onPress={handleSubmit(onSubmit)}>
-          <Text style={styles.buttonText}>Añadir</Text>
-        </Pressable>
+        <DashedButton
+          title="Añadir"
+          color={colors.green}
+          background={colors.transparentYellow}
+          style={{ alignSelf: "center", marginTop: 50 }}
+          size={{ paddingHorizontal: 50 }}
+          onPress={() => handleSubmit(onSubmit)}
+        />
       </SafeAreaView>
     </ScrollView>
   );
@@ -300,7 +304,7 @@ export default AddRecipe;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.yellow,
+    backgroundColor: colors.transparentYellow,
     paddingHorizontal: 20,
     paddingVertical: 20,
   },
@@ -345,21 +349,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: colors.lightBrown,
     marginRight: 10,
-  },
-  button: {
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "center",
-    marginTop: 50,
-    paddingVertical: 12,
-    paddingHorizontal: 60,
-    borderRadius: 25,
-    backgroundColor: colors.green,
-    borderColor: colors.lightBrown,
-    borderWidth: 2,
-  },
-  buttonText: {
-    fontFamily: "ShantellSans-SemiBold",
-    color: colors.darkBrown,
   },
 });

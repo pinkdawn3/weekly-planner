@@ -1,27 +1,17 @@
 import Svg, { Defs, Pattern, Rect, Line } from "react-native-svg";
 import { View, StyleSheet } from "react-native";
 import TodayRecipe from "../components/Recipes/TodayRecipe";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { RecipeContext } from "../contexts/RecipeContext";
 import { getLastMenu } from "../services/db/database.service";
 import { Menu } from "../types/RecipeType";
+import { colors } from "../theme/colors";
 
 const menuDefault: Menu = { id: 0, created: "", recipes: [] };
 
 const Homescreen = () => {
-  const { recipes, setCurrentMenu, menuCreated, setMenuCreated } =
+  const { setCurrentMenu, menuCreated, setMenuCreated } =
     useContext(RecipeContext);
-  const [menuVisible, setMenuVisible] = useState(false);
-
-  const showMenuModal = () => setMenuVisible(true);
-  const hideMenuModal = () => setMenuVisible(false);
-
-  const containerStyle = {
-    backgroundColor: "white",
-    padding: 30,
-    margin: 20,
-    borderRadius: 10,
-  };
 
   useEffect(() => {
     try {
@@ -56,7 +46,7 @@ const Homescreen = () => {
             patternUnits="userSpaceOnUse"
           >
             {/* Fondo del patrón */}
-            <Rect width="25" height="25" fill="#ffe7b7" />
+            <Rect width="25" height="25" fill={colors.yellow} />
             {/* Línea horizontal */}
             <Line
               x1="0"
