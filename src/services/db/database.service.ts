@@ -1,4 +1,4 @@
-import * as SQLite from "expo-sqlite";
+import db from "./client";
 import {
   MealType,
   Label,
@@ -7,8 +7,6 @@ import {
   MenuRecipe,
 } from "../../types/RecipeType";
 import { CURRENT_DB_VERSION, migrations } from "./migrations";
-
-const db = SQLite.openDatabaseSync("weeklymeal.db");
 
 export const initDB = () => {
   // Toggle comment in case of table changes
@@ -94,7 +92,7 @@ export const createRecipe = (recipe: Recipe): void => {
     "INSERT INTO recipes (name, description, ingredients, steps) VALUES (?, ?, ?, ?)",
     [
       recipe.name,
-      recipe.description,
+      recipe.description ?? null,
       JSON.stringify(recipe.ingredients),
       JSON.stringify(recipe.steps),
     ],
@@ -127,9 +125,10 @@ export const updateRecipe = (recipe: Recipe): void => {
     "UPDATE recipes SET name=?, description=?, ingredients=?, steps=? WHERE id=?",
     [
       recipe.name,
-      recipe.description,
+      recipe.description ?? null,
       JSON.stringify(recipe.ingredients),
       JSON.stringify(recipe.steps),
+      recipe.id!,
     ],
   );
 
@@ -292,5 +291,3 @@ export const createMenu = (menuRecipes: MenuRecipe[]): void => {
     );
   });
 };
-
-export default db;

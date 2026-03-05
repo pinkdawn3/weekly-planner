@@ -11,11 +11,12 @@ export type Label = {
 export type Recipe = {
   id: number | undefined;
   name: string;
-  description: string;
+  description?: string;
   ingredients: string[];
   steps: string[];
   mealTypes: MealType[];
   labels: Label[];
+  photo_uri?: string;
 };
 
 export type MenuRecipe = {

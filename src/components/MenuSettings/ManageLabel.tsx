@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
-import { TextInput } from "react-native-paper";
+import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Label } from "../../types/RecipeType";
 import {
   createLabel,
   deleteLabel,
   getAllLabels,
-} from "../../services/database.service";
+} from "../../services/db/database.service";
+import { colors } from "../../theme/colors";
 
 interface ManageLabelsProps {
   labels: Label[];
@@ -30,7 +30,7 @@ const ManageLabels: React.FC<ManageLabelsProps> = ({ labels, onUpdate }) => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.title}>Categorías</Text>
       {labels.map((l) => (
         <View key={l.id} style={styles.listItem}>
@@ -41,7 +41,8 @@ const ManageLabels: React.FC<ManageLabelsProps> = ({ labels, onUpdate }) => {
         </View>
       ))}
       <TextInput
-        label="Nueva categoría"
+        placeholder="Añadir categoría..."
+        placeholderTextColor={colors.lightBrown}
         value={newName}
         onChangeText={setNewName}
         style={styles.input}
@@ -56,39 +57,52 @@ const ManageLabels: React.FC<ManageLabelsProps> = ({ labels, onUpdate }) => {
 export default ManageLabels;
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.offWhite,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: colors.lightBrown,
+    margin: 40,
+    padding: 20,
+  },
   title: {
     fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
+    color: colors.darkBrown,
     marginBottom: 15,
+    alignSelf: "center",
+    fontFamily: "ShantellSans-SemiBold",
   },
   listItem: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
   },
   itemText: {
     fontSize: 16,
-    color: "#333",
+    color: colors.darkBrown,
+    fontFamily: "ShantellSans-Regular",
   },
   input: {
     marginTop: 15,
     backgroundColor: "white",
+    borderRadius: 15,
+    borderWidth: 1.5,
+    borderColor: colors.lightBrown,
+    paddingHorizontal: 10,
+    fontFamily: "ShantellSans-Regular",
   },
   button: {
     marginTop: 10,
     alignItems: "center",
     paddingVertical: 10,
-    borderRadius: 10,
-    backgroundColor: "#dbeed0",
-    borderColor: "gray",
-    borderWidth: 1,
+    backgroundColor: colors.green,
+    borderRadius: 15,
+    borderWidth: 1.5,
+    borderColor: colors.lightBrown,
   },
   buttonText: {
-    fontWeight: "bold",
-    color: "black",
+    color: colors.darkBrown,
+    fontFamily: "ShantellSans-SemiBold",
   },
 });

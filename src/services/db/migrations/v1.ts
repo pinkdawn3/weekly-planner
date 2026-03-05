@@ -1,4 +1,4 @@
-import db from "../database.service";
+import db from "../client";
 
 export const v1 = () => {
   db.execSync(`

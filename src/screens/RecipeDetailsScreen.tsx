@@ -18,10 +18,11 @@ import {
   getLastMenu,
 } from "../services/db/database.service";
 import { RootStackParamList } from "../navigation/RootNavigator";
-import { Feather, Ionicons } from "@expo/vector-icons";
+import { Entypo, Feather, Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../theme/colors";
 import { Chip } from "react-native-paper";
+import SettingsModal from "../components/SettingsModal";
 
 type RecipeDetailsScreenRouteProp = RouteProp<
   RootStackParamList,
@@ -136,7 +137,11 @@ const EditableArrayItem = ({
             focused && styles.inputFocused,
           ]}
         />
-        <Pressable onPress={onDelete}>
+
+        <Pressable
+          onPress={onDelete}
+          style={{ paddingBottom: 10, marginLeft: 5 }}
+        >
           <Ionicons name="trash-outline" size={16} color={colors.darkOrange} />
         </Pressable>
       </View>
@@ -148,9 +153,6 @@ const EditableArrayItem = ({
       <Pressable style={{ flex: 1 }} onPress={() => setEditing(true)}>
         <Text style={style}>{text}</Text>
       </Pressable>
-      <Pressable onPress={onDelete}>
-        <Ionicons name="trash-outline" size={16} color={colors.darkOrange} />
-      </Pressable>
     </View>
   );
 };
@@ -158,7 +160,10 @@ const EditableArrayItem = ({
 const RecipeDetailsScreen: React.FC = () => {
   const navigation = useNavigation<RecipeDetailsScreenNavigationProp>();
   const route = useRoute<RecipeDetailsScreenRouteProp>();
-  const { setRecipes, setCurrentMenu } = useContext(RecipeContext);
+  const { mealTypes, labels, setRecipes, setCurrentMenu } =
+    useContext(RecipeContext);
+  const [isMealTypeVisible, setIsMealTypeVisible] = useState(false);
+  const [isLabelVisible, setIsLabelVisible] = useState(false);
 
   const [currentRecipe, setCurrentRecipe] = useState<Recipe>({
     ...route.params.recipe,
@@ -220,50 +225,94 @@ const RecipeDetailsScreen: React.FC = () => {
           style={styles.modalTitle}
         />
 
-        <EditableField
-          field="description"
-          fieldsRef={fieldsRef}
-          onSave={(field, value) => handleSave(field, value)}
-          placeholder="Añadir descripción"
-          style={styles.detailsText}
-        />
-
         <Text style={styles.sectionHeader}>Tipo de comida</Text>
-        <View style={styles.chipContainer}>
+        <Pressable
+          style={styles.chipContainer}
+          onPress={() => setIsMealTypeVisible(true)}
+        >
           {currentRecipe.mealTypes.map((mt) => (
             <Chip key={mt.id} style={styles.chip}>
               {mt.name}
             </Chip>
           ))}
-        </View>
+        </Pressable>
+
+        <SettingsModal
+          items={mealTypes}
+          selected={currentRecipe.mealTypes}
+          onClose={async (newMealTypes) => {
+            setIsMealTypeVisible(false);
+            setCurrentRecipe((prev) => ({
+              ...prev,
+              mealTypes: newMealTypes,
+            }));
+            await updateRecipe({ ...currentRecipe, mealTypes: newMealTypes });
+            setRecipes(getAllRecipes());
+          }}
+          visible={isMealTypeVisible}
+        />
 
         <Text style={styles.sectionHeader}>Categoría</Text>
-        <View style={styles.chipContainer}>
+        <Pressable
+          style={styles.chipContainer}
+          onPress={() => setIsLabelVisible(true)}
+        >
           {currentRecipe.labels.map((l) => (
             <Chip key={l.id} style={styles.chip}>
               {l.name}
             </Chip>
           ))}
-        </View>
+        </Pressable>
+
+        <SettingsModal
+          items={labels}
+          selected={currentRecipe.labels}
+          visible={isLabelVisible}
+          onClose={async (newLabel) => {
+            setIsLabelVisible(false);
+            setCurrentRecipe((prev) => ({
+              ...prev,
+              labels: newLabel,
+            }));
+            await updateRecipe({ ...currentRecipe, labels: newLabel });
+            setRecipes(getAllRecipes());
+          }}
+        />
 
         <Text style={styles.sectionHeader}>Ingredientes</Text>
         {currentRecipe.ingredients.map((ingredient, index) => (
-          <EditableArrayItem
+          <View
             key={index}
-            value={ingredient}
-            onSave={(value) => {
-              const newArray = [...currentRecipe.ingredients];
-              newArray[index] = value;
-              handleSave("ingredients", newArray);
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingHorizontal: 20,
             }}
-            onDelete={() =>
-              handleSave(
-                "ingredients",
-                currentRecipe.ingredients.filter((_, i) => i !== index),
-              )
-            }
-            style={styles.detailsText}
-          />
+          >
+            <View style={{ paddingBottom: 10 }}>
+              <Entypo
+                name="triangle-right"
+                size={24}
+                color={colors.lightBrown}
+              />
+            </View>
+            <EditableArrayItem
+              key={index}
+              value={ingredient}
+              onSave={(value) => {
+                const newArray = [...currentRecipe.ingredients];
+                newArray[index] = value;
+                handleSave("ingredients", newArray);
+              }}
+              onDelete={() =>
+                handleSave(
+                  "ingredients",
+                  currentRecipe.ingredients.filter((_, i) => i !== index),
+                )
+              }
+              style={styles.detailsText}
+            />
+          </View>
         ))}
         <Pressable
           onPress={() =>
@@ -275,22 +324,34 @@ const RecipeDetailsScreen: React.FC = () => {
 
         <Text style={styles.sectionHeader}>Pasos</Text>
         {currentRecipe.steps.map((step, index) => (
-          <EditableArrayItem
+          <View
             key={index}
-            value={step}
-            onSave={(value) => {
-              const newArray = [...currentRecipe.steps];
-              newArray[index] = value;
-              handleSave("steps", newArray);
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingHorizontal: 20,
             }}
-            onDelete={() =>
-              handleSave(
-                "steps",
-                currentRecipe.steps.filter((_, i) => i !== index),
-              )
-            }
-            style={styles.detailsText}
-          />
+          >
+            <View style={{ paddingBottom: 10 }}>
+              <Text style={styles.enum}>{index + 1 + "."}</Text>
+            </View>
+            <EditableArrayItem
+              key={index}
+              value={step}
+              onSave={(value) => {
+                const newArray = [...currentRecipe.steps];
+                newArray[index] = value;
+                handleSave("steps", newArray);
+              }}
+              onDelete={() =>
+                handleSave(
+                  "steps",
+                  currentRecipe.steps.filter((_, i) => i !== index),
+                )
+              }
+              style={styles.detailsText}
+            />
+          </View>
         ))}
         <Pressable
           onPress={() => handleSave("steps", [...currentRecipe.steps, ""])}
@@ -373,8 +434,17 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   addButton: {
-    color: colors.orange,
+    color: colors.darkOrange,
     fontFamily: "ShantellSans-Regular",
     marginVertical: 8,
+  },
+
+  enum: {
+    backgroundColor: colors.darkOrange,
+    color: colors.offWhite,
+    marginRight: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 50,
   },
 });

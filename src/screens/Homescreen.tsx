@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import TodayRecipe from "../components/Recipes/TodayRecipe";
 import { useContext, useState, useEffect } from "react";
 import { RecipeContext } from "../contexts/RecipeContext";
-import { getLastMenu } from "../services/database.service";
+import { getLastMenu } from "../services/db/database.service";
 import { Menu } from "../types/RecipeType";
 
 const menuDefault: Menu = { id: 0, created: "", recipes: [] };

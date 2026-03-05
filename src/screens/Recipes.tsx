@@ -29,8 +29,6 @@ const Recipes = () => {
     navigation.navigate("AddRecipe");
   };
 
-  const containerStyle = { backgroundColor: "white", margin: 40, padding: 20 };
-
   // Function that filters the recipes based on the input text
   const [searchText, setSearchText] = useState("");
 
@@ -49,7 +47,6 @@ const Recipes = () => {
         <Modal
           visible={mealTypesVisible}
           onDismiss={() => setMealTypesVisible(false)}
-          contentContainerStyle={containerStyle}
         >
           <ManageMealTypes mealTypes={mealTypes} onUpdate={setMealTypes} />
         </Modal>
@@ -57,7 +54,6 @@ const Recipes = () => {
         <Modal
           visible={labelsVisible}
           onDismiss={() => setLabelsVisible(false)}
-          contentContainerStyle={containerStyle}
         >
           <ManageLabels labels={labels} onUpdate={setLabels} />
         </Modal>
@@ -112,12 +108,12 @@ const Recipes = () => {
       <ScrollView>
         {filteredRecipes &&
           filteredRecipes.map((recipe, index) => (
-            <View key={index} style={styles.card}>
-              <Text style={styles.title}>{recipe.name}</Text>
-              <Pressable onPress={() => showDetailsScreen(recipe)}>
+            <Pressable key={index} onPress={() => showDetailsScreen(recipe)}>
+              <View style={styles.card}>
+                <Text style={styles.title}>{recipe.name}</Text>
                 <Text style={styles.detailsLink}>Ver detalles</Text>
-              </Pressable>
-            </View>
+              </View>
+            </Pressable>
           ))}
       </ScrollView>
 
