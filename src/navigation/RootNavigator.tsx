@@ -5,7 +5,7 @@ import AddRecipe from "../screens/AddRecipe";
 import BottomTabNav from "./BottomTabNav";
 import RecipeDetailsScreen from "../screens/RecipeDetailsScreen";
 
-import { Recipe } from "../types/RecipeType";
+import { Recipe } from "../types/recipeType";
 import Settings from "../screens/Settings";
 
 export type RootStackParamList = {

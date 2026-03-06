@@ -1,4 +1,4 @@
-import { MealType, Label, Recipe } from "./RecipeType";
+import { MealType, Label, Recipe } from "./recipeType";
 
 export type ExportData = {
   version: number;

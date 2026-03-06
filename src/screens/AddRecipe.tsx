@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import React, { useContext } from "react";
 import { Chip, HelperText } from "react-native-paper";
-import { Recipe } from "../types/RecipeType";
-import { RecipeContext } from "../contexts/RecipeContext";
+import { Recipe } from "../types/recipeType";
+import { RecipeContext } from "../contexts/Recipe/RecipeContext";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
@@ -20,6 +20,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Controller, useForm } from "react-hook-form";
 import DashedButton from "../components/Core/DashedButton";
+import { Trans } from "@lingui/react/macro";
 
 type AddRecipeNavProp = StackNavigationProp<RootStackParamList, "AddRecipe">;
 
@@ -73,9 +74,13 @@ const AddRecipe: React.FC = () => {
           onPress={() => navigation.goBack()}
         >
           <Feather name="arrow-left" size={24} color={colors.darkOrange} />
-          <Text style={styles.buttonText}>Volver</Text>
+          <Text style={styles.buttonText}>
+            <Trans>Go Back</Trans>
+          </Text>
         </Pressable>
-        <Text style={styles.label}>Nombre</Text>
+        <Text style={styles.label}>
+          <Trans>Name</Trans>
+        </Text>
         <Controller
           name="name"
           control={control}
@@ -84,7 +89,7 @@ const AddRecipe: React.FC = () => {
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              placeholder="Añadir nombre..."
+              placeholder="Add name..."
               placeholderTextColor={colors.lightBrown}
               onBlur={onBlur}
               onChangeText={onChange}
@@ -98,7 +103,9 @@ const AddRecipe: React.FC = () => {
           <HelperText type="error">{errors.name?.message}</HelperText>
         )}
 
-        <Text style={styles.label}>Tipo de comida</Text>
+        <Text style={styles.label}>
+          <Trans>Type of meal</Trans>
+        </Text>
         <View style={styles.chipContainer}>
           <Controller
             name="mealTypes"
@@ -136,7 +143,9 @@ const AddRecipe: React.FC = () => {
           <HelperText type="error">{errors.mealTypes?.message}</HelperText>
         )}
 
-        <Text style={styles.label}>Categoría</Text>
+        <Text style={styles.label}>
+          <Trans>Category</Trans>
+        </Text>
         <View style={styles.chipContainer}>
           <Controller
             name="labels"
@@ -170,7 +179,9 @@ const AddRecipe: React.FC = () => {
           />
         </View>
         {/* Ingredientes */}
-        <Text style={styles.label}>Ingredientes</Text>
+        <Text style={styles.label}>
+          <Trans>Ingredients</Trans>
+        </Text>
 
         {ingredients.map((ingredient, index) => (
           <Controller
@@ -200,7 +211,7 @@ const AddRecipe: React.FC = () => {
                 </View>
                 <TextInput
                   style={[styles.input, { flex: 1 }]}
-                  placeholder="Añadir ingrediente..."
+                  placeholder="Add ingredient..."
                   value={value}
                   autoFocus
                   onChangeText={onChange}
@@ -234,11 +245,15 @@ const AddRecipe: React.FC = () => {
             color={colors.lightBrown}
             style={styles.addButton}
           />
-          <Text style={styles.text}>Añadir ingrediente</Text>
+          <Text style={styles.text}>
+            <Trans>Add Ingredient</Trans>
+          </Text>
         </Pressable>
 
         {/* Pasos */}
-        <Text style={styles.label}>Pasos</Text>
+        <Text style={styles.label}>
+          <Trans>Steps</Trans>
+        </Text>
         {steps.map((step, index) => (
           <Controller
             key={index}
@@ -263,7 +278,7 @@ const AddRecipe: React.FC = () => {
                 </View>
                 <TextInput
                   style={[styles.input, { flex: 1 }]}
-                  placeholder="Añadir paso..."
+                  placeholder="Add step..."
                   value={value}
                   autoFocus
                   multiline
@@ -297,11 +312,11 @@ const AddRecipe: React.FC = () => {
             color={colors.lightBrown}
             style={styles.addButton}
           />
-          <Text style={styles.text}>Añadir paso</Text>
+          <Text style={styles.text}>Add Step</Text>
         </Pressable>
 
         <DashedButton
-          title="Añadir"
+          title="Save"
           color={colors.purple}
           background={colors.transparentYellow}
           style={{ alignSelf: "center", marginTop: 50 }}

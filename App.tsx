@@ -4,15 +4,18 @@ import {
   MD3LightTheme,
   PaperProvider,
 } from "react-native-paper";
-import React from "react";
+import React, { useContext, useMemo } from "react";
 import Header from "./src/header/Header";
-import RecipeProvider from "./src/providers/RecipeProvider";
+import RecipeProvider from "./src/contexts/Recipe/RecipeProvider";
 import AppNavigationContainer from "./src/navigation/NavigationContainer";
 import RootNavigator from "./src/navigation/RootNavigator";
 import { useFonts } from "expo-font";
 import { Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { colors } from "./src/theme/colors";
+
+import UserProvider from "./src/contexts/User/UserProvider";
+import { UserContext } from "./src/contexts/User/UserContext";
 
 const fontConfig = {
   fontFamily: "ShantellSans-Regular",
@@ -41,6 +44,8 @@ const theme = {
 
 // Main App of the application, with all the Providers and the custom NavigationContainer
 export default function App() {
+  const { language } = useContext(UserContext);
+
   const [fontsLoaded] = useFonts({
     "ShantellSans-Regular": require("./assets/fonts/static/ShantellSans-Regular.ttf"),
     "ShantellSans-Bold": require("./assets/fonts/static/ShantellSans-Bold.ttf"),
@@ -56,12 +61,14 @@ export default function App() {
     <View style={{ flex: 1, backgroundColor: colors.transparentYellow }}>
       <SafeAreaProvider>
         <AppNavigationContainer>
-          <RecipeProvider>
-            <PaperProvider theme={theme}>
-              <Header />
-              <RootNavigator />
-            </PaperProvider>
-          </RecipeProvider>
+          <UserProvider>
+            <RecipeProvider>
+              <PaperProvider theme={theme}>
+                <Header />
+                <RootNavigator />
+              </PaperProvider>
+            </RecipeProvider>
+          </UserProvider>
         </AppNavigationContainer>
       </SafeAreaProvider>
     </View>

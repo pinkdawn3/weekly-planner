@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { Label, MealType, Menu, Recipe } from "../types/RecipeType";
+import { Label, MealType, Menu, Recipe } from "../../types/recipeType";
 
 export type RecipeTypeContext = {
   recipe: Recipe;

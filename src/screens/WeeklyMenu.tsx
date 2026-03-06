@@ -1,7 +1,7 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useContext, useState } from "react";
-import { RecipeContext } from "../contexts/RecipeContext";
-import { MenuRecipe, Recipe } from "../types/RecipeType";
+import { RecipeContext } from "../contexts/Recipe/RecipeContext";
+import { MenuRecipe, Recipe } from "../types/recipeType";
 import { Modal, Portal, Provider, Searchbar } from "react-native-paper";
 import { navigate } from "../navigation/NavigationContainer";
 import {
@@ -13,6 +13,7 @@ import MenuGenerator from "../components/MenuGenerator";
 import { colors } from "../theme/colors";
 import { Entypo, Feather } from "@expo/vector-icons";
 import DashedButton from "../components/Core/DashedButton";
+import { Trans } from "@lingui/react/macro";
 
 const daysOfWeekOrder = [
   "Monday",
@@ -138,7 +139,9 @@ const WeeklyMenu = () => {
           <View
             style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
           >
-            <Text style={styles.infoText}>¡No hay menú!</Text>
+            <Text style={styles.infoText}>
+              <Trans>No menu available!</Trans>
+            </Text>
 
             <DashedButton
               title="Crear menú"

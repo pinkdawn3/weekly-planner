@@ -1,20 +1,21 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable, Linking } from "react-native";
 import { colors } from "../theme/colors";
 import { Menu } from "react-native-paper";
 import { useContext, useState } from "react";
 import DashedButton from "../components/Core/DashedButton";
 import { exportData, importData } from "../services/backup.service";
-import { RecipeContext } from "../contexts/RecipeContext";
+import { RecipeContext } from "../contexts/Recipe/RecipeContext";
 import {
   getAllRecipes,
   getAllMealTypes,
   getAllLabels,
 } from "../services/db/database.service";
+import { UserContext } from "../contexts/User/UserContext";
 
 const Settings = () => {
   const [visible, setVisible] = useState(false);
-  const [selected, setSelected] = useState("");
   const { setRecipes, setMealTypes, setLabels } = useContext(RecipeContext);
+  const { language, handleSetLanguage } = useContext(UserContext);
 
   const dropdownStyle = {
     borderRadius: 18,
@@ -59,7 +60,7 @@ const Settings = () => {
         onDismiss={() => setVisible(false)}
         anchor={
           <DashedButton
-            title={selected || "Language..."}
+            title={language}
             color={colors.orange}
             background={colors.transparentYellow}
             style={{ alignSelf: "center", marginBottom: 20 }}
@@ -72,19 +73,25 @@ const Settings = () => {
       >
         <Menu.Item
           onPress={() => {
-            setSelected("English");
+            handleSetLanguage("en");
             setVisible(false);
           }}
           title="English"
         />
         <Menu.Item
           onPress={() => {
-            setSelected("Spanish");
+            handleSetLanguage("es");
             setVisible(false);
           }}
           title="Spanish"
         />
       </Menu>
+
+      <Pressable
+        onPress={() => Linking.openURL("https://ko-fi.com/sunrisemorning")}
+      >
+        <Text>☕ Support the project!</Text>
+      </Pressable>
     </View>
   );
 };

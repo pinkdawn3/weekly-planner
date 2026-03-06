@@ -1,16 +1,16 @@
-import db from "./client";
 import {
   MealType,
   Label,
   Recipe,
   Menu,
   MenuRecipe,
-} from "../../types/RecipeType";
+} from "../../types/recipeType";
+import db from "./client";
 import { CURRENT_DB_VERSION, migrations } from "./migrations";
 
 export const initDB = () => {
   // Toggle comment in case of table changes
-  /* db.execSync(`
+  /*  db.execSync(`
     DROP TABLE IF EXISTS menu_recipes;
     DROP TABLE IF EXISTS recipe_meal_types;
     DROP TABLE IF EXISTS recipe_labels;
@@ -18,10 +18,11 @@ export const initDB = () => {
     DROP TABLE IF EXISTS recipes;
     DROP TABLE IF EXISTS meal_types;
     DROP TABLE IF EXISTS labels;
+    DROP TABLE IF EXISTS preferences;
   `);
 
-  db.execSync(`PRAGMA user_version = 0`);
- */
+  db.execSync(`PRAGMA user_version = 0`); */
+
   const { user_version } = db.getFirstSync<{ user_version: number }>(
     "PRAGMA user_version",
   )!;
@@ -294,4 +295,20 @@ export const createMenu = (menuRecipes: MenuRecipe[]): void => {
       [menu.id, mr.recipe.id!, mr.mealType.id, mr.weekDay],
     );
   });
+};
+
+// User Preferences
+export const getPreference = (key: string): string | null => {
+  const result = db.getFirstSync<{ value: string }>(
+    "SELECT value FROM preferences WHERE key=?",
+    [key],
+  );
+  return result?.value ?? null;
+};
+
+export const setPreference = (key: string, value: string): void => {
+  db.runSync("INSERT OR REPLACE INTO preferences (key, value) VALUES (?, ?)", [
+    key,
+    value,
+  ]);
 };

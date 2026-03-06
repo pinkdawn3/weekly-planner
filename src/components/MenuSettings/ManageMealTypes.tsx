@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { MealType } from "../../types/RecipeType";
+import { MealType } from "../../types/recipeType";
 import {
   createMealType,
   deleteMealType,

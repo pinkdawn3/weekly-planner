@@ -1,9 +1,9 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useContext, useState } from "react";
-import { RecipeContext } from "../contexts/RecipeContext";
+import { RecipeContext } from "../contexts/Recipe/RecipeContext";
 import { Modal, Portal, Searchbar } from "react-native-paper";
 import { Entypo } from "@expo/vector-icons";
-import { Recipe } from "../types/RecipeType";
+import { Recipe } from "../types/recipeType";
 import ManageMealTypes from "../components/MenuSettings/ManageMealTypes";
 import ManageLabels from "../components/MenuSettings/ManageLabel";
 import { useNavigation } from "@react-navigation/native";
@@ -12,6 +12,7 @@ import { RootStackParamList } from "../navigation/RootNavigator";
 import { colors } from "../theme/colors";
 import DashedButton from "../components/Core/DashedButton";
 import DottedBackground from "../components/Core/DottedBackground";
+import { Trans } from "@lingui/react/macro";
 
 const Recipes = () => {
   const { recipes, mealTypes, setMealTypes, labels, setLabels } =
@@ -67,14 +68,14 @@ const Recipes = () => {
 
         <View style={styles.configButtons}>
           <DashedButton
-            title="Tipos de comida"
+            title="Types of meals"
             color={colors.purple}
             background={colors.transparentYellow}
             onPress={() => setMealTypesVisible(true)}
           />
 
           <DashedButton
-            title="Categorías"
+            title="Categories"
             color={colors.purple}
             background={colors.transparentYellow}
             size={{ paddingHorizontal: 30 }}
@@ -84,7 +85,7 @@ const Recipes = () => {
 
         {/* Search bar to search recipes by name */}
         <Searchbar
-          placeholder="Buscar receta..."
+          placeholder="Search recipe..."
           onChangeText={setSearchText}
           value={searchText}
           style={{
@@ -123,7 +124,9 @@ const Recipes = () => {
               >
                 <View style={styles.card}>
                   <Text style={styles.title}>{recipe.name}</Text>
-                  <Text style={styles.detailsLink}>Ver detalles</Text>
+                  <Text style={styles.detailsLink}>
+                    <Trans>See details</Trans>{" "}
+                  </Text>
                 </View>
               </Pressable>
             ))}

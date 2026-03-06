@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from "react";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { Recipe } from "../types/RecipeType";
+import { Recipe } from "../types/recipeType";
 import {
   Pressable,
   View,
@@ -10,7 +10,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import { RecipeContext } from "../contexts/RecipeContext";
+import { RecipeContext } from "../contexts/Recipe/RecipeContext";
 import {
   updateRecipe,
   deleteRecipe,

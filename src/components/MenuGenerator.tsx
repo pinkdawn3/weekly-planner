@@ -6,8 +6,8 @@ import {
   Chip,
   HelperText,
 } from "react-native-paper";
-import { RecipeContext } from "../contexts/RecipeContext";
-import { Label, MealType, Menu, MenuRecipe } from "../types/RecipeType";
+import { RecipeContext } from "../contexts/Recipe/RecipeContext";
+import { Label, MealType, Menu, MenuRecipe } from "../types/recipeType";
 import moment from "moment";
 import {
   createMenu,
@@ -16,6 +16,7 @@ import {
 } from "../services/db/database.service";
 import { colors } from "../theme/colors";
 import DashedButton from "./Core/DashedButton";
+import { Trans } from "@lingui/react/macro";
 
 interface MenuGeneratorProps {
   onCloseModal: () => void;
@@ -194,7 +195,9 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
-        <Text style={styles.sectionTitle}>Tipos de comida</Text>
+        <Text style={styles.sectionTitle}>
+          <Trans>Type of meal</Trans>
+        </Text>
         <View style={styles.chipContainer}>
           {mealTypes.map((mt) => (
             <Chip
@@ -212,7 +215,9 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
           ))}
         </View>
 
-        <Text style={styles.sectionTitle}>Categorías</Text>
+        <Text style={styles.sectionTitle}>
+          <Trans>Categories</Trans>
+        </Text>
         <View style={styles.chipContainer}>
           {labels.map((l) => (
             <Chip
@@ -230,7 +235,7 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
           ))}
         </View>
 
-        <Text style={styles.sectionTitle}>Cantidad por categoría</Text>
+        <Text style={styles.sectionTitle}>Number per category</Text>
         {selectedLabels.map((l, index) => (
           <View key={index}>
             <TextInput
@@ -256,7 +261,7 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
         ))}
 
         <DashedButton
-          title="Generar menú"
+          title="Generate menu"
           color={colors.purple}
           background={colors.offWhite}
           onPress={generateMenu}

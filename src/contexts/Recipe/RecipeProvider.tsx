@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { RecipeContext, RecipeTypeContext } from "../contexts/RecipeContext";
-import { Label, MealType, Menu, Recipe } from "../types/RecipeType";
 import {
   initDB,
   getAllRecipes,
   getAllMealTypes,
   getAllLabels,
   getLastMenu,
-} from "../services/db/database.service";
+} from "../../services/db/database.service";
+import { RecipeTypeContext, RecipeContext } from "./RecipeContext";
+import { Recipe, Menu, MealType, Label } from "../../types/recipeType";
 
 type RecipeProviderProps = {
   children: React.ReactNode | React.ReactNode[];

@@ -2,7 +2,7 @@ import { File, Paths } from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import * as DocumentPicker from "expo-document-picker";
 
-import { ExportData } from "../types/ExportData";
+import { ExportData } from "../types/exportData";
 
 import {
   getAllMealTypes,

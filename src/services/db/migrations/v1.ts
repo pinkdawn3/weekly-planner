@@ -36,6 +36,11 @@ export const v1 = () => {
       meal_type_id INTEGER REFERENCES meal_types(id),
       week_day TEXT
     );
+
+    CREATE TABLE IF NOT EXISTS preferences (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL
+    );
   `);
 
   // Default values

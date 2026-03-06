@@ -2,9 +2,9 @@ import Svg, { Defs, Pattern, Rect, Line } from "react-native-svg";
 import { View, StyleSheet } from "react-native";
 import TodayRecipe from "../components/Recipes/TodayRecipe";
 import { useContext, useEffect } from "react";
-import { RecipeContext } from "../contexts/RecipeContext";
+import { RecipeContext } from "../contexts/Recipe/RecipeContext";
 import { getLastMenu } from "../services/db/database.service";
-import { Menu } from "../types/RecipeType";
+import { Menu } from "../types/recipeType";
 import { colors } from "../theme/colors";
 
 const menuDefault: Menu = { id: 0, created: "", recipes: [] };

@@ -1,13 +1,13 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import moment from "moment";
-import { RecipeContext } from "../../contexts/RecipeContext";
-import { MenuRecipe } from "../../types/RecipeType";
+import { RecipeContext } from "../../contexts/Recipe/RecipeContext";
+import { MenuRecipe } from "../../types/recipeType";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../navigation/RootNavigator";
-
 import { colors } from "../../theme/colors";
+import { Trans } from "@lingui/react/macro";
 
 const TodayRecipe = () => {
   const { currentMenu } = useContext(RecipeContext);
@@ -33,7 +33,9 @@ const TodayRecipe = () => {
     <View style={styles.card}>
       {todaysRecipes.length > 0 ? (
         <>
-          <Text style={styles.title}>Hoy toca...</Text>
+          <Text style={styles.title}>
+            <Trans>Today we eat...</Trans>
+          </Text>
 
           {todaysRecipes.map((mr) => (
             <Pressable key={mr.mealType.id} onPress={() => handlePress(mr)}>
@@ -44,8 +46,12 @@ const TodayRecipe = () => {
         </>
       ) : (
         <View>
-          <Text style={styles.noMenuTextTitle}>No menu availabe!</Text>
-          <Text style={styles.noMenuText}>Add recipes or create a menu.</Text>
+          <Text style={styles.noMenuTextTitle}>
+            <Trans>No menu available!</Trans>
+          </Text>
+          <Text style={styles.noMenuText}>
+            <Trans>Add recipes or create a menu.</Trans>
+          </Text>
         </View>
       )}
     </View>
