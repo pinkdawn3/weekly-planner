@@ -20,8 +20,8 @@ export const initDB = () => {
     DROP TABLE IF EXISTS labels;
   `);
 
-  db.execSync(`PRAGMA user_version = 0`); */
-
+  db.execSync(`PRAGMA user_version = 0`);
+ */
   const { user_version } = db.getFirstSync<{ user_version: number }>(
     "PRAGMA user_version",
   )!;

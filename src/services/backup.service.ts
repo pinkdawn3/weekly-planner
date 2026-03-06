@@ -34,8 +34,8 @@ const importers: Record<number, (data: any) => void> = {
     data.recipes.forEach((r) => createRecipe(r));
   },
 
-  // en el futuro si el schema cambia:
-  // 2: (data) => { /* transformar campos nuevos */ }
+  // If schema changes in the future:
+  // 2: (data: ExportData) => { /* transform new data */ }
 };
 
 export const importData = async () => {
@@ -49,7 +49,7 @@ export const importData = async () => {
   const data: ExportData = JSON.parse(await content);
 
   const importer = importers[data.version];
-  if (!importer) throw new Error(`Versión no soportada: ${data.version}`);
+  if (!importer) throw new Error(`Version not supported: ${data.version}`);
 
   importer(data);
 };

@@ -16,6 +16,7 @@ export const v1 = () => {
       description TEXT,
       ingredients TEXT,
       steps TEXT
+      photo_uri TEXT
     );
     CREATE TABLE IF NOT EXISTS recipe_meal_types (
       recipe_id INTEGER REFERENCES recipes(id) ON DELETE CASCADE,
@@ -43,8 +44,8 @@ export const v1 = () => {
   );
   if (mealTypeCount?.count === 0) {
     db.execSync(`
-      INSERT INTO meal_types (name) VALUES ('Almuerzo');
-      INSERT INTO meal_types (name) VALUES ('Cena');
+      INSERT INTO meal_types (name) VALUES ('Lunch');
+      INSERT INTO meal_types (name) VALUES ('Dinner');
     `);
   }
 
@@ -53,10 +54,10 @@ export const v1 = () => {
   );
   if (labelCount?.count === 0) {
     db.execSync(`
-      INSERT INTO labels (name) VALUES ('Proteína');
-      INSERT INTO labels (name) VALUES ('Hidratos');
-      INSERT INTO labels (name) VALUES ('Fibra');
-      INSERT INTO labels (name) VALUES ('Pescado');
+      INSERT INTO labels (name) VALUES ('Protein');
+      INSERT INTO labels (name) VALUES ('Carbohydrates');
+      INSERT INTO labels (name) VALUES ('Fibre');
+      INSERT INTO labels (name) VALUES ('Fish');
     `);
   }
 };
