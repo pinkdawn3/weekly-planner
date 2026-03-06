@@ -106,7 +106,7 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
       ).length;
 
       if (labelCount[l.id] > recipesWithLabel) {
-        newErrors[l.id] = `Faltan recetas.`;
+        newErrors[l.id] = _(msg`Not enough recipes.`);
         hasErrors = true;
       } else {
         newErrors[l.id] = null;
@@ -215,6 +215,11 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
                 fontFamily: "ShantellSans-Regular",
                 color: colors.darkBrown,
               }}
+              accessibilityRole="checkbox"
+              accessibilityState={{
+                checked: selectedMealTypes.some((s) => s.id === mt.id),
+              }}
+              accessibilityLabel={t(mt.name)}
             >
               {t(mt.name)}
             </Chip>
@@ -262,6 +267,10 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
               keyboardType="numeric"
               style={styles.input}
               error={!!errors[l.id]}
+              accessibilityLabel={t(l.name)}
+              accessibilityHint={_(
+                msg`Enter the number of recipes for this category`,
+              )}
             />
 
             <HelperText type="error">{errors[l.id]}</HelperText>
@@ -275,6 +284,7 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
           onPress={generateMenu}
           style={{ alignSelf: "center", marginTop: 20 }}
           size={{ paddingHorizontal: 40 }}
+          accessibilityLabel={_(msg`Generate menu`)}
         />
       </View>
     </ScrollView>

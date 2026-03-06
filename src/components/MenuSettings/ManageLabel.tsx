@@ -44,7 +44,11 @@ const ManageLabels: React.FC<ManageLabelsProps> = ({ labels, onUpdate }) => {
       {labels.map((l) => (
         <View key={l.id} style={styles.listItem}>
           <Text style={styles.itemText}>{t(l.name)}</Text>
-          <Pressable onPress={() => handleDelete(l.id)}>
+          <Pressable
+            onPress={() => handleDelete(l.id)}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Delete meal category`)}
+          >
             <Ionicons name="trash-outline" size={20} color="#f28966" />
           </Pressable>
         </View>
@@ -55,6 +59,8 @@ const ManageLabels: React.FC<ManageLabelsProps> = ({ labels, onUpdate }) => {
         value={newName}
         onChangeText={setNewName}
         style={styles.input}
+        accessibilityLabel={newName}
+        accessibilityHint={_(msg`Enter meal category`)}
       />
 
       <DashedButton
@@ -64,6 +70,7 @@ const ManageLabels: React.FC<ManageLabelsProps> = ({ labels, onUpdate }) => {
         size={{ paddingHorizontal: 30 }}
         background={colors.offWhite}
         onPress={handleAdd}
+        accessibilityLabel={_(msg`Add meal category`)}
       />
     </View>
   );

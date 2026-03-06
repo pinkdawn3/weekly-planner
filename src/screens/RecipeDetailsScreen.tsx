@@ -26,6 +26,7 @@ import SettingsModal from "../components/SettingsModal";
 import { Trans } from "@lingui/react/macro";
 import { useTranslate } from "../hooks/useTranslations";
 import { useLingui } from "@lingui/react";
+import { msg } from "@lingui/core/macro";
 
 type RecipeDetailsScreenRouteProp = RouteProp<
   RootStackParamList,
@@ -56,6 +57,8 @@ const EditableField = ({
   placeholder,
   style,
 }: EditableFieldProps) => {
+  const { _ } = useLingui();
+
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(fieldsRef.current[field] ?? "");
   const [focused, setFocused] = useState(false);
@@ -81,6 +84,7 @@ const EditableField = ({
           { borderWidth: 0, padding: 0, textAlignVertical: "top" },
           focused && styles.inputFocused,
         ]}
+        accessibilityLabel={_(msg`Edit`) + `: ${text}`}
       />
     );
   }
@@ -113,6 +117,8 @@ const EditableArrayItem = ({
   onDelete,
   style,
 }: EditableArrayItemProps) => {
+  const { _ } = useLingui();
+
   const [editing, setEditing] = useState(!value);
   const [text, setText] = useState(value);
   const [focused, setFocused] = useState(false);
@@ -139,11 +145,14 @@ const EditableArrayItem = ({
             { flex: 1, borderWidth: 0, padding: 0 },
             focused && styles.inputFocused,
           ]}
+          accessibilityLabel={_(msg`Edit`) + `: ${text}`}
         />
 
         <Pressable
           onPress={onDelete}
           style={{ paddingBottom: 10, marginLeft: 5 }}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Delete item`)}
         >
           <Ionicons name="trash-outline" size={16} color={colors.darkOrange} />
         </Pressable>
@@ -153,7 +162,12 @@ const EditableArrayItem = ({
 
   return (
     <View style={styles.arrayItemContainer}>
-      <Pressable style={{ flex: 1 }} onPress={() => setEditing(true)}>
+      <Pressable
+        style={{ flex: 1 }}
+        onPress={() => setEditing(true)}
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`Edit`) + `: ${text}`}
+      >
         <Text style={style}>{text}</Text>
       </Pressable>
     </View>
@@ -212,16 +226,26 @@ const RecipeDetailsScreen: React.FC = () => {
     <ScrollView style={{ backgroundColor: colors.offWhite }}>
       <SafeAreaView style={styles.detailsContainer}>
         <View style={styles.buttonContainer}>
+          {/*  Go back button */}
           <Pressable
             style={styles.backButton}
             onPress={() => navigation.goBack()}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Go back`)}
           >
             <Feather name="arrow-left" size={24} color={colors.darkOrange} />
             <Text style={styles.buttonText}>
               <Trans>Go Back</Trans>
             </Text>
           </Pressable>
-          <Pressable style={styles.buttonDelete} onPress={handleDelete}>
+
+          {/* Delete recipe button */}
+          <Pressable
+            style={styles.buttonDelete}
+            onPress={handleDelete}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Delete recipe`)}
+          >
             <Ionicons name="trash" size={24} color={colors.darkBrown} />
           </Pressable>
         </View>
@@ -234,12 +258,14 @@ const RecipeDetailsScreen: React.FC = () => {
           style={styles.modalTitle}
         />
 
-        <Text style={styles.sectionHeader}>
+        <Text style={styles.sectionHeader} accessibilityRole="header">
           <Trans>Type of meal</Trans>
         </Text>
         <Pressable
           style={styles.chipContainer}
           onPress={() => setIsMealTypeVisible(true)}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Edit meal types`)}
         >
           {currentRecipe.mealTypes.map((mt) => (
             <Chip
@@ -269,12 +295,14 @@ const RecipeDetailsScreen: React.FC = () => {
           />
         </Portal>
 
-        <Text style={styles.sectionHeader}>
+        <Text style={styles.sectionHeader} accessibilityRole="header">
           <Trans>Category</Trans>
         </Text>
         <Pressable
           style={styles.chipContainer}
           onPress={() => setIsLabelVisible(true)}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Edit categories`)}
         >
           {currentRecipe.labels.map((l) => (
             <Chip
@@ -304,7 +332,7 @@ const RecipeDetailsScreen: React.FC = () => {
           />
         </Portal>
 
-        <Text style={styles.sectionHeader}>
+        <Text style={styles.sectionHeader} accessibilityRole="header">
           <Trans>Ingredients</Trans>
         </Text>
         {currentRecipe.ingredients.map((ingredient, index) => (
@@ -345,13 +373,15 @@ const RecipeDetailsScreen: React.FC = () => {
           onPress={() =>
             handleSave("ingredients", [...currentRecipe.ingredients, ""])
           }
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Add ingredient`)}
         >
           <Text style={styles.addButton}>
             +<Trans> Add Ingredient</Trans>
           </Text>
         </Pressable>
 
-        <Text style={styles.sectionHeader}>
+        <Text style={styles.sectionHeader} accessibilityRole="header">
           <Trans>Steps</Trans>
         </Text>
         {currentRecipe.steps.map((step, index) => (
@@ -386,6 +416,8 @@ const RecipeDetailsScreen: React.FC = () => {
         ))}
         <Pressable
           onPress={() => handleSave("steps", [...currentRecipe.steps, ""])}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Add step`)}
         >
           <Text style={styles.addButton}>
             +<Trans> Add Step</Trans>

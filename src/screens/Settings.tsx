@@ -53,6 +53,7 @@ const Settings = () => {
         background={colors.transparentYellow}
         style={{ alignSelf: "center" }}
         onPress={handleImport}
+        accessibilityLabel={_(msg`Import user data`)}
       />
       <DashedButton
         title={_(msg`Export`)}
@@ -60,6 +61,7 @@ const Settings = () => {
         background={colors.transparentYellow}
         style={{ alignSelf: "center" }}
         onPress={exportData}
+        accessibilityLabel={_(msg`Export user data`)}
       />
 
       <Menu
@@ -72,6 +74,7 @@ const Settings = () => {
             background={colors.transparentYellow}
             style={{ alignSelf: "center", marginBottom: 20 }}
             onPress={() => setVisible(true)}
+            accessibilityLabel={_(msg`Change language`)}
           />
         }
         anchorPosition="bottom"
@@ -96,6 +99,8 @@ const Settings = () => {
 
       <Pressable
         onPress={() => Linking.openURL("https://ko-fi.com/sunrisemorning")}
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`Support me on ko-fi`)}
       >
         <Text style={styles.kofi}>
           <Trans>☕ Support the project!</Trans>

@@ -64,6 +64,7 @@ const SettingsModal = <T extends { id: number; name: string }>({
           style={{ alignSelf: "center", marginTop: 20 }}
           size={{ paddingHorizontal: 30 }}
           onPress={() => onClose(tempSelected)}
+          accessibilityLabel={_(msg`Close meal types and categories`)}
         />
       </View>
     </Modal>

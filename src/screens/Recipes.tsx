@@ -76,6 +76,7 @@ const Recipes = () => {
             color={colors.purple}
             background={colors.transparentYellow}
             onPress={() => setMealTypesVisible(true)}
+            accessibilityLabel={_(msg`Manage types of meals`)}
           />
 
           <DashedButton
@@ -84,6 +85,7 @@ const Recipes = () => {
             background={colors.transparentYellow}
             size={{ paddingHorizontal: 30 }}
             onPress={() => setLabelsVisible(true)}
+            accessibilityLabel={_(msg`Manage categories of meals`)}
           />
         </View>
 
@@ -112,6 +114,8 @@ const Recipes = () => {
           onPress={() => {
             showAddRecipeScreen();
           }}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Add recipe`)}
         >
           <View style={styles.innerButton}>
             <Entypo name="plus" size={24} color={colors.transparentYellow} />
@@ -125,6 +129,7 @@ const Recipes = () => {
               <Pressable
                 key={recipe.id}
                 onPress={() => showDetailsScreen(recipe)}
+                accessibilityLabel={`${recipe.name}, ${_(msg`See details`)}`}
               >
                 <View style={styles.card}>
                   <Text style={styles.title}>{recipe.name}</Text>

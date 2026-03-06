@@ -78,13 +78,15 @@ const AddRecipe: React.FC = () => {
         <Pressable
           style={styles.backButton}
           onPress={() => navigation.goBack()}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Go back to recipes`)}
         >
           <Feather name="arrow-left" size={24} color={colors.darkOrange} />
           <Text style={styles.buttonText}>
             <Trans>Go Back</Trans>
           </Text>
         </Pressable>
-        <Text style={styles.label}>
+        <Text style={styles.label} accessibilityRole="header">
           <Trans>Name</Trans> <Text style={{ color: colors.red }}>*</Text>
         </Text>
         <Controller
@@ -101,6 +103,8 @@ const AddRecipe: React.FC = () => {
               onChangeText={onChange}
               value={value}
               style={styles.input}
+              accessibilityLabel={_(msg`Name, required`)}
+              accessibilityHint={_(msg`Enter the recipe name`)}
             />
           )}
         />
@@ -109,7 +113,7 @@ const AddRecipe: React.FC = () => {
           <HelperText type="error">{errors.name?.message}</HelperText>
         )}
 
-        <Text style={styles.label}>
+        <Text style={styles.label} accessibilityRole="header">
           <Trans>Type of meal</Trans>{" "}
           <Text style={{ color: colors.red }}>*</Text>
         </Text>
@@ -121,7 +125,10 @@ const AddRecipe: React.FC = () => {
               required: { value: true, message: "This field is required." },
             }}
             render={({ field: { onChange, value } }) => (
-              <View style={styles.chipContainer}>
+              <View
+                style={styles.chipContainer}
+                accessibilityLabel={_(msg`Type of meal is required`)}
+              >
                 {mealTypes.map((mt) => {
                   const isSelected = value?.some((v) => v.id === mt.id);
                   return (
@@ -136,6 +143,11 @@ const AddRecipe: React.FC = () => {
                       }}
                       style={styles.chip}
                       textStyle={{ color: colors.darkBrown }}
+                      accessibilityRole="checkbox"
+                      accessibilityState={{
+                        checked: value.some((s) => s.id === mt.id),
+                      }}
+                      accessibilityLabel={t(mt.name)}
                     >
                       {t(mt.name)}
                     </Chip>
@@ -150,10 +162,13 @@ const AddRecipe: React.FC = () => {
           <HelperText type="error">{errors.mealTypes?.message}</HelperText>
         )}
 
-        <Text style={styles.label}>
+        <Text style={styles.label} accessibilityRole="header">
           <Trans>Category</Trans> <Text style={{ color: colors.red }}>*</Text>
         </Text>
-        <View style={styles.chipContainer}>
+        <View
+          style={styles.chipContainer}
+          accessibilityLabel={_(msg`Category of meal is required`)}
+        >
           <Controller
             name="labels"
             control={control}
@@ -176,6 +191,11 @@ const AddRecipe: React.FC = () => {
                       }}
                       style={styles.chip}
                       textStyle={{ color: colors.darkBrown }}
+                      accessibilityRole="checkbox"
+                      accessibilityState={{
+                        checked: value.some((s) => s.id === label.id),
+                      }}
+                      accessibilityLabel={t(label.name)}
                     >
                       {t(label.name)}
                     </Chip>
@@ -186,7 +206,7 @@ const AddRecipe: React.FC = () => {
           />
         </View>
         {/* Ingredientes */}
-        <Text style={styles.label}>
+        <Text style={styles.label} accessibilityRole="header">
           <Trans>Ingredients</Trans>
         </Text>
 
@@ -227,8 +247,13 @@ const AddRecipe: React.FC = () => {
                       onBlur();
                     }
                   }}
+                  accessibilityHint={_(msg`Add an ingredient`)}
                 />
-                <Pressable onPress={() => removeIngredient(index)}>
+                <Pressable
+                  onPress={() => removeIngredient(index)}
+                  accessibilityRole="button"
+                  accessibilityLabel={_(msg`Delete ingredient`)}
+                >
                   <View style={{ paddingBottom: 15 }}>
                     <Entypo name="trash" size={24} color={colors.lightBrown} />
                   </View>
@@ -245,6 +270,8 @@ const AddRecipe: React.FC = () => {
             justifyContent: "center",
           }}
           onPress={appendIngredient}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Add a new ingredient`)}
         >
           <Entypo
             name="plus"
@@ -258,7 +285,7 @@ const AddRecipe: React.FC = () => {
         </Pressable>
 
         {/* Pasos */}
-        <Text style={styles.label}>
+        <Text style={styles.label} accessibilityRole="header">
           <Trans>Steps</Trans>
         </Text>
         {steps.map((step, index) => (
@@ -295,8 +322,13 @@ const AddRecipe: React.FC = () => {
                       onBlur();
                     }
                   }}
+                  accessibilityHint={_(msg`Add a new step`)}
                 />
-                <Pressable onPress={() => removeStep(index)}>
+                <Pressable
+                  onPress={() => removeStep(index)}
+                  accessibilityRole="button"
+                  accessibilityLabel={_(msg`Delete step`)}
+                >
                   <View style={{ paddingBottom: 15 }}>
                     <Entypo name="trash" size={24} color={colors.lightBrown} />
                   </View>
@@ -312,6 +344,8 @@ const AddRecipe: React.FC = () => {
             justifyContent: "center",
           }}
           onPress={appendStep}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Add a new step`)}
         >
           <Entypo
             name="plus"
@@ -331,6 +365,7 @@ const AddRecipe: React.FC = () => {
           style={{ alignSelf: "center", marginTop: 50 }}
           size={{ paddingHorizontal: 50 }}
           onPress={handleSubmit(onSubmit)}
+          accessibilityLabel={_(msg`Save recipe`)}
         />
       </SafeAreaView>
     </ScrollView>

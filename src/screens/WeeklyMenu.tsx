@@ -122,13 +122,26 @@ const WeeklyMenu = () => {
       <View style={styles.container}>
         {currentMenu && currentMenu.recipes.length > 0 ? (
           <View style={styles.buttonGroup}>
+            {/*  Create menu button */}
             <Pressable
               style={styles.menuGeneratorButton}
               onPress={showMenuGeneratorModal}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Create new menu`)}
             >
               <Entypo name="plus" size={24} color={colors.lightBrown} />
             </Pressable>
-            <Pressable style={styles.editMenu} onPress={toggleEditMode}>
+
+            {/* Edit menu button */}
+            <Pressable
+              style={styles.editMenu}
+              onPress={toggleEditMode}
+              accessibilityRole="button"
+              accessibilityLabel={
+                editMode ? _(msg`Finish editing`) : _(msg`Edit menu`)
+              }
+              accessibilityState={{ selected: editMode }}
+            >
               {editMode ? (
                 <Feather
                   name="check-circle"
@@ -154,6 +167,7 @@ const WeeklyMenu = () => {
               style={{ marginTop: 20 }}
               background={colors.transparentYellow}
               onPress={showMenuGeneratorModal}
+              accessibilityLabel={_(msg`Create new menu`)}
             />
           </View>
         )}
@@ -166,7 +180,9 @@ const WeeklyMenu = () => {
             {Object.entries(recipesByDay).map(([day, recipes]) => (
               <View key={day} style={cardStyle}>
                 <View style={styles.weekDayContainer}>
-                  <Text style={styles.weekDay}>{day}</Text>
+                  <Text style={styles.weekDay} accessibilityRole="header">
+                    {day}
+                  </Text>
                 </View>
 
                 {recipes.map((mr) => (
@@ -176,6 +192,8 @@ const WeeklyMenu = () => {
                     onPress={() =>
                       editMode ? showSearchModal(mr) : handleDetails(mr.recipe)
                     }
+                    accessibilityRole="button"
+                    accessibilityLabel={`${mr.mealType.name}: ${mr.recipe.name}${editMode ? `, ${_(msg`tap to change`)}` : ""}`}
                   >
                     <Text style={styles.mealType}>{mr.mealType.name}</Text>
                     <Text style={styles.recipeName}>{mr.recipe.name}</Text>
@@ -215,7 +233,12 @@ const WeeklyMenu = () => {
           />
           <ScrollView>
             {filteredRecipes.map((recipe, index) => (
-              <Pressable key={index} onPress={() => handleRecipeChange(recipe)}>
+              <Pressable
+                key={index}
+                onPress={() => handleRecipeChange(recipe)}
+                accessibilityRole="button"
+                accessibilityLabel={_(msg`Select`) + ` ${recipe.name}`}
+              >
                 <View style={styles.recipeCard}>
                   <Text
                     style={{

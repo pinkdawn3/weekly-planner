@@ -15,6 +15,7 @@ interface DashedButtonProps {
   background: string;
   size?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
+  accessibilityLabel?: string;
 }
 
 const DashedButton = ({
@@ -24,6 +25,7 @@ const DashedButton = ({
   background,
   size,
   style,
+  accessibilityLabel,
 }: DashedButtonProps) => {
   return (
     <View style={[styles.button, style, { backgroundColor: color }]}>
@@ -34,6 +36,8 @@ const DashedButton = ({
           { borderColor: background, backgroundColor: color },
         ]}
         onPress={onPress}
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel ?? title}
       >
         <Text style={styles.buttonText}>{title}</Text>
       </Pressable>

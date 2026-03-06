@@ -48,7 +48,11 @@ const ManageMealTypes: React.FC<ManageMealTypesProps> = ({
       {mealTypes.map((mt) => (
         <View key={mt.id} style={styles.listItem}>
           <Text style={styles.itemText}>{t(mt.name)}</Text>
-          <Pressable onPress={() => handleDelete(mt.id)}>
+          <Pressable
+            onPress={() => handleDelete(mt.id)}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Delete type of meal`)}
+          >
             <Ionicons name="trash-outline" size={20} color="#f28966" />
           </Pressable>
         </View>
@@ -59,6 +63,8 @@ const ManageMealTypes: React.FC<ManageMealTypesProps> = ({
         value={newName}
         onChangeText={setNewName}
         style={styles.input}
+        accessibilityLabel={newName}
+        accessibilityHint={_(msg`Enter meal type`)}
       />
       <DashedButton
         title={_(msg`Add`)}
@@ -67,6 +73,7 @@ const ManageMealTypes: React.FC<ManageMealTypesProps> = ({
         size={{ paddingHorizontal: 30 }}
         background={colors.offWhite}
         onPress={handleAdd}
+        accessibilityLabel={_(msg`Add meal category`)}
       />
     </View>
   );
