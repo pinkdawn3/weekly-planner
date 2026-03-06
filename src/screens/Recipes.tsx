@@ -116,8 +116,11 @@ const Recipes = () => {
         {/* Scroll view to display filtered recipes */}
         <ScrollView showsVerticalScrollIndicator={false}>
           {filteredRecipes &&
-            filteredRecipes.map((recipe, index) => (
-              <Pressable key={index} onPress={() => showDetailsScreen(recipe)}>
+            filteredRecipes.map((recipe) => (
+              <Pressable
+                key={recipe.id}
+                onPress={() => showDetailsScreen(recipe)}
+              >
                 <View style={styles.card}>
                   <Text style={styles.title}>{recipe.name}</Text>
                   <Text style={styles.detailsLink}>Ver detalles</Text>

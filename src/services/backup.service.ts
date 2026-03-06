@@ -24,7 +24,10 @@ export const exportData = async () => {
 
   const file = new File(Paths.document, "autocook_backup.json");
   file.write(JSON.stringify(data));
-  await Sharing.shareAsync(file.uri);
+  await Sharing.shareAsync(file.uri, {
+    mimeType: "application/json",
+    dialogTitle: "Guardar backup",
+  });
 };
 
 const importers: Record<number, (data: any) => void> = {
@@ -52,4 +55,6 @@ export const importData = async () => {
   if (!importer) throw new Error(`Version not supported: ${data.version}`);
 
   importer(data);
+
+  return true;
 };

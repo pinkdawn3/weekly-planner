@@ -14,13 +14,13 @@ const BottomTabNav = () => {
   const [routes] = React.useState([
     {
       key: "home",
-      title: "Inicio",
+      title: "Home",
       focusedIcon: "home",
       unfocusedIcon: "home-outline",
     },
-    { key: "menu", title: "Menú", focusedIcon: "notebook-outline" },
-    { key: "recipes", title: "Recetas", focusedIcon: "chef-hat" },
-    { key: "settings", title: "Ajustes", focusedIcon: "cog" },
+    { key: "menu", title: "Menu", focusedIcon: "notebook-outline" },
+    { key: "recipes", title: "Recipes", focusedIcon: "chef-hat" },
+    { key: "settings", title: "Settings", focusedIcon: "cog" },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({

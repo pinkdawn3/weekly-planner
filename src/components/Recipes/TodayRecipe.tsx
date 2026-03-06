@@ -44,8 +44,8 @@ const TodayRecipe = () => {
         </>
       ) : (
         <View>
-          <Text style={styles.noMenuTextTitle}>¡No hay menú!</Text>
-          <Text style={styles.noMenuText}>Añade recetas o crea un menú.</Text>
+          <Text style={styles.noMenuTextTitle}>No menu availabe!</Text>
+          <Text style={styles.noMenuText}>Add recipes or create a menu.</Text>
         </View>
       )}
     </View>
