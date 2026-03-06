@@ -9,6 +9,10 @@ import {
 } from "../../services/db/database.service";
 import { colors } from "../../theme/colors";
 import DashedButton from "../Core/DashedButton";
+import { useTranslate } from "../../hooks/useTranslations";
+import { useLingui } from "@lingui/react";
+import { Trans } from "@lingui/react/macro";
+import { msg } from "@lingui/core/macro";
 
 interface ManageMealTypesProps {
   mealTypes: MealType[];
@@ -19,6 +23,9 @@ const ManageMealTypes: React.FC<ManageMealTypesProps> = ({
   mealTypes,
   onUpdate,
 }) => {
+  const t = useTranslate();
+  const { _ } = useLingui();
+
   const [newName, setNewName] = useState("");
 
   const handleAdd = () => {
@@ -35,24 +42,26 @@ const ManageMealTypes: React.FC<ManageMealTypesProps> = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tipos de comida</Text>
+      <Text style={styles.title}>
+        <Trans>Types of meal</Trans>
+      </Text>
       {mealTypes.map((mt) => (
         <View key={mt.id} style={styles.listItem}>
-          <Text style={styles.itemText}>{mt.name}</Text>
+          <Text style={styles.itemText}>{t(mt.name)}</Text>
           <Pressable onPress={() => handleDelete(mt.id)}>
             <Ionicons name="trash-outline" size={20} color="#f28966" />
           </Pressable>
         </View>
       ))}
       <TextInput
-        placeholder="Añadir tipo de comida..."
+        placeholder={_(msg`Add meal type...`)}
         placeholderTextColor={colors.lightBrown}
         value={newName}
         onChangeText={setNewName}
         style={styles.input}
       />
       <DashedButton
-        title="Añadir"
+        title={_(msg`Add`)}
         color={colors.purple}
         style={{ alignSelf: "center", marginTop: 20 }}
         size={{ paddingHorizontal: 30 }}

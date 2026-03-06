@@ -11,11 +11,18 @@ import {
   getAllLabels,
 } from "../services/db/database.service";
 import { UserContext } from "../contexts/User/UserContext";
+import { Trans } from "@lingui/react/macro";
+import { msg } from "@lingui/core/macro";
+import { useTranslate } from "../hooks/useTranslations";
+import { useLingui } from "@lingui/react";
 
 const Settings = () => {
   const [visible, setVisible] = useState(false);
   const { setRecipes, setMealTypes, setLabels } = useContext(RecipeContext);
   const { language, handleSetLanguage } = useContext(UserContext);
+
+  const { _ } = useLingui();
+  const t = useTranslate();
 
   const dropdownStyle = {
     borderRadius: 18,
@@ -41,14 +48,14 @@ const Settings = () => {
   return (
     <View style={styles.container}>
       <DashedButton
-        title="Import"
+        title={_(msg`Import`)}
         color={colors.orange}
         background={colors.transparentYellow}
         style={{ alignSelf: "center" }}
         onPress={handleImport}
       />
       <DashedButton
-        title="Export"
+        title={_(msg`Export`)}
         color={colors.orange}
         background={colors.transparentYellow}
         style={{ alignSelf: "center" }}
@@ -60,7 +67,7 @@ const Settings = () => {
         onDismiss={() => setVisible(false)}
         anchor={
           <DashedButton
-            title={language}
+            title={t(language)}
             color={colors.orange}
             background={colors.transparentYellow}
             style={{ alignSelf: "center", marginBottom: 20 }}
@@ -90,7 +97,9 @@ const Settings = () => {
       <Pressable
         onPress={() => Linking.openURL("https://ko-fi.com/sunrisemorning")}
       >
-        <Text>☕ Support the project!</Text>
+        <Text style={styles.kofi}>
+          <Trans>☕ Support the project!</Trans>
+        </Text>
       </Pressable>
     </View>
   );
@@ -106,5 +115,9 @@ const styles = StyleSheet.create({
     gap: 20,
     alignItems: "center",
     justifyContent: "center",
+  },
+  kofi: {
+    color: colors.darkBrown,
+    fontFamily: "ShantellSans-Regular",
   },
 });

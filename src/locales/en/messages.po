@@ -13,44 +13,163 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/screens/AddRecipe.tsx:249
+#: src/screens/RecipeDetailsScreen.tsx:350
+msgid " Add Ingredient"
+msgstr " Add Ingredient"
+
+#: src/screens/RecipeDetailsScreen.tsx:391
+msgid " Add Step"
+msgstr " Add Step"
+
+#: src/screens/RecipeDetailsScreen.tsx:350
+#~ msgid " Añadir ingrediente"
+#~ msgstr " Añadir ingrediente"
+
+#: src/screens/RecipeDetailsScreen.tsx:391
+#~ msgid " Añadir paso"
+#~ msgstr " Añadir paso"
+
+#: src/screens/Settings.tsx:101
+msgid "☕ Support the project!"
+msgstr "☕ Support the project!"
+
+#: src/components/MenuSettings/ManageLabel.tsx:61
+#: src/components/MenuSettings/ManageMealTypes.tsx:64
+msgid "Add"
+msgstr "Add"
+
+#: src/components/MenuSettings/ManageLabel.tsx:53
+msgid "Add category..."
+msgstr "Add category..."
+
+#: src/screens/AddRecipe.tsx:256
 msgid "Add Ingredient"
 msgstr "Add Ingredient"
+
+#: src/screens/AddRecipe.tsx:221
+msgid "Add ingredient..."
+msgstr "Add ingredient..."
+
+#: src/components/MenuSettings/ManageMealTypes.tsx:57
+msgid "Add meal type..."
+msgstr "Add meal type..."
+
+#: src/screens/AddRecipe.tsx:98
+msgid "Add name..."
+msgstr "Add name..."
 
 #: src/components/Recipes/TodayRecipe.tsx:53
 msgid "Add recipes or create a menu."
 msgstr "Add recipes or create a menu."
 
-#: src/components/MenuGenerator.tsx:219
+#: src/screens/AddRecipe.tsx:323
+msgid "Add Step"
+msgstr "Add Step"
+
+#: src/screens/AddRecipe.tsx:288
+msgid "Add step..."
+msgstr "Add step..."
+
+#: src/components/MenuGenerator.tsx:225
+#: src/components/MenuSettings/ManageLabel.tsx:42
+#: src/screens/Recipes.tsx:82
 msgid "Categories"
 msgstr "Categories"
 
-#: src/screens/AddRecipe.tsx:147
+#: src/screens/AddRecipe.tsx:154
+#: src/screens/RecipeDetailsScreen.tsx:273
 msgid "Category"
 msgstr "Category"
 
-#: src/screens/AddRecipe.tsx:78
+#: src/components/SettingsModal.tsx:61
+msgid "Close"
+msgstr "Close"
+
+#: src/screens/WeeklyMenu.tsx:152
+msgid "Create menu"
+msgstr "Create menu"
+
+#: src/screens/Settings.tsx:58
+msgid "Export"
+msgstr "Export"
+
+#: src/components/MenuGenerator.tsx:272
+msgid "Generate menu"
+msgstr "Generate menu"
+
+#: src/screens/AddRecipe.tsx:84
+#: src/screens/RecipeDetailsScreen.tsx:221
 msgid "Go Back"
 msgstr "Go Back"
 
-#: src/screens/AddRecipe.tsx:183
+#: src/navigation/BottomTabNav.tsx:21
+msgid "Home"
+msgstr "Home"
+
+#: src/screens/Settings.tsx:51
+msgid "Import"
+msgstr "Import"
+
+#: src/screens/RecipeDetailsScreen.tsx:308
+#~ msgid "Ingredientes"
+#~ msgstr "Ingredientes"
+
+#: src/screens/AddRecipe.tsx:190
+#: src/screens/RecipeDetailsScreen.tsx:308
 msgid "Ingredients"
 msgstr "Ingredients"
 
-#: src/screens/AddRecipe.tsx:82
+#: src/navigation/BottomTabNav.tsx:25
+msgid "Menu"
+msgstr "Menu"
+
+#: src/screens/AddRecipe.tsx:88
 msgid "Name"
 msgstr "Name"
 
 #: src/components/Recipes/TodayRecipe.tsx:50
-#: src/screens/WeeklyMenu.tsx:143
+#: src/screens/WeeklyMenu.tsx:148
 msgid "No menu available!"
 msgstr "No menu available!"
 
-#: src/screens/Recipes.tsx:127
+#: src/components/MenuGenerator.tsx:68
+msgid "Not enough recipes."
+msgstr "Not enough recipes."
+
+#: src/components/MenuGenerator.tsx:245
+msgid "Number per category"
+msgstr "Number per category"
+
+#: src/screens/RecipeDetailsScreen.tsx:355
+#~ msgid "Pasos"
+#~ msgstr "Pasos"
+
+#: src/navigation/BottomTabNav.tsx:26
+msgid "Recipes"
+msgstr "Recipes"
+
+#: src/screens/AddRecipe.tsx:328
+msgid "Save"
+msgstr "Save"
+
+#: src/screens/Recipes.tsx:92
+msgid "Search recipe..."
+msgstr "Search recipe..."
+
+#: src/screens/WeeklyMenu.tsx:198
+msgid "Search..."
+msgstr "Search..."
+
+#: src/screens/Recipes.tsx:132
 msgid "See details"
 msgstr "See details"
 
-#: src/screens/AddRecipe.tsx:255
+#: src/navigation/BottomTabNav.tsx:27
+msgid "Settings"
+msgstr "Settings"
+
+#: src/screens/AddRecipe.tsx:262
+#: src/screens/RecipeDetailsScreen.tsx:355
 msgid "Steps"
 msgstr "Steps"
 
@@ -58,7 +177,16 @@ msgstr "Steps"
 msgid "Today we eat..."
 msgstr "Today we eat..."
 
-#: src/components/MenuGenerator.tsx:199
-#: src/screens/AddRecipe.tsx:107
+#: src/components/MenuGenerator.tsx:205
+#: src/screens/AddRecipe.tsx:113
+#: src/screens/RecipeDetailsScreen.tsx:238
 msgid "Type of meal"
 msgstr "Type of meal"
+
+#: src/components/MenuSettings/ManageMealTypes.tsx:46
+msgid "Types of meal"
+msgstr "Types of meal"
+
+#: src/screens/Recipes.tsx:75
+msgid "Types of meals"
+msgstr "Types of meals"

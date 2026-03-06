@@ -13,10 +13,14 @@ import { colors } from "../theme/colors";
 import DashedButton from "../components/Core/DashedButton";
 import DottedBackground from "../components/Core/DottedBackground";
 import { Trans } from "@lingui/react/macro";
+import { msg } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react";
 
 const Recipes = () => {
   const { recipes, mealTypes, setMealTypes, labels, setLabels } =
     useContext(RecipeContext);
+
+  const { _ } = useLingui();
 
   const [mealTypesVisible, setMealTypesVisible] = useState(false);
   const [labelsVisible, setLabelsVisible] = useState(false);
@@ -68,14 +72,14 @@ const Recipes = () => {
 
         <View style={styles.configButtons}>
           <DashedButton
-            title="Types of meals"
+            title={_(msg`Types of meals`)}
             color={colors.purple}
             background={colors.transparentYellow}
             onPress={() => setMealTypesVisible(true)}
           />
 
           <DashedButton
-            title="Categories"
+            title={_(msg`Categories`)}
             color={colors.purple}
             background={colors.transparentYellow}
             size={{ paddingHorizontal: 30 }}
@@ -85,7 +89,7 @@ const Recipes = () => {
 
         {/* Search bar to search recipes by name */}
         <Searchbar
-          placeholder="Search recipe..."
+          placeholder={_(msg`Search recipe...`)}
           onChangeText={setSearchText}
           value={searchText}
           style={{
@@ -125,7 +129,7 @@ const Recipes = () => {
                 <View style={styles.card}>
                   <Text style={styles.title}>{recipe.name}</Text>
                   <Text style={styles.detailsLink}>
-                    <Trans>See details</Trans>{" "}
+                    <Trans>See details</Trans>
                   </Text>
                 </View>
               </Pressable>

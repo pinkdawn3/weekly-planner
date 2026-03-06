@@ -23,6 +23,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../theme/colors";
 import { Chip, Portal } from "react-native-paper";
 import SettingsModal from "../components/SettingsModal";
+import { Trans } from "@lingui/react/macro";
+import { useTranslate } from "../hooks/useTranslations";
+import { useLingui } from "@lingui/react";
 
 type RecipeDetailsScreenRouteProp = RouteProp<
   RootStackParamList,
@@ -162,6 +165,10 @@ const RecipeDetailsScreen: React.FC = () => {
   const route = useRoute<RecipeDetailsScreenRouteProp>();
   const { mealTypes, labels, setRecipes, setCurrentMenu } =
     useContext(RecipeContext);
+
+  const t = useTranslate();
+  const { _ } = useLingui();
+
   const [isMealTypeVisible, setIsMealTypeVisible] = useState(false);
   const [isLabelVisible, setIsLabelVisible] = useState(false);
 
@@ -210,7 +217,9 @@ const RecipeDetailsScreen: React.FC = () => {
             onPress={() => navigation.goBack()}
           >
             <Feather name="arrow-left" size={24} color={colors.darkOrange} />
-            <Text style={styles.buttonText}>Volver</Text>
+            <Text style={styles.buttonText}>
+              <Trans>Go Back</Trans>
+            </Text>
           </Pressable>
           <Pressable style={styles.buttonDelete} onPress={handleDelete}>
             <Ionicons name="trash" size={24} color={colors.darkBrown} />
@@ -225,7 +234,9 @@ const RecipeDetailsScreen: React.FC = () => {
           style={styles.modalTitle}
         />
 
-        <Text style={styles.sectionHeader}>Tipo de comida</Text>
+        <Text style={styles.sectionHeader}>
+          <Trans>Type of meal</Trans>
+        </Text>
         <Pressable
           style={styles.chipContainer}
           onPress={() => setIsMealTypeVisible(true)}
@@ -236,7 +247,7 @@ const RecipeDetailsScreen: React.FC = () => {
               style={styles.chip}
               textStyle={{ color: colors.darkBrown }}
             >
-              {mt.name}
+              {t(mt.name)}
             </Chip>
           ))}
         </Pressable>
@@ -258,7 +269,9 @@ const RecipeDetailsScreen: React.FC = () => {
           />
         </Portal>
 
-        <Text style={styles.sectionHeader}>Categoría</Text>
+        <Text style={styles.sectionHeader}>
+          <Trans>Category</Trans>
+        </Text>
         <Pressable
           style={styles.chipContainer}
           onPress={() => setIsLabelVisible(true)}
@@ -269,7 +282,7 @@ const RecipeDetailsScreen: React.FC = () => {
               style={styles.chip}
               textStyle={{ color: colors.darkBrown }}
             >
-              {l.name}
+              {t(l.name)}
             </Chip>
           ))}
         </Pressable>
@@ -291,7 +304,9 @@ const RecipeDetailsScreen: React.FC = () => {
           />
         </Portal>
 
-        <Text style={styles.sectionHeader}>Ingredientes</Text>
+        <Text style={styles.sectionHeader}>
+          <Trans>Ingredients</Trans>
+        </Text>
         {currentRecipe.ingredients.map((ingredient, index) => (
           <View
             key={index}
@@ -331,10 +346,14 @@ const RecipeDetailsScreen: React.FC = () => {
             handleSave("ingredients", [...currentRecipe.ingredients, ""])
           }
         >
-          <Text style={styles.addButton}>+ Añadir ingrediente</Text>
+          <Text style={styles.addButton}>
+            +<Trans> Add Ingredient</Trans>
+          </Text>
         </Pressable>
 
-        <Text style={styles.sectionHeader}>Pasos</Text>
+        <Text style={styles.sectionHeader}>
+          <Trans>Steps</Trans>
+        </Text>
         {currentRecipe.steps.map((step, index) => (
           <View
             key={index}
@@ -368,7 +387,9 @@ const RecipeDetailsScreen: React.FC = () => {
         <Pressable
           onPress={() => handleSave("steps", [...currentRecipe.steps, ""])}
         >
-          <Text style={styles.addButton}>+ Añadir paso</Text>
+          <Text style={styles.addButton}>
+            +<Trans> Add Step</Trans>
+          </Text>
         </Pressable>
       </SafeAreaView>
     </ScrollView>

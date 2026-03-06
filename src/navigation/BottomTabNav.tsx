@@ -5,23 +5,27 @@ import WeeklyMenu from "../screens/WeeklyMenu";
 import Recipes from "../screens/Recipes";
 import { colors } from "../theme/colors";
 import Settings from "../screens/Settings";
+import { msg } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react";
 
 //This is the main component while logged in. It has a navigation tab that sits on the bottom and that it's visibile at
 //all moments. It features 4 screens: the Homepage, the Weekly Menu, the Recipes, and the UserScreen.
 
 const BottomTabNav = () => {
+  const { _ } = useLingui();
   const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
+
+  const routes = [
     {
       key: "home",
-      title: "Home",
+      title: _(msg`Home`),
       focusedIcon: "home",
       unfocusedIcon: "home-outline",
     },
-    { key: "menu", title: "Menu", focusedIcon: "notebook-outline" },
-    { key: "recipes", title: "Recipes", focusedIcon: "chef-hat" },
-    { key: "settings", title: "Settings", focusedIcon: "cog" },
-  ]);
+    { key: "menu", title: _(msg`Menu`), focusedIcon: "notebook-outline" },
+    { key: "recipes", title: _(msg`Recipes`), focusedIcon: "chef-hat" },
+    { key: "settings", title: _(msg`Settings`), focusedIcon: "cog" },
+  ];
 
   const renderScene = BottomNavigation.SceneMap({
     home: Homescreen,

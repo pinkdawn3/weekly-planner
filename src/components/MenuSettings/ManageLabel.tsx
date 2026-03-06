@@ -9,6 +9,10 @@ import {
 } from "../../services/db/database.service";
 import { colors } from "../../theme/colors";
 import DashedButton from "../Core/DashedButton";
+import { Trans } from "@lingui/react/macro";
+import { useTranslate } from "../../hooks/useTranslations";
+import { useLingui } from "@lingui/react";
+import { msg } from "@lingui/core/macro";
 
 interface ManageLabelsProps {
   labels: Label[];
@@ -17,6 +21,8 @@ interface ManageLabelsProps {
 
 const ManageLabels: React.FC<ManageLabelsProps> = ({ labels, onUpdate }) => {
   const [newName, setNewName] = useState("");
+  const t = useTranslate();
+  const { _ } = useLingui();
 
   const handleAdd = () => {
     if (!newName.trim()) return;
@@ -32,17 +38,19 @@ const ManageLabels: React.FC<ManageLabelsProps> = ({ labels, onUpdate }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Categorías</Text>
+      <Text style={styles.title}>
+        <Trans>Categories</Trans>
+      </Text>
       {labels.map((l) => (
         <View key={l.id} style={styles.listItem}>
-          <Text style={styles.itemText}>{l.name}</Text>
+          <Text style={styles.itemText}>{t(l.name)}</Text>
           <Pressable onPress={() => handleDelete(l.id)}>
             <Ionicons name="trash-outline" size={20} color="#f28966" />
           </Pressable>
         </View>
       ))}
       <TextInput
-        placeholder="Añadir categoría..."
+        placeholder={_(msg`Add category...`)}
         placeholderTextColor={colors.lightBrown}
         value={newName}
         onChangeText={setNewName}
@@ -50,7 +58,7 @@ const ManageLabels: React.FC<ManageLabelsProps> = ({ labels, onUpdate }) => {
       />
 
       <DashedButton
-        title="Añadir"
+        title={_(msg`Add`)}
         color={colors.purple}
         style={{ alignSelf: "center", marginTop: 20 }}
         size={{ paddingHorizontal: 30 }}

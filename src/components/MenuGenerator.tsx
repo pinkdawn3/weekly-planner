@@ -17,6 +17,9 @@ import {
 import { colors } from "../theme/colors";
 import DashedButton from "./Core/DashedButton";
 import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react";
+import { msg } from "@lingui/core/macro";
+import { useTranslate } from "../hooks/useTranslations";
 
 interface MenuGeneratorProps {
   onCloseModal: () => void;
@@ -25,6 +28,9 @@ interface MenuGeneratorProps {
 const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
   const { recipes, setCurrentMenu, setMenuCreated, mealTypes, labels } =
     useContext(RecipeContext);
+
+  const { _ } = useLingui();
+  const t = useTranslate();
 
   const [selectedLabels, setSelectedLabels] = useState(labels);
   const toggleLabel = (label: Label) => {
@@ -59,7 +65,7 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
 
     setErrors((prev) => ({
       ...prev,
-      [labelId]: count > recipesWithLabel ? `Faltan recetas.` : null,
+      [labelId]: count > recipesWithLabel ? _(msg`Not enough recipes.`) : null,
     }));
   };
 
@@ -210,7 +216,7 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
                 color: colors.darkBrown,
               }}
             >
-              {mt.name}
+              {t(mt.name)}
             </Chip>
           ))}
         </View>
@@ -230,12 +236,14 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
                 color: colors.darkBrown,
               }}
             >
-              {l.name}
+              {t(l.name)}
             </Chip>
           ))}
         </View>
 
-        <Text style={styles.sectionTitle}>Number per category</Text>
+        <Text style={styles.sectionTitle}>
+          <Trans>Number per category</Trans>
+        </Text>
         {selectedLabels.map((l, index) => (
           <View key={index}>
             <TextInput
@@ -248,7 +256,7 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
                 fontSize: 15,
               }}
               key={l.id}
-              label={l.name}
+              label={t(l.name)}
               value={labelCount[l.id]?.toString() ?? "2"}
               onChangeText={(value) => updateLabelCount(l.id, value)}
               keyboardType="numeric"
@@ -261,7 +269,7 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
         ))}
 
         <DashedButton
-          title="Generate menu"
+          title={_(msg`Generate menu`)}
           color={colors.purple}
           background={colors.offWhite}
           onPress={generateMenu}

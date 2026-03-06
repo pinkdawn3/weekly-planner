@@ -3,6 +3,9 @@ import { Chip, Modal } from "react-native-paper";
 import { colors } from "../theme/colors";
 import { useEffect, useState } from "react";
 import DashedButton from "./Core/DashedButton";
+import { useTranslate } from "../hooks/useTranslations";
+import { useLingui } from "@lingui/react";
+import { msg } from "@lingui/core/macro";
 
 interface SettingsModalProps<T extends { id: number; name: string }> {
   items: T[];
@@ -17,6 +20,9 @@ const SettingsModal = <T extends { id: number; name: string }>({
   visible,
   onClose,
 }: SettingsModalProps<T>) => {
+  const t = useTranslate();
+  const { _ } = useLingui();
+
   const [tempSelected, setTempSelected] = useState(selected);
 
   useEffect(() => {
@@ -45,14 +51,14 @@ const SettingsModal = <T extends { id: number; name: string }>({
                 style={styles.chip}
                 textStyle={{ color: colors.darkBrown }}
               >
-                {item.name}
+                {t(item.name)}
               </Chip>
             );
           })}
         </View>
 
         <DashedButton
-          title="Cerrar"
+          title={_(msg`Close`)}
           color={colors.purple}
           background={colors.offWhite}
           style={{ alignSelf: "center", marginTop: 20 }}

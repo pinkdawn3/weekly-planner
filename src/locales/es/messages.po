@@ -13,44 +13,147 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/screens/AddRecipe.tsx:249
+#: src/screens/RecipeDetailsScreen.tsx:350
+msgid " Add Ingredient"
+msgstr " Añadir Ingrediente"
+
+#: src/screens/RecipeDetailsScreen.tsx:391
+msgid " Add Step"
+msgstr " Añadir Paso"
+
+#: src/screens/Settings.tsx:101
+msgid "☕ Support the project!"
+msgstr "☕ ¡Apoya el proyecto!"
+
+#: src/components/MenuSettings/ManageLabel.tsx:61
+#: src/components/MenuSettings/ManageMealTypes.tsx:64
+msgid "Add"
+msgstr "Añadir"
+
+#: src/components/MenuSettings/ManageLabel.tsx:53
+msgid "Add category..."
+msgstr "Añadir categoría..."
+
+#: src/screens/AddRecipe.tsx:256
 msgid "Add Ingredient"
 msgstr "Añadir ingrediente"
+
+#: src/screens/AddRecipe.tsx:221
+msgid "Add ingredient..."
+msgstr "Añadir ingrediente..."
+
+#: src/components/MenuSettings/ManageMealTypes.tsx:57
+msgid "Add meal type..."
+msgstr "Añadir tipo de comida..."
+
+#: src/screens/AddRecipe.tsx:98
+msgid "Add name..."
+msgstr "Añadir nombre..."
 
 #: src/components/Recipes/TodayRecipe.tsx:53
 msgid "Add recipes or create a menu."
 msgstr "Añade recetas o crea un menú."
 
-#: src/components/MenuGenerator.tsx:219
+#: src/screens/AddRecipe.tsx:323
+msgid "Add Step"
+msgstr "Añadir paso"
+
+#: src/screens/AddRecipe.tsx:288
+msgid "Add step..."
+msgstr "Añadir paso..."
+
+#: src/components/MenuGenerator.tsx:225
+#: src/components/MenuSettings/ManageLabel.tsx:42
+#: src/screens/Recipes.tsx:82
 msgid "Categories"
 msgstr "Categorías"
 
-#: src/screens/AddRecipe.tsx:147
+#: src/screens/AddRecipe.tsx:154
+#: src/screens/RecipeDetailsScreen.tsx:273
 msgid "Category"
 msgstr "Categoría"
 
-#: src/screens/AddRecipe.tsx:78
+#: src/components/SettingsModal.tsx:61
+msgid "Close"
+msgstr "Cerrar"
+
+#: src/screens/WeeklyMenu.tsx:152
+msgid "Create menu"
+msgstr "Crear menú"
+
+#: src/screens/Settings.tsx:58
+msgid "Export"
+msgstr "Exportar"
+
+#: src/components/MenuGenerator.tsx:272
+msgid "Generate menu"
+msgstr "Generar menú"
+
+#: src/screens/AddRecipe.tsx:84
+#: src/screens/RecipeDetailsScreen.tsx:221
 msgid "Go Back"
 msgstr "Volver"
 
-#: src/screens/AddRecipe.tsx:183
+#: src/navigation/BottomTabNav.tsx:21
+msgid "Home"
+msgstr "Inicio"
+
+#: src/screens/Settings.tsx:51
+msgid "Import"
+msgstr "Importar"
+
+#: src/screens/AddRecipe.tsx:190
+#: src/screens/RecipeDetailsScreen.tsx:308
 msgid "Ingredients"
 msgstr "Ingredientes"
 
-#: src/screens/AddRecipe.tsx:82
+#: src/navigation/BottomTabNav.tsx:25
+msgid "Menu"
+msgstr "Menú"
+
+#: src/screens/AddRecipe.tsx:88
 msgid "Name"
 msgstr "Nombre"
 
 #: src/components/Recipes/TodayRecipe.tsx:50
-#: src/screens/WeeklyMenu.tsx:143
+#: src/screens/WeeklyMenu.tsx:148
 msgid "No menu available!"
 msgstr "¡No hay menú!"
 
-#: src/screens/Recipes.tsx:127
+#: src/components/MenuGenerator.tsx:68
+msgid "Not enough recipes."
+msgstr "Faltan recetas."
+
+#: src/components/MenuGenerator.tsx:245
+msgid "Number per category"
+msgstr "Cantidad por categoría"
+
+#: src/navigation/BottomTabNav.tsx:26
+msgid "Recipes"
+msgstr "Recetas"
+
+#: src/screens/AddRecipe.tsx:328
+msgid "Save"
+msgstr "Guardar"
+
+#: src/screens/Recipes.tsx:92
+msgid "Search recipe..."
+msgstr "Buscar receta..."
+
+#: src/screens/WeeklyMenu.tsx:198
+msgid "Search..."
+msgstr "Buscar..."
+
+#: src/screens/Recipes.tsx:132
 msgid "See details"
 msgstr "Ver detalles"
 
-#: src/screens/AddRecipe.tsx:255
+#: src/navigation/BottomTabNav.tsx:27
+msgid "Settings"
+msgstr "Ajustes"
+
+#: src/screens/AddRecipe.tsx:262
+#: src/screens/RecipeDetailsScreen.tsx:355
 msgid "Steps"
 msgstr "Pasos"
 
@@ -58,7 +161,16 @@ msgstr "Pasos"
 msgid "Today we eat..."
 msgstr "Hoy toca..."
 
-#: src/components/MenuGenerator.tsx:199
-#: src/screens/AddRecipe.tsx:107
+#: src/components/MenuGenerator.tsx:205
+#: src/screens/AddRecipe.tsx:113
+#: src/screens/RecipeDetailsScreen.tsx:238
 msgid "Type of meal"
 msgstr "Tipo de comida"
+
+#: src/components/MenuSettings/ManageMealTypes.tsx:46
+msgid "Types of meal"
+msgstr "Tipos de comida"
+
+#: src/screens/Recipes.tsx:75
+msgid "Types of meals"
+msgstr "Tipos de comida"

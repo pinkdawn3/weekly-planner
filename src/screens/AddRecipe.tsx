@@ -22,11 +22,17 @@ import { Controller, useForm } from "react-hook-form";
 import DashedButton from "../components/Core/DashedButton";
 import { Trans } from "@lingui/react/macro";
 
+import { msg } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react";
+import { useTranslate } from "../hooks/useTranslations";
+
 type AddRecipeNavProp = StackNavigationProp<RootStackParamList, "AddRecipe">;
 
 const AddRecipe: React.FC = () => {
   const { mealTypes, labels, setRecipes } = useContext(RecipeContext);
   const navigation = useNavigation<AddRecipeNavProp>();
+  const { _ } = useLingui();
+  const t = useTranslate();
 
   const {
     control,
@@ -79,7 +85,7 @@ const AddRecipe: React.FC = () => {
           </Text>
         </Pressable>
         <Text style={styles.label}>
-          <Trans>Name</Trans>
+          <Trans>Name</Trans> <Text style={{ color: colors.red }}>*</Text>
         </Text>
         <Controller
           name="name"
@@ -89,7 +95,7 @@ const AddRecipe: React.FC = () => {
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              placeholder="Add name..."
+              placeholder={_(msg`Add name...`)}
               placeholderTextColor={colors.lightBrown}
               onBlur={onBlur}
               onChangeText={onChange}
@@ -104,7 +110,8 @@ const AddRecipe: React.FC = () => {
         )}
 
         <Text style={styles.label}>
-          <Trans>Type of meal</Trans>
+          <Trans>Type of meal</Trans>{" "}
+          <Text style={{ color: colors.red }}>*</Text>
         </Text>
         <View style={styles.chipContainer}>
           <Controller
@@ -130,7 +137,7 @@ const AddRecipe: React.FC = () => {
                       style={styles.chip}
                       textStyle={{ color: colors.darkBrown }}
                     >
-                      {mt.name}
+                      {t(mt.name)}
                     </Chip>
                   );
                 })}
@@ -144,7 +151,7 @@ const AddRecipe: React.FC = () => {
         )}
 
         <Text style={styles.label}>
-          <Trans>Category</Trans>
+          <Trans>Category</Trans> <Text style={{ color: colors.red }}>*</Text>
         </Text>
         <View style={styles.chipContainer}>
           <Controller
@@ -170,7 +177,7 @@ const AddRecipe: React.FC = () => {
                       style={styles.chip}
                       textStyle={{ color: colors.darkBrown }}
                     >
-                      {label.name}
+                      {t(label.name)}
                     </Chip>
                   );
                 })}
@@ -211,7 +218,7 @@ const AddRecipe: React.FC = () => {
                 </View>
                 <TextInput
                   style={[styles.input, { flex: 1 }]}
-                  placeholder="Add ingredient..."
+                  placeholder={_(msg`Add ingredient...`)}
                   value={value}
                   autoFocus
                   onChangeText={onChange}
@@ -278,7 +285,7 @@ const AddRecipe: React.FC = () => {
                 </View>
                 <TextInput
                   style={[styles.input, { flex: 1 }]}
-                  placeholder="Add step..."
+                  placeholder={_(msg`Add step...`)}
                   value={value}
                   autoFocus
                   multiline
@@ -312,11 +319,13 @@ const AddRecipe: React.FC = () => {
             color={colors.lightBrown}
             style={styles.addButton}
           />
-          <Text style={styles.text}>Add Step</Text>
+          <Text style={styles.text}>
+            <Trans>Add Step</Trans>
+          </Text>
         </Pressable>
 
         <DashedButton
-          title="Save"
+          title={_(msg`Save`)}
           color={colors.purple}
           background={colors.transparentYellow}
           style={{ alignSelf: "center", marginTop: 50 }}

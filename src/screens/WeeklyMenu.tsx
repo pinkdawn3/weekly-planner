@@ -13,7 +13,10 @@ import MenuGenerator from "../components/MenuGenerator";
 import { colors } from "../theme/colors";
 import { Entypo, Feather } from "@expo/vector-icons";
 import DashedButton from "../components/Core/DashedButton";
+
 import { Trans } from "@lingui/react/macro";
+import { useLingui } from "@lingui/react";
+import { msg } from "@lingui/core/macro";
 
 const daysOfWeekOrder = [
   "Monday",
@@ -28,6 +31,8 @@ const daysOfWeekOrder = [
 const WeeklyMenu = () => {
   const { currentMenu, recipes, setCurrentMenu, setMenuCreated } =
     useContext(RecipeContext);
+
+  const { _ } = useLingui();
 
   const [editMode, setEditMode] = useState<boolean>(false);
   const [selectedMenuRecipe, setSelectedMenuRecipe] =
@@ -144,7 +149,7 @@ const WeeklyMenu = () => {
             </Text>
 
             <DashedButton
-              title="Crear menú"
+              title={_(msg`Create menu`)}
               color={colors.purple}
               style={{ marginTop: 20 }}
               background={colors.transparentYellow}
@@ -190,7 +195,7 @@ const WeeklyMenu = () => {
           style={{ margin: 40 }}
         >
           <Searchbar
-            placeholder="Buscar..."
+            placeholder={_(msg`Search...`)}
             onChangeText={setSearchText}
             value={searchText}
             style={{
