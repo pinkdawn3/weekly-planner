@@ -53,7 +53,7 @@ const ManageMealTypes: React.FC<ManageMealTypesProps> = ({
       />
       <DashedButton
         title="Añadir"
-        color={colors.green}
+        color={colors.purple}
         style={{ alignSelf: "center", marginTop: 20 }}
         size={{ paddingHorizontal: 30 }}
         background={colors.offWhite}
@@ -100,18 +100,5 @@ const styles = StyleSheet.create({
     borderColor: colors.lightBrown,
     paddingHorizontal: 10,
     fontFamily: "ShantellSans-Regular",
-  },
-  button: {
-    marginTop: 10,
-    alignItems: "center",
-    paddingVertical: 10,
-    backgroundColor: colors.green,
-    borderRadius: 15,
-    borderWidth: 1.5,
-    borderColor: colors.lightBrown,
-  },
-  buttonText: {
-    color: colors.darkBrown,
-    fontFamily: "ShantellSans-SemiBold",
   },
 });

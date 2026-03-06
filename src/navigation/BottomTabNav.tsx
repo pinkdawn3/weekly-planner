@@ -4,6 +4,7 @@ import Homescreen from "../screens/Homescreen";
 import WeeklyMenu from "../screens/WeeklyMenu";
 import Recipes from "../screens/Recipes";
 import { colors } from "../theme/colors";
+import Settings from "../screens/Settings";
 
 //This is the main component while logged in. It has a navigation tab that sits on the bottom and that it's visibile at
 //all moments. It features 4 screens: the Homepage, the Weekly Menu, the Recipes, and the UserScreen.
@@ -19,12 +20,14 @@ const BottomTabNav = () => {
     },
     { key: "menu", title: "Menú", focusedIcon: "notebook-outline" },
     { key: "recipes", title: "Recetas", focusedIcon: "chef-hat" },
+    { key: "settings", title: "Ajustes", focusedIcon: "cog" },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
     home: Homescreen,
     menu: WeeklyMenu,
     recipes: Recipes,
+    settings: Settings,
   });
   return (
     <BottomNavigation

@@ -1,8 +1,13 @@
 import React, { useContext, useState } from "react";
 import { View, StyleSheet, Pressable, Text, ScrollView } from "react-native";
-import { TextInput, ActivityIndicator, Chip } from "react-native-paper";
+import {
+  TextInput,
+  ActivityIndicator,
+  Chip,
+  HelperText,
+} from "react-native-paper";
 import { RecipeContext } from "../contexts/RecipeContext";
-import { Label, MealType, Menu, MenuRecipe, Recipe } from "../types/RecipeType";
+import { Label, MealType, Menu, MenuRecipe } from "../types/RecipeType";
 import moment from "moment";
 import {
   createMenu,
@@ -10,6 +15,7 @@ import {
   getLastMenus,
 } from "../services/db/database.service";
 import { colors } from "../theme/colors";
+import DashedButton from "./Core/DashedButton";
 
 interface MenuGeneratorProps {
   onCloseModal: () => void;
@@ -18,8 +24,6 @@ interface MenuGeneratorProps {
 const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
   const { recipes, setCurrentMenu, setMenuCreated, mealTypes, labels } =
     useContext(RecipeContext);
-
-  const [loading, setLoading] = useState<boolean>(false);
 
   const [selectedLabels, setSelectedLabels] = useState(labels);
   const toggleLabel = (label: Label) => {
@@ -40,10 +44,21 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
     return defaults;
   });
 
+  // Error management
+  const [errors, setErrors] = useState<Record<number, string | null>>({});
+
   const updateLabelCount = (labelId: number, value: string) => {
-    setLabelCount((prev) => ({
+    const count = value === "" ? 0 : parseInt(value);
+
+    setLabelCount((prev) => ({ ...prev, [labelId]: count }));
+
+    const recipesWithLabel = recipes.filter((r) =>
+      r.labels.some((l) => l.id === labelId),
+    ).length;
+
+    setErrors((prev) => ({
       ...prev,
-      [labelId]: value === "" ? 0 : parseInt(value),
+      [labelId]: count > recipesWithLabel ? `Faltan recetas.` : null,
     }));
   };
 
@@ -73,7 +88,26 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
 
   const generateMenu = () => {
     if (selectedMealTypes.length === 0) return;
-    setLoading(true);
+
+    //Error management
+    const newErrors: Record<number, string | null> = {};
+    let hasErrors = false;
+
+    selectedLabels.forEach((l) => {
+      const recipesWithLabel = recipes.filter((r) =>
+        r.labels.some((rl) => rl.id === l.id),
+      ).length;
+
+      if (labelCount[l.id] > recipesWithLabel) {
+        newErrors[l.id] = `Faltan recetas.`;
+        hasErrors = true;
+      } else {
+        newErrors[l.id] = null;
+      }
+    });
+
+    setErrors(newErrors);
+    if (hasErrors) return;
 
     const daysOfWeek = [
       "Sunday",
@@ -154,13 +188,11 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
       onCloseModal();
     } catch (error) {
       console.error("Error creating menu:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         <Text style={styles.sectionTitle}>Tipos de comida</Text>
         <View style={styles.chipContainer}>
@@ -170,6 +202,10 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
               selected={selectedMealTypes.some((s) => s.id === mt.id)}
               onPress={() => toggleMealType(mt)}
               style={styles.chip}
+              textStyle={{
+                fontFamily: "ShantellSans-Regular",
+                color: colors.darkBrown,
+              }}
             >
               {mt.name}
             </Chip>
@@ -184,6 +220,10 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
               selected={selectedLabels.some((s) => s.id === l.id)}
               onPress={() => toggleLabel(l)}
               style={styles.chip}
+              textStyle={{
+                fontFamily: "ShantellSans-Regular",
+                color: colors.darkBrown,
+              }}
             >
               {l.name}
             </Chip>
@@ -191,31 +231,38 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
         </View>
 
         <Text style={styles.sectionTitle}>Cantidad por categoría</Text>
-        {selectedLabels.map((l) => (
-          <TextInput
-            key={l.id}
-            label={l.name}
-            value={labelCount[l.id]?.toString() ?? "2"}
-            onChangeText={(value) => updateLabelCount(l.id, value)}
-            keyboardType="numeric"
-            style={styles.input}
-          />
+        {selectedLabels.map((l, index) => (
+          <View key={index}>
+            <TextInput
+              mode="outlined"
+              outlineColor={colors.lightBrown}
+              activeOutlineColor={colors.lightBrown}
+              textColor={colors.lightBrown}
+              contentStyle={{
+                fontFamily: "ShantellSans-Regular",
+                fontSize: 15,
+              }}
+              key={l.id}
+              label={l.name}
+              value={labelCount[l.id]?.toString() ?? "2"}
+              onChangeText={(value) => updateLabelCount(l.id, value)}
+              keyboardType="numeric"
+              style={styles.input}
+              error={!!errors[l.id]}
+            />
+
+            <HelperText type="error">{errors[l.id]}</HelperText>
+          </View>
         ))}
 
-        <Pressable
-          style={[
-            styles.button,
-            selectedMealTypes.length === 0 && styles.disabledButton,
-          ]}
+        <DashedButton
+          title="Generar menú"
+          color={colors.purple}
+          background={colors.offWhite}
           onPress={generateMenu}
-          disabled={selectedMealTypes.length === 0}
-        >
-          {loading ? (
-            <ActivityIndicator animating={true} color="white" />
-          ) : (
-            <Text style={styles.buttonText}>Generar Menú</Text>
-          )}
-        </Pressable>
+          style={{ alignSelf: "center", marginTop: 20 }}
+          size={{ paddingHorizontal: 40 }}
+        />
       </View>
     </ScrollView>
   );
@@ -223,13 +270,13 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    paddingHorizontal: 20,
     borderRadius: 10,
   },
   sectionTitle: {
     fontSize: 16,
     fontFamily: "ShantellSans-SemiBold",
-    color: "#333",
+    color: colors.darkBrown,
     marginBottom: 8,
     marginTop: 10,
   },
@@ -240,10 +287,8 @@ const styles = StyleSheet.create({
   },
   chip: {
     margin: 4,
-    backgroundColor: colors.blue,
-    borderWidth: 1.5,
+    backgroundColor: colors.orange,
     borderRadius: 12,
-    borderColor: colors.lightBrown,
     fontFamily: "ShantellSans-Regular",
   },
   input: {
@@ -251,28 +296,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 12,
     fontFamily: "ShantellSans-Regular",
-  },
-  button: {
-    marginTop: 20,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 15,
-    backgroundColor: colors.orange,
-    borderWidth: 2,
-    borderColor: colors.lightBrown,
-  },
-  buttonText: {
-    fontSize: 16,
-    lineHeight: 21,
-    fontFamily: "ShantellSans-SemiBold",
-    letterSpacing: 0.25,
-    color: colors.lightBrown,
-  },
-  disabledButton: {
-    backgroundColor: "gray",
-    borderColor: "darkgray",
   },
 });
 

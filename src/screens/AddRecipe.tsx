@@ -66,7 +66,7 @@ const AddRecipe: React.FC = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <SafeAreaView>
         <Pressable
           style={styles.backButton}

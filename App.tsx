@@ -25,8 +25,11 @@ const theme = {
     ...MD3LightTheme.colors,
     secondaryContainer: "#eab295",
 
-    onSurface: "#624942", // primary text color
-    onSurfaceVariant: "#666", // secondary text color
+    onSurface: colors.lightBrown, // primary text color
+    onSurfaceVariant: colors.lightBrown, // secondary text color
+
+    primary: colors.darkOrange,
+    outline: colors.lightBrown,
   },
 };
 

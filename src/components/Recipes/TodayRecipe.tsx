@@ -43,7 +43,10 @@ const TodayRecipe = () => {
           ))}
         </>
       ) : (
-        <Text style={styles.noMenuText}>No se ha generado menú</Text>
+        <View>
+          <Text style={styles.noMenuTextTitle}>¡No hay menú!</Text>
+          <Text style={styles.noMenuText}>Añade recetas o crea un menú.</Text>
+        </View>
       )}
     </View>
   );
@@ -60,6 +63,7 @@ const styles = StyleSheet.create({
     borderColor: colors.lightBrown,
     borderWidth: 2,
     marginBottom: 20,
+    marginHorizontal: 10,
   },
   title: {
     fontSize: 24,
@@ -80,9 +84,16 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     fontFamily: "ShantellSans-SemiBold",
   },
-  noMenuText: {
+  noMenuTextTitle: {
     fontSize: 18,
-    color: "red",
+    color: colors.red,
     textAlign: "center",
+    fontFamily: "ShantellSans-SemiBold",
+  },
+  noMenuText: {
+    fontSize: 14,
+    color: colors.red,
+    textAlign: "center",
+    fontFamily: "ShantellSans-Regular",
   },
 });

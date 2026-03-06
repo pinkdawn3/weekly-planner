@@ -18,15 +18,19 @@ export const initDB = () => {
     DROP TABLE IF EXISTS recipes;
     DROP TABLE IF EXISTS meal_types;
     DROP TABLE IF EXISTS labels;
-  `); */
+  `);
+
+  db.execSync(`PRAGMA user_version = 0`); */
 
   const { user_version } = db.getFirstSync<{ user_version: number }>(
     "PRAGMA user_version",
   )!;
 
   for (let v = user_version + 1; v <= CURRENT_DB_VERSION; v++) {
-    migrations[v]();
-    db.execSync(`PRAGMA user_version = ${v}`);
+    db.withTransactionSync(() => {
+      migrations[v]();
+      db.execSync(`PRAGMA user_version = ${v}`);
+    });
   }
 };
 

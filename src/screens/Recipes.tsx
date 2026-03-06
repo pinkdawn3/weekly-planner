@@ -108,7 +108,9 @@ const Recipes = () => {
             showAddRecipeScreen();
           }}
         >
-          <Entypo name="plus" size={24} color={colors.darkBrown} />
+          <View style={styles.innerButton}>
+            <Entypo name="plus" size={24} color={colors.transparentYellow} />
+          </View>
         </Pressable>
 
         {/* Scroll view to display filtered recipes */}
@@ -153,10 +155,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 50,
     right: 30,
-    padding: 15,
+
     backgroundColor: colors.darkOrange,
     borderRadius: 50,
-    borderColor: colors.lightBrown,
+    borderColor: colors.darkOrange,
     borderWidth: 2,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -164,6 +166,13 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
     zIndex: 1000,
+  },
+  innerButton: {
+    borderWidth: 2,
+    borderStyle: "dashed",
+    borderRadius: 50,
+    borderColor: colors.transparentYellow,
+    padding: 15,
   },
   detailsLink: {
     color: colors.darkOrange,

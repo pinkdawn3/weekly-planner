@@ -12,4 +12,5 @@ export const colors = {
   darkBrown: "#624946",
   offWhite: "#faeeee",
   purple: "#d6b3f5",
+  red: "#fc623f",
 };

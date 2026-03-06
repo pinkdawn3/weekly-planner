@@ -6,10 +6,12 @@ import BottomTabNav from "./BottomTabNav";
 import RecipeDetailsScreen from "../screens/RecipeDetailsScreen";
 
 import { Recipe } from "../types/RecipeType";
+import Settings from "../screens/Settings";
 
 export type RootStackParamList = {
   AddRecipe: undefined;
   BottomTabNav: undefined;
+  Settings: undefined;
   RecipeDetailsScreen: { recipe: Recipe };
 };
 
@@ -25,6 +27,7 @@ const RootNavigator = () => {
     >
       <Stack.Screen name="AddRecipe" component={AddRecipe} />
       <Stack.Screen name="BottomTabNav" component={BottomTabNav} />
+      <Stack.Screen name="Settings" component={Settings} />
 
       <Stack.Screen
         name="RecipeDetailsScreen"

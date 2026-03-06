@@ -12,6 +12,7 @@ import {
 import MenuGenerator from "../components/MenuGenerator";
 import { colors } from "../theme/colors";
 import { Entypo, Feather } from "@expo/vector-icons";
+import DashedButton from "../components/Core/DashedButton";
 
 const daysOfWeekOrder = [
   "Monday",
@@ -47,7 +48,7 @@ const WeeklyMenu = () => {
   const containerStyle = {
     backgroundColor: colors.offWhite,
     padding: 30,
-    margin: 20,
+    marginHorizontal: 20,
     borderRadius: 25,
     borderColor: colors.lightBrown,
     borderWidth: 2,
@@ -113,19 +114,7 @@ const WeeklyMenu = () => {
   return (
     <Provider>
       <View style={styles.container}>
-        {recipes.length < 7 ? (
-          <>
-            <Text style={styles.infoText}>
-              Añade al menos 7 recetas para crear un menú semanal.
-            </Text>
-            <Pressable
-              style={[styles.menuGeneratorButton, styles.disabledButton]}
-              disabled
-            >
-              <Text style={styles.buttonText}>Menú nuevo</Text>
-            </Pressable>
-          </>
-        ) : (
+        {currentMenu && currentMenu.recipes.length > 0 ? (
           <View style={styles.buttonGroup}>
             <Pressable
               style={styles.menuGeneratorButton}
@@ -144,6 +133,20 @@ const WeeklyMenu = () => {
                 <Feather name="edit-3" size={24} color={colors.lightBrown} />
               )}
             </Pressable>
+          </View>
+        ) : (
+          <View
+            style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
+          >
+            <Text style={styles.infoText}>¡No hay menú!</Text>
+
+            <DashedButton
+              title="Crear menú"
+              color={colors.purple}
+              style={{ marginTop: 20 }}
+              background={colors.transparentYellow}
+              onPress={showMenuGeneratorModal}
+            />
           </View>
         )}
 
@@ -335,8 +338,8 @@ const styles = StyleSheet.create({
     borderColor: "darkgray",
   },
   infoText: {
-    marginTop: 10,
-    fontSize: 14,
-    color: "red",
+    fontSize: 18,
+    fontFamily: "ShantellSans-SemiBold",
+    color: colors.red,
   },
 });
