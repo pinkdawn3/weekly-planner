@@ -29,6 +29,7 @@ import { useLingui } from "@lingui/react";
 import { msg } from "@lingui/core/macro";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import { useEffect } from "react";
+import ConfirmDeleteModal from "../components/Core/ConfirmDeleteModal";
 
 type RecipeDetailsScreenRouteProp = RouteProp<
   RootStackParamList,
@@ -148,6 +149,8 @@ const EditableArrayItem = ({
             focused && styles.inputFocused,
           ]}
           accessibilityLabel={_(msg`Edit`) + `: ${text}`}
+          multiline
+          submitBehavior="blurAndSubmit"
         />
 
         <Pressable
@@ -194,6 +197,7 @@ const RecipeDetailsScreen: React.FC = () => {
 
   const [isMealTypeVisible, setIsMealTypeVisible] = useState(false);
   const [isLabelVisible, setIsLabelVisible] = useState(false);
+  const [confirmVisible, setConfirmVisible] = useState(false);
 
   const [currentRecipe, setCurrentRecipe] = useState<Recipe>({
     ...route.params.recipe,
@@ -215,7 +219,9 @@ const RecipeDetailsScreen: React.FC = () => {
       updateRecipe(updated);
       setRecipes(getAllRecipes());
       const updatedMenu = getLastMenu();
-      setCurrentMenu(updatedMenu ?? { id: 0, created: "", recipes: [] });
+      setCurrentMenu(
+        updatedMenu ?? { id: 0, created: "", recipes: [], structure: [] },
+      );
     } catch (error) {
       console.error("Error saving recipe:", error);
     }
@@ -227,6 +233,12 @@ const RecipeDetailsScreen: React.FC = () => {
       try {
         deleteRecipe(currentRecipe.id);
         setRecipes(getAllRecipes());
+
+        const lastMenu = getLastMenu();
+        setCurrentMenu(
+          lastMenu ?? { id: 0, created: "", recipes: [], structure: [] },
+        );
+
         navigation.goBack();
       } catch (error) {
         console.error("Error deleting recipe:", error);
@@ -238,6 +250,17 @@ const RecipeDetailsScreen: React.FC = () => {
     <ScrollView style={{ backgroundColor: colors.offWhite }}>
       <SafeAreaView style={styles.detailsContainer}>
         <View style={styles.buttonContainer}>
+          {/* Confirm Delete modal */}
+          <ConfirmDeleteModal
+            visible={confirmVisible}
+            onDismiss={() => setConfirmVisible(false)}
+            onConfirm={() => {
+              setConfirmVisible(false);
+              handleDelete();
+            }}
+            itemName={currentRecipe.name}
+          />
+
           {/*  Go back button */}
           <Pressable
             style={styles.backButton}
@@ -254,7 +277,7 @@ const RecipeDetailsScreen: React.FC = () => {
           {/* Delete recipe button */}
           <Pressable
             style={styles.buttonDelete}
-            onPress={handleDelete}
+            onPress={() => setConfirmVisible(true)}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Delete recipe`)}
           >

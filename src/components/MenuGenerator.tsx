@@ -1,11 +1,6 @@
 import React, { useContext, useState } from "react";
-import { View, StyleSheet, Pressable, Text, ScrollView } from "react-native";
-import {
-  TextInput,
-  ActivityIndicator,
-  Chip,
-  HelperText,
-} from "react-native-paper";
+import { View, StyleSheet, Text, ScrollView } from "react-native";
+import { TextInput, Chip, HelperText } from "react-native-paper";
 import { RecipeContext } from "../contexts/Recipe/RecipeContext";
 import { Label, MealType, Menu, MenuRecipe } from "../types/recipeType";
 import moment from "moment";
@@ -20,6 +15,7 @@ import { Trans } from "@lingui/react/macro";
 import { useLingui } from "@lingui/react";
 import { msg } from "@lingui/core/macro";
 import { useTranslate } from "../hooks/useTranslations";
+import { generateMenuRecipes } from "../utils/menuGenerator";
 
 interface MenuGeneratorProps {
   onCloseModal: () => void;
@@ -83,20 +79,10 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
     }
   };
 
-  // Fisher-Yates shuffle
-  const shuffle = <T,>(array: T[]): T[] => {
-    const arr = [...array];
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  };
-
   const generateMenu = () => {
     if (selectedMealTypes.length === 0) return;
 
-    //Error management
+    // validaciones
     const newErrors: Record<number, string | null> = {};
     let hasErrors = false;
 
@@ -116,22 +102,7 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
     setErrors(newErrors);
     if (hasErrors) return;
 
-    const daysOfWeek = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-    const startIndex = moment().day();
-    const weekDays = Array.from(
-      { length: 7 },
-      (_, i) => daysOfWeek[(startIndex + i) % 7],
-    );
-
-    // Recetas usadas en el menú anterior para evitar repeticiones
+    // 👇 esto es lo que tienes suelto, tiene que ir aquí
     const lastMenus = getLastMenus(1);
     const recentRecipeIds = new Set(
       lastMenus.flatMap((m: Menu) =>
@@ -139,58 +110,20 @@ const MenuGenerator: React.FC<MenuGeneratorProps> = ({ onCloseModal }) => {
       ),
     );
 
-    const menuRecipes: MenuRecipe[] = [];
-    const usedRecipeIds = new Set<number>();
-    const labelUsageCount: Record<number, number> = {};
-    selectedLabels.forEach((l) => {
-      labelUsageCount[l.id] = 0;
-    });
-
-    for (const day of weekDays) {
-      for (const mealType of selectedMealTypes) {
-        // Recetas válidas para este meal type
-        const validRecipes = recipes.filter((r) =>
-          r.mealTypes.some((mt) => mt.id === mealType.id),
-        );
-
-        const shuffled = shuffle(validRecipes);
-
-        // Intentamos encontrar la mejor receta según prioridad
-        const selected =
-          // 1. No usada en este menú, no usada recientemente, respeta preferencias
-          shuffled.find(
-            (r) =>
-              !usedRecipeIds.has(r.id!) &&
-              !recentRecipeIds.has(r.id!) &&
-              r.labels.some(
-                (l) => labelUsageCount[l.id] < (labelCount[l.id] ?? 2),
-              ),
-          ) ??
-          // 2. No usada en este menú, no usada recientemente
-          shuffled.find(
-            (r) => !usedRecipeIds.has(r.id!) && !recentRecipeIds.has(r.id!),
-          ) ??
-          // 3. No usada en este menú
-          shuffled.find((r) => !usedRecipeIds.has(r.id!)) ??
-          // 4. Fallback: cualquier receta válida (repetición permitida)
-          shuffled[0];
-
-        if (selected) {
-          menuRecipes.push({ recipe: selected, mealType, weekDay: day });
-          usedRecipeIds.add(selected.id!);
-          selected.labels.forEach((l) => {
-            if (labelUsageCount[l.id] !== undefined) {
-              labelUsageCount[l.id]++;
-            }
-          });
-        }
-      }
-    }
+    const menuRecipes = generateMenuRecipes(
+      recipes,
+      selectedMealTypes,
+      selectedLabels,
+      labelCount,
+      recentRecipeIds,
+    );
 
     try {
       createMenu(menuRecipes);
       const lastMenu = getLastMenu();
-      setCurrentMenu(lastMenu ?? { id: 0, created: "", recipes: [] });
+      setCurrentMenu(
+        lastMenu ?? { id: 0, created: "", recipes: [], structure: [] },
+      );
       setMenuCreated(true);
       onCloseModal();
     } catch (error) {

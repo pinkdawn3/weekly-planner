@@ -45,7 +45,9 @@ const Recipes = () => {
     );
   };
 
-  const filteredRecipes = searchRecipe();
+  const filteredRecipes = searchRecipe().sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
 
   return (
     <View style={styles.container}>

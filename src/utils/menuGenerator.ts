@@ -36,11 +36,15 @@ export const generateMenuRecipes = (
   const menuRecipes: MenuRecipe[] = [];
   const usedRecipeIds = new Set<number>();
   const labelUsageCount: Record<number, number> = {};
+  const previousDayLabels = new Set<number>();
+
   selectedLabels.forEach((l) => {
     labelUsageCount[l.id] = 0;
   });
 
   for (const day of weekDays) {
+    const currentDayLabels = new Set<number>();
+
     for (const mealType of selectedMealTypes) {
       const validRecipes = recipes.filter((r) =>
         r.mealTypes.some((mt) => mt.id === mealType.id),
@@ -49,6 +53,15 @@ export const generateMenuRecipes = (
       const shuffled = shuffle(validRecipes);
 
       const selected =
+        shuffled.find(
+          (r) =>
+            !usedRecipeIds.has(r.id!) &&
+            !recentRecipeIds.has(r.id!) &&
+            r.labels.some(
+              (l) => labelUsageCount[l.id] < (labelCount[l.id] ?? 2),
+            ) &&
+            r.labels.every((l) => !previousDayLabels.has(l.id)),
+        ) ??
         shuffled.find(
           (r) =>
             !usedRecipeIds.has(r.id!) &&
@@ -67,12 +80,16 @@ export const generateMenuRecipes = (
         menuRecipes.push({ recipe: selected, mealType, weekDay: day });
         usedRecipeIds.add(selected.id!);
         selected.labels.forEach((l) => {
+          currentDayLabels.add(l.id);
           if (labelUsageCount[l.id] !== undefined) {
             labelUsageCount[l.id]++;
           }
         });
       }
     }
+
+    previousDayLabels.clear();
+    currentDayLabels.forEach((id) => previousDayLabels.add(id));
   }
 
   return menuRecipes;

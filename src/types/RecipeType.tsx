@@ -25,10 +25,17 @@ export type MenuRecipe = {
   weekDay: string;
 };
 
+export type MenuSlot = {
+  weekDay: string;
+  mealTypeId: number;
+  mealTypeName: string;
+};
+
 export type Menu = {
   id: number;
   created: string;
   recipes: MenuRecipe[];
+  structure: MenuSlot[];
 };
 
 export type Preferences = {

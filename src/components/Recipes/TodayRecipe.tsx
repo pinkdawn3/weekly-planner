@@ -10,10 +10,12 @@ import { colors } from "../../theme/colors";
 import { Trans } from "@lingui/react/macro";
 import { useLingui } from "@lingui/react";
 import { msg } from "@lingui/core/macro";
+import { useTranslate } from "../../hooks/useTranslations";
 
 const TodayRecipe = () => {
   const { currentMenu } = useContext(RecipeContext);
   const { _ } = useLingui();
+  const t = useTranslate();
 
   const [todaysRecipes, setTodaysRecipes] = useState<MenuRecipe[]>([]);
   const currentDate = moment().format("dddd");
@@ -33,31 +35,44 @@ const TodayRecipe = () => {
     navigation.navigate("RecipeDetailsScreen", { recipe: menuRecipe.recipe });
   };
 
+  const hasMenu =
+    currentMenu && currentMenu.recipes && currentMenu.recipes.length > 0;
+
   return (
     <View style={styles.card}>
-      {todaysRecipes.length > 0 ? (
-        <>
-          <Text style={styles.title}>
-            <Trans>Today we eat...</Trans>
-          </Text>
-
-          {todaysRecipes.map((mr) => (
-            <Pressable
-              key={mr.mealType.id}
-              onPress={() => handlePress(mr)}
-              accessibilityRole="button"
-              accessibilityLabel={`${mr.mealType.name}: ${mr.recipe.name}`}
-            >
-              <Text style={styles.mealType}>{mr.mealType.name}</Text>
-              <Text style={styles.recipeName}>{mr.recipe.name}</Text>
-            </Pressable>
-          ))}
-        </>
+      {hasMenu ? (
+        todaysRecipes.length > 0 ? (
+          <>
+            <Text style={styles.title}>
+              <Trans>Today we eat...</Trans>
+            </Text>
+            {todaysRecipes.map((mr) => (
+              <Pressable
+                key={mr.mealType.id}
+                onPress={() => handlePress(mr)}
+                accessibilityRole="button"
+                accessibilityLabel={`${mr.mealType.name}: ${mr.recipe.name}`}
+              >
+                <Text style={styles.mealType}>{t(mr.mealType.name)}</Text>
+                <Text style={styles.recipeName}>{mr.recipe.name}</Text>
+              </Pressable>
+            ))}
+          </>
+        ) : (
+          <>
+            <Text style={styles.noMenuTextTitle}>
+              <Trans>Recipe for today not found.</Trans>
+            </Text>
+            <Text style={styles.noMenuText}>
+              <Trans>Edit the menu to add a recipe.</Trans>
+            </Text>
+          </>
+        )
       ) : (
         <View
           accessibilityRole="text"
           accessibilityLabel={_(
-            msg`"No menu available. Add recipes or create a menu."`,
+            msg`No menu available. Add recipes or create a menu.`,
           )}
         >
           <Text style={styles.noMenuTextTitle}>

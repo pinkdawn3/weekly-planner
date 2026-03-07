@@ -1,7 +1,7 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useContext, useState } from "react";
 import { RecipeContext } from "../contexts/Recipe/RecipeContext";
-import { MenuRecipe, Recipe } from "../types/recipeType";
+import { MealType, MenuRecipe, Recipe } from "../types/recipeType";
 import { Modal, Portal, Provider, Searchbar } from "react-native-paper";
 import { navigate } from "../navigation/NavigationContainer";
 import {
@@ -17,6 +17,7 @@ import DashedButton from "../components/Core/DashedButton";
 import { Trans } from "@lingui/react/macro";
 import { useLingui } from "@lingui/react";
 import { msg } from "@lingui/core/macro";
+import { useTranslate } from "../hooks/useTranslations";
 
 const daysOfWeekOrder = [
   "Monday",
@@ -33,16 +34,21 @@ const WeeklyMenu = () => {
     useContext(RecipeContext);
 
   const { _ } = useLingui();
+  const t = useTranslate();
 
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [selectedMenuRecipe, setSelectedMenuRecipe] =
-    useState<MenuRecipe | null>(null);
+
+  type SlotInfo = { weekDay: string; mealType: MealType; recipe: null };
+  const [selectedMenuRecipe, setSelectedMenuRecipe] = useState<
+    MenuRecipe | SlotInfo | null
+  >(null);
+
   const [searchVisible, setSearchVisible] = useState<boolean>(false);
   const [MenuGeneratorVisible, setMenuGeneratorVisible] =
     useState<boolean>(false);
   const [searchText, setSearchText] = useState("");
 
-  const showSearchModal = (menuRecipe: MenuRecipe) => {
+  const showSearchModal = (menuRecipe: MenuRecipe | SlotInfo) => {
     setSelectedMenuRecipe(menuRecipe);
     setSearchVisible(true);
   };
@@ -63,19 +69,35 @@ const WeeklyMenu = () => {
   const cardStyle = editMode ? styles.dayCardEdit : styles.dayCard;
 
   const handleRecipeChange = (newRecipe: Recipe) => {
-    if (selectedMenuRecipe && currentMenu && currentMenu.recipes) {
-      const updatedMenuRecipes: MenuRecipe[] = currentMenu.recipes.map((mr) =>
-        mr.recipe.id === selectedMenuRecipe.recipe.id &&
-        mr.mealType.id === selectedMenuRecipe.mealType.id
-          ? { ...mr, recipe: newRecipe }
-          : mr,
-      );
+    if (selectedMenuRecipe && currentMenu) {
+      let updatedMenuRecipes: MenuRecipe[];
+
+      if (selectedMenuRecipe.recipe === null) {
+        // Emtpy slot -> new recipe
+        updatedMenuRecipes = [
+          ...currentMenu.recipes,
+          {
+            recipe: newRecipe,
+            mealType: selectedMenuRecipe.mealType,
+            weekDay: selectedMenuRecipe.weekDay,
+          },
+        ];
+      } else {
+        // Existing recipe -> replace recipe
+        updatedMenuRecipes = currentMenu.recipes.map((mr) =>
+          mr.recipe.id === selectedMenuRecipe.recipe!.id &&
+          mr.mealType.id === selectedMenuRecipe.mealType.id
+            ? { ...mr, recipe: newRecipe }
+            : mr,
+        );
+      }
 
       try {
-        updateRecipe(newRecipe);
         createMenu(updatedMenuRecipes);
         const lastMenu = getLastMenu();
-        setCurrentMenu(lastMenu ?? { id: 0, created: "", recipes: [] });
+        setCurrentMenu(
+          lastMenu ?? { id: 0, created: "", recipes: [], structure: [] },
+        );
         setMenuCreated(true);
       } catch (error) {
         console.error("Error creating menu:", error);
@@ -92,7 +114,9 @@ const WeeklyMenu = () => {
       recipe.name.toLowerCase().includes(searchText.toLowerCase()),
     );
 
-  const filteredRecipes = searchRecipe();
+  const filteredRecipes = searchRecipe().sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
 
   const sortedMenuRecipes = currentMenu?.recipes
     ? [...currentMenu.recipes].sort(
@@ -108,10 +132,7 @@ const WeeklyMenu = () => {
 
   const recipesByDay = daysOfWeekOrder.reduce(
     (acc, day) => {
-      const dayRecipes = sortedMenuRecipes.filter((mr) => mr.weekDay === day);
-      if (dayRecipes.length > 0) {
-        acc[day] = dayRecipes;
-      }
+      acc[day] = sortedMenuRecipes.filter((mr) => mr.weekDay === day);
       return acc;
     },
     {} as Record<string, MenuRecipe[]>,
@@ -172,35 +193,74 @@ const WeeklyMenu = () => {
           </View>
         )}
 
-        {sortedMenuRecipes.length > 0 && (
+        {(sortedMenuRecipes.length > 0 || currentMenu) && (
           <ScrollView
             style={{ width: "100%" }}
             contentContainerStyle={{ paddingHorizontal: 30, paddingBottom: 30 }}
           >
-            {Object.entries(recipesByDay).map(([day, recipes]) => (
-              <View key={day} style={cardStyle}>
-                <View style={styles.weekDayContainer}>
-                  <Text style={styles.weekDay} accessibilityRole="header">
-                    {day}
-                  </Text>
-                </View>
+            {Object.entries(recipesByDay).map(([day, recipes]) => {
+              const validRecipes = recipes.filter((mr) => mr.recipe);
 
-                {recipes.map((mr) => (
-                  <Pressable
-                    key={mr.mealType.id}
-                    style={styles.recipeCard}
-                    onPress={() =>
-                      editMode ? showSearchModal(mr) : handleDetails(mr.recipe)
-                    }
-                    accessibilityRole="button"
-                    accessibilityLabel={`${mr.mealType.name}: ${mr.recipe.name}${editMode ? `, ${_(msg`tap to change`)}` : ""}`}
-                  >
-                    <Text style={styles.mealType}>{mr.mealType.name}</Text>
-                    <Text style={styles.recipeName}>{mr.recipe.name}</Text>
-                  </Pressable>
-                ))}
-              </View>
-            ))}
+              return (
+                <View key={day} style={cardStyle}>
+                  <View style={styles.weekDayContainer}>
+                    <Text style={styles.weekDay} accessibilityRole="header">
+                      {t(day)}
+                    </Text>
+                  </View>
+                  {validRecipes.length === 0 ? (
+                    <Pressable
+                      style={styles.recipeCard}
+                      onPress={() => {
+                        if (editMode) {
+                          const slot = currentMenu?.structure.find(
+                            (s) => s.weekDay === day,
+                          );
+                          if (slot) {
+                            showSearchModal({
+                              weekDay: day,
+                              mealType: {
+                                id: slot.mealTypeId,
+                                name: slot.mealTypeName,
+                              },
+                              recipe: null,
+                            });
+                          }
+                        }
+                      }}
+                      accessibilityRole="button"
+                      accessibilityLabel="Recipe not found, edit menu to replace it"
+                    >
+                      <Text style={styles.recipeName}>
+                        <Trans>Recipe not found.</Trans>
+                      </Text>
+                      <Text style={styles.mealType}>
+                        <Trans>Edit to add one.</Trans>
+                      </Text>
+                    </Pressable>
+                  ) : (
+                    validRecipes.map((mr) => (
+                      <Pressable
+                        key={mr.mealType.id}
+                        style={styles.recipeCard}
+                        onPress={() =>
+                          editMode
+                            ? showSearchModal(mr)
+                            : handleDetails(mr.recipe)
+                        }
+                        accessibilityRole="button"
+                        accessibilityLabel={`${mr.mealType.name}: ${mr.recipe.name}${editMode ? `, ${_(msg`tap to change`)}` : ""}`}
+                      >
+                        <Text style={styles.mealType}>
+                          {t(mr.mealType.name)}
+                        </Text>
+                        <Text style={styles.recipeName}>{mr.recipe.name}</Text>
+                      </Pressable>
+                    ))
+                  )}
+                </View>
+              );
+            })}
           </ScrollView>
         )}
       </View>
@@ -292,7 +352,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: colors.offWhite,
     paddingBottom: 10,
-    elevation: 10,
+    elevation: 15,
   },
   recipeCard: {
     paddingHorizontal: 15,

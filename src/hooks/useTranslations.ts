@@ -13,6 +13,14 @@ const translations = {
 
     Lunch: "Lunch",
     Dinner: "Dinner",
+
+    Monday: "Monday",
+    Tuesday: "Tuesday",
+    Wednesday: "Wednesday",
+    Thursday: "Thursday",
+    Friday: "Friday",
+    Saturday: "Saturday",
+    Sunday: "Sunday",
   },
 
   es: {
@@ -26,6 +34,14 @@ const translations = {
 
     Lunch: "Almuerzo",
     Dinner: "Cena",
+
+    Monday: "Lunes",
+    Tuesday: "Martes",
+    Wednesday: "Miércoles",
+    Thursday: "Jueves",
+    Friday: "Viernes",
+    Saturday: "Sábado",
+    Sunday: "Domingo",
   },
 } as const;
 

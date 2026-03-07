@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Label } from "../../types/recipeType";
@@ -6,6 +6,7 @@ import {
   createLabel,
   deleteLabel,
   getAllLabels,
+  getAllRecipes,
 } from "../../services/db/database.service";
 import { colors } from "../../theme/colors";
 import DashedButton from "../Core/DashedButton";
@@ -13,6 +14,8 @@ import { Trans } from "@lingui/react/macro";
 import { useTranslate } from "../../hooks/useTranslations";
 import { useLingui } from "@lingui/react";
 import { msg } from "@lingui/core/macro";
+import { RecipeContext } from "../../contexts/Recipe/RecipeContext";
+import ConfirmDeleteModal from "../Core/ConfirmDeleteModal";
 
 interface ManageLabelsProps {
   labels: Label[];
@@ -20,9 +23,14 @@ interface ManageLabelsProps {
 }
 
 const ManageLabels: React.FC<ManageLabelsProps> = ({ labels, onUpdate }) => {
+  const { setRecipes } = useContext(RecipeContext);
   const [newName, setNewName] = useState("");
   const t = useTranslate();
   const { _ } = useLingui();
+
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedName, setSelectedName] = useState<string>("");
 
   const handleAdd = () => {
     if (!newName.trim()) return;
@@ -31,13 +39,24 @@ const ManageLabels: React.FC<ManageLabelsProps> = ({ labels, onUpdate }) => {
     setNewName("");
   };
 
-  const handleDelete = (id: number) => {
-    deleteLabel(id);
+  const handleDelete = () => {
+    if (selectedId === null) return;
+    deleteLabel(selectedId);
     onUpdate(getAllLabels());
+    setRecipes(getAllRecipes());
   };
 
   return (
     <View style={styles.container}>
+      <ConfirmDeleteModal
+        visible={confirmVisible}
+        onDismiss={() => setConfirmVisible(false)}
+        onConfirm={() => {
+          setConfirmVisible(false);
+          handleDelete();
+        }}
+        itemName={selectedName}
+      />
       <Text style={styles.title}>
         <Trans>Categories</Trans>
       </Text>
@@ -45,7 +64,11 @@ const ManageLabels: React.FC<ManageLabelsProps> = ({ labels, onUpdate }) => {
         <View key={l.id} style={styles.listItem}>
           <Text style={styles.itemText}>{t(l.name)}</Text>
           <Pressable
-            onPress={() => handleDelete(l.id)}
+            onPress={() => {
+              setSelectedId(l.id);
+              setSelectedName(l.name);
+              setConfirmVisible(true);
+            }}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Delete meal category`)}
           >

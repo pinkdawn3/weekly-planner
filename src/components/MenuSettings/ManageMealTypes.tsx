@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { MealType } from "../../types/recipeType";
@@ -6,6 +6,7 @@ import {
   createMealType,
   deleteMealType,
   getAllMealTypes,
+  getAllRecipes,
 } from "../../services/db/database.service";
 import { colors } from "../../theme/colors";
 import DashedButton from "../Core/DashedButton";
@@ -13,6 +14,8 @@ import { useTranslate } from "../../hooks/useTranslations";
 import { useLingui } from "@lingui/react";
 import { Trans } from "@lingui/react/macro";
 import { msg } from "@lingui/core/macro";
+import { RecipeContext } from "../../contexts/Recipe/RecipeContext";
+import ConfirmDeleteModal from "../Core/ConfirmDeleteModal";
 
 interface ManageMealTypesProps {
   mealTypes: MealType[];
@@ -23,10 +26,15 @@ const ManageMealTypes: React.FC<ManageMealTypesProps> = ({
   mealTypes,
   onUpdate,
 }) => {
+  const { setRecipes } = useContext(RecipeContext);
+
+  const [newName, setNewName] = useState("");
   const t = useTranslate();
   const { _ } = useLingui();
 
-  const [newName, setNewName] = useState("");
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedName, setSelectedName] = useState<string>("");
 
   const handleAdd = () => {
     if (!newName.trim()) return;
@@ -35,13 +43,25 @@ const ManageMealTypes: React.FC<ManageMealTypesProps> = ({
     setNewName("");
   };
 
-  const handleDelete = (id: number) => {
-    deleteMealType(id);
+  const handleDelete = () => {
+    if (selectedId === null) return;
+    deleteMealType(selectedId);
     onUpdate(getAllMealTypes());
+    setRecipes(getAllRecipes());
   };
 
   return (
     <View style={styles.container}>
+      <ConfirmDeleteModal
+        visible={confirmVisible}
+        onDismiss={() => setConfirmVisible(false)}
+        onConfirm={() => {
+          setConfirmVisible(false);
+          handleDelete();
+        }}
+        itemName={selectedName}
+      />
+
       <Text style={styles.title}>
         <Trans>Types of meal</Trans>
       </Text>
@@ -49,7 +69,11 @@ const ManageMealTypes: React.FC<ManageMealTypesProps> = ({
         <View key={mt.id} style={styles.listItem}>
           <Text style={styles.itemText}>{t(mt.name)}</Text>
           <Pressable
-            onPress={() => handleDelete(mt.id)}
+            onPress={() => {
+              setSelectedId(mt.id);
+              setSelectedName(mt.name);
+              setConfirmVisible(true);
+            }}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Delete type of meal`)}
           >
