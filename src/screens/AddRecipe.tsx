@@ -93,7 +93,7 @@ const AddRecipe: React.FC = () => {
           name="name"
           control={control}
           rules={{
-            required: { value: true, message: "This field is required." },
+            required: { value: true, message: _(msg`This field is required.`) },
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
@@ -122,7 +122,10 @@ const AddRecipe: React.FC = () => {
             name="mealTypes"
             control={control}
             rules={{
-              required: { value: true, message: "This field is required." },
+              required: {
+                value: true,
+                message: _(msg`This field is required.`),
+              },
             }}
             render={({ field: { onChange, value } }) => (
               <View
@@ -173,7 +176,10 @@ const AddRecipe: React.FC = () => {
             name="labels"
             control={control}
             rules={{
-              required: { value: true, message: "This field is required." },
+              required: {
+                value: true,
+                message: _(msg`This field is required.`),
+              },
             }}
             render={({ field: { onChange, value } }) => (
               <View style={styles.chipContainer}>
@@ -205,6 +211,10 @@ const AddRecipe: React.FC = () => {
             )}
           />
         </View>
+        {errors.labels && (
+          <HelperText type="error">{errors.labels?.message}</HelperText>
+        )}
+
         {/* Ingredientes */}
         <Text style={styles.label} accessibilityRole="header">
           <Trans>Ingredients</Trans>
