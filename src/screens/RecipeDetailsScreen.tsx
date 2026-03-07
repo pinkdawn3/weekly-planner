@@ -27,6 +27,8 @@ import { Trans } from "@lingui/react/macro";
 import { useTranslate } from "../hooks/useTranslations";
 import { useLingui } from "@lingui/react";
 import { msg } from "@lingui/core/macro";
+import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
+import { useEffect } from "react";
 
 type RecipeDetailsScreenRouteProp = RouteProp<
   RootStackParamList,
@@ -175,6 +177,13 @@ const EditableArrayItem = ({
 };
 
 const RecipeDetailsScreen: React.FC = () => {
+  useEffect(() => {
+    activateKeepAwakeAsync();
+    return () => {
+      deactivateKeepAwake();
+    };
+  }, []);
+
   const navigation = useNavigation<RecipeDetailsScreenNavigationProp>();
   const route = useRoute<RecipeDetailsScreenRouteProp>();
   const { mealTypes, labels, setRecipes, setCurrentMenu } =
@@ -192,11 +201,13 @@ const RecipeDetailsScreen: React.FC = () => {
     steps: route.params.recipe.steps ?? [],
   });
 
+  //References to edit fields
   const fieldsRef = useRef<RecipeFields>({
     name: route.params.recipe.name ?? "",
     description: route.params.recipe.description ?? "",
   });
 
+  //Recipe saving funcionality
   const handleSave = (field: keyof Recipe, value: any) => {
     const updated = { ...currentRecipe, [field]: value };
     setCurrentRecipe(updated);
@@ -210,6 +221,7 @@ const RecipeDetailsScreen: React.FC = () => {
     }
   };
 
+  //Recipe deleting functionality
   const handleDelete = () => {
     if (currentRecipe.id !== undefined) {
       try {
@@ -250,6 +262,7 @@ const RecipeDetailsScreen: React.FC = () => {
           </Pressable>
         </View>
 
+        {/* Name */}
         <EditableField
           field="name"
           fieldsRef={fieldsRef}
@@ -258,6 +271,7 @@ const RecipeDetailsScreen: React.FC = () => {
           style={styles.modalTitle}
         />
 
+        {/* Type of meal */}
         <Text style={styles.sectionHeader} accessibilityRole="header">
           <Trans>Type of meal</Trans>
         </Text>
@@ -295,6 +309,7 @@ const RecipeDetailsScreen: React.FC = () => {
           />
         </Portal>
 
+        {/* Meal label */}
         <Text style={styles.sectionHeader} accessibilityRole="header">
           <Trans>Category</Trans>
         </Text>
@@ -332,6 +347,7 @@ const RecipeDetailsScreen: React.FC = () => {
           />
         </Portal>
 
+        {/* Ingredients*/}
         <Text style={styles.sectionHeader} accessibilityRole="header">
           <Trans>Ingredients</Trans>
         </Text>
@@ -369,6 +385,7 @@ const RecipeDetailsScreen: React.FC = () => {
             />
           </View>
         ))}
+        {/* Add ingredient */}
         <Pressable
           onPress={() =>
             handleSave("ingredients", [...currentRecipe.ingredients, ""])
@@ -381,6 +398,7 @@ const RecipeDetailsScreen: React.FC = () => {
           </Text>
         </Pressable>
 
+        {/* Steps */}
         <Text style={styles.sectionHeader} accessibilityRole="header">
           <Trans>Steps</Trans>
         </Text>
@@ -414,6 +432,7 @@ const RecipeDetailsScreen: React.FC = () => {
             />
           </View>
         ))}
+        {/* Add step */}
         <Pressable
           onPress={() => handleSave("steps", [...currentRecipe.steps, ""])}
           accessibilityRole="button"

@@ -2,8 +2,6 @@ import { File, Paths } from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import * as DocumentPicker from "expo-document-picker";
 
-import { ExportData } from "../types/exportData";
-
 import {
   getAllMealTypes,
   getAllLabels,
@@ -12,6 +10,7 @@ import {
   createLabel,
   createRecipe,
 } from "./db/database.service";
+import { ExportData } from "../types/exportData";
 
 export const exportData = async () => {
   const data: ExportData = {
@@ -22,7 +21,7 @@ export const exportData = async () => {
     recipes: getAllRecipes(),
   };
 
-  const file = new File(Paths.document, "autocook_backup.json");
+  const file = new File(Paths.document, "chefplanner.json");
   file.write(JSON.stringify(data));
   await Sharing.shareAsync(file.uri, {
     mimeType: "application/json",

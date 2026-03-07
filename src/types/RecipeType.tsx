@@ -11,7 +11,7 @@ export type Label = {
 export type Recipe = {
   id: number | undefined;
   name: string;
-  description?: string;
+  description?: string | null;
   ingredients: string[];
   steps: string[];
   mealTypes: MealType[];

@@ -12,7 +12,7 @@ const Header = () => {
         borderBottomColor: colors.lightBrown,
       }}
     >
-      <Appbar.Content title="AutoCook" />
+      <Appbar.Content title="Chef Planner" />
     </Appbar.Header>
   );
 };
