@@ -34,8 +34,10 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+# Excluded folders from the project
 builds/
 android/
 dev/
-
+.idea/
+builds/
 
