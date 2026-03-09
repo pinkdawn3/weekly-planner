@@ -1,19 +1,17 @@
 {
   "expo": {
-    "name": "weeklymeal",
-    "slug": "weeklymeal",
+    "name": "Chef Planner",
+    "slug": "chefplanner",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo-chefplanner.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -23,15 +21,12 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.weeklymeal"
+      "package": "com.sunrisemorning.chefplanner"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-sqlite",
-      "expo-localization"
-    ],
+    "plugins": ["expo-sqlite", "expo-localization"],
     "extra": {
       "eas": {
         "projectId": "c7737fa9-9ee9-439b-b290-3da1fabd8b51"

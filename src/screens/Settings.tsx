@@ -52,13 +52,13 @@ const Settings = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Pressable style={styles.themeButton} onPress={toggleTheme}>
+      {/* <Pressable style={styles.themeButton} onPress={toggleTheme}>
         {theme == "light" ? (
           <Feather name="sun" size={25} color={colors.icon} />
         ) : (
           <Feather name="moon" size={24} color={colors.icon} />
         )}
-      </Pressable>
+      </Pressable> */}
       <DashedButton
         title={_(msg`Import`)}
         color={colors.accent}

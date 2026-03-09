@@ -200,7 +200,7 @@ const WeeklyMenu = () => {
           </View>
         )}
 
-        {(sortedMenuRecipes.length > 0 || currentMenu) && (
+        {currentMenu && currentMenu.recipes.length > 0 && (
           <ScrollView
             style={{ width: "100%" }}
             contentContainerStyle={{ paddingHorizontal: 30, paddingBottom: 30 }}
