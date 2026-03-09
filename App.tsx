@@ -1,10 +1,11 @@
 import "react-native-gesture-handler";
 import {
   configureFonts,
+  MD3DarkTheme,
   MD3LightTheme,
   PaperProvider,
 } from "react-native-paper";
-import React, { useContext, useMemo } from "react";
+import React, { useContext } from "react";
 import Header from "./src/header/Header";
 import RecipeProvider from "./src/contexts/Recipe/RecipeProvider";
 import AppNavigationContainer from "./src/navigation/NavigationContainer";
@@ -19,6 +20,32 @@ import { UserContext } from "./src/contexts/User/UserContext";
 
 const fontConfig = {
   fontFamily: "ShantellSans-Regular",
+};
+
+export const lightTheme = {
+  ...MD3LightTheme,
+  fonts: configureFonts({ config: fontConfig }),
+  colors: {
+    ...MD3LightTheme.colors,
+    secondaryContainer: "#eab295",
+    onSurface: colors.lightBrown, // primary text color
+    onSurfaceVariant: colors.lightBrown, // secondary text color
+    primary: colors.darkOrange,
+    outline: colors.lightBrown,
+  },
+};
+
+export const darkTheme = {
+  ...MD3DarkTheme,
+  fonts: configureFonts({ config: fontConfig }),
+  colors: {
+    ...MD3DarkTheme.colors,
+    secondaryContainer: "#7a4a2a",
+    onSurface: colors.offWhite, // primary text color
+    onSurfaceVariant: colors.offWhite, // secondary text color
+    primary: colors.darkOrange,
+    outline: colors.offWhite,
+  },
 };
 
 const theme = {

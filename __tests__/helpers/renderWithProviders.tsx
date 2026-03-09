@@ -32,7 +32,7 @@ export const mockRecipeContext = {
   labels: [{ id: 1, name: "Protein" }],
   setMealTypes: jest.fn(),
   setLabels: jest.fn(),
-  currentMenu: { id: 0, created: "", recipes: [] },
+  currentMenu: { id: 0, created: "", recipes: [], structure: [] },
   setCurrentMenu: jest.fn(),
   menuCreated: false,
   setMenuCreated: jest.fn(),

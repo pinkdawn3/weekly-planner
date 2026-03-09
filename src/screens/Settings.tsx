@@ -15,20 +15,25 @@ import { Trans } from "@lingui/react/macro";
 import { msg } from "@lingui/core/macro";
 import { useTranslate } from "../hooks/useTranslations";
 import { useLingui } from "@lingui/react";
+import { Feather } from "@expo/vector-icons";
+import { useColors } from "../theme/useColors";
 
 const Settings = () => {
   const [visible, setVisible] = useState(false);
   const { setRecipes, setMealTypes, setLabels } = useContext(RecipeContext);
-  const { language, handleSetLanguage } = useContext(UserContext);
+  const { language, handleSetLanguage, theme, toggleTheme } =
+    useContext(UserContext);
+
+  const colors = useColors();
 
   const { _ } = useLingui();
   const t = useTranslate();
 
   const dropdownStyle = {
     borderRadius: 18,
-    borderColor: colors.lightBrown,
+    borderColor: colors.border,
     borderWidth: 2,
-    backgroundColor: colors.offWhite,
+    backgroundColor: colors.cardBackground,
   };
 
   const handleImport = async () => {
@@ -46,19 +51,26 @@ const Settings = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Pressable style={styles.themeButton} onPress={toggleTheme}>
+        {theme == "light" ? (
+          <Feather name="sun" size={25} color={colors.icon} />
+        ) : (
+          <Feather name="moon" size={24} color={colors.icon} />
+        )}
+      </Pressable>
       <DashedButton
         title={_(msg`Import`)}
-        color={colors.orange}
-        background={colors.transparentYellow}
+        color={colors.accent}
+        background={colors.background}
         style={{ alignSelf: "center" }}
         onPress={handleImport}
         accessibilityLabel={_(msg`Import user data`)}
       />
       <DashedButton
         title={_(msg`Export`)}
-        color={colors.orange}
-        background={colors.transparentYellow}
+        color={colors.accent}
+        background={colors.background}
         style={{ alignSelf: "center" }}
         onPress={exportData}
         accessibilityLabel={_(msg`Export user data`)}
@@ -70,8 +82,8 @@ const Settings = () => {
         anchor={
           <DashedButton
             title={t(language)}
-            color={colors.orange}
-            background={colors.transparentYellow}
+            color={colors.accent}
+            background={colors.background}
             style={{ alignSelf: "center", marginBottom: 20 }}
             onPress={() => setVisible(true)}
             accessibilityLabel={_(msg`Change language`)}
@@ -102,7 +114,7 @@ const Settings = () => {
         accessibilityRole="button"
         accessibilityLabel={_(msg`Support me on ko-fi`)}
       >
-        <Text style={styles.kofi}>
+        <Text style={[styles.kofi, { color: colors.text }]}>
           <Trans>☕ Support the project!</Trans>
         </Text>
       </Pressable>
@@ -115,14 +127,17 @@ export default Settings;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.transparentYellow,
     paddingHorizontal: 40,
     gap: 20,
     alignItems: "center",
     justifyContent: "center",
   },
   kofi: {
-    color: colors.darkBrown,
     fontFamily: "ShantellSans-Regular",
+  },
+  themeButton: {
+    position: "absolute",
+    top: 30,
+    right: 20,
   },
 });

@@ -60,7 +60,7 @@ export const v1 = () => {
   if (labelCount?.count === 0) {
     db.execSync(`
       INSERT INTO labels (name) VALUES ('Protein');
-      INSERT INTO labels (name) VALUES ('Carbohydrates');
+      INSERT INTO labels (name) VALUES ('Carbs');
       INSERT INTO labels (name) VALUES ('Fibre');
       INSERT INTO labels (name) VALUES ('Fish');
     `);

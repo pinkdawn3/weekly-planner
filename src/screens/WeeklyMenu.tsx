@@ -18,16 +18,23 @@ import { Trans } from "@lingui/react/macro";
 import { useLingui } from "@lingui/react";
 import { msg } from "@lingui/core/macro";
 import { useTranslate } from "../hooks/useTranslations";
+import moment from "moment";
 
-const daysOfWeekOrder = [
+const today = moment().day();
+const daysOfWeek = [
+  "Sunday",
   "Monday",
   "Tuesday",
   "Wednesday",
   "Thursday",
   "Friday",
   "Saturday",
-  "Sunday",
 ];
+
+const daysOfWeekOrder = Array.from(
+  { length: 7 },
+  (_, i) => daysOfWeek[(today + i) % 7],
+);
 
 const WeeklyMenu = () => {
   const { currentMenu, recipes, setCurrentMenu, setMenuCreated } =

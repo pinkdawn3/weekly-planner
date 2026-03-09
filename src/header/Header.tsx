@@ -1,15 +1,16 @@
 import React from "react";
 import { Appbar } from "react-native-paper";
-import { colors } from "../theme/colors";
+import { useColors } from "../theme/useColors";
 
 const Header = () => {
+  const colors = useColors();
   return (
     <Appbar.Header
       mode={"center-aligned"}
       style={{
-        backgroundColor: colors.orange,
+        backgroundColor: colors.accent,
         borderBottomWidth: 2,
-        borderBottomColor: colors.lightBrown,
+        borderBottomColor: colors.border,
       }}
     >
       <Appbar.Content title="Chef Planner" />

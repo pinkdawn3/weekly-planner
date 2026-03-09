@@ -7,7 +7,7 @@ const translations = {
     en: "English",
 
     Protein: "Protein",
-    Carbohydrates: "Carbohydrates",
+    Carbs: "Carbs",
     Fibre: "Fibre",
     Fish: "Fish",
 
@@ -28,7 +28,7 @@ const translations = {
     en: "Inglés",
 
     Protein: "Proteína",
-    Carbohydrates: "Hidratos",
+    Carbs: "Hidratos",
     Fibre: "Fibra",
     Fish: "Pescado",
 

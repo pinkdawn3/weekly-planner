@@ -31,6 +31,11 @@
     "plugins": [
       "expo-sqlite",
       "expo-localization"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "c7737fa9-9ee9-439b-b290-3da1fabd8b51"
+      }
+    }
   }
 }

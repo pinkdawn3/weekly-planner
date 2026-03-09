@@ -6,7 +6,7 @@ import {
   ViewStyle,
   StyleSheet,
 } from "react-native";
-import { colors } from "../../theme/colors";
+import { useColors } from "../../theme/useColors";
 
 interface DashedButtonProps {
   title: string;
@@ -27,6 +27,8 @@ const DashedButton = ({
   style,
   accessibilityLabel,
 }: DashedButtonProps) => {
+  const colors = useColors();
+
   return (
     <View style={[styles.button, style, { backgroundColor: color }]}>
       <Pressable
@@ -39,7 +41,7 @@ const DashedButton = ({
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel ?? title}
       >
-        <Text style={styles.buttonText}>{title}</Text>
+        <Text style={[styles.buttonText, { color: colors.text }]}>{title}</Text>
       </Pressable>
     </View>
   );
@@ -62,6 +64,5 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: "ShantellSans-Regular",
-    color: colors.darkBrown,
   },
 });
