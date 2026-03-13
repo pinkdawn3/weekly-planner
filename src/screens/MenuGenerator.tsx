@@ -6,6 +6,8 @@ import {
   ScrollView,
   Pressable,
   FlatList,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { TextInput, Chip, HelperText } from "react-native-paper";
 import { RecipeContext } from "../contexts/Recipe/RecipeContext";
@@ -150,7 +152,10 @@ const MenuGenerator: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
       <Pressable
         style={styles.backButton}
         onPress={() => navigation.goBack()}
@@ -261,13 +266,13 @@ const MenuGenerator: React.FC = () => {
         }}
         keyExtractor={(item) => String(item.id)}
       />
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
+    padding: 20,
     borderRadius: 10,
     backgroundColor: colors.transparentYellow,
     flex: 1,
