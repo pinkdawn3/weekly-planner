@@ -98,14 +98,14 @@ const Settings = () => {
             handleSetLanguage("en");
             setVisible(false);
           }}
-          title="English"
+          title={t("English")}
         />
         <Menu.Item
           onPress={() => {
             handleSetLanguage("es");
             setVisible(false);
           }}
-          title="Spanish"
+          title={t("Spanish")}
         />
       </Menu>
 

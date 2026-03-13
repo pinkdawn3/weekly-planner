@@ -11,11 +11,12 @@ import { useLingui } from "@lingui/react";
 import { msg } from "@lingui/core/macro";
 import { useTranslate } from "../../hooks/useTranslations";
 import { useColors } from "../../theme/useColors";
+import DashedButton from "../Core/DashedButton";
 
 const TodayRecipe = () => {
   const colors = useColors();
 
-  const { currentMenu } = useContext(RecipeContext);
+  const { currentMenu, recipes } = useContext(RecipeContext);
   const { _ } = useLingui();
   const t = useTranslate();
 
@@ -82,18 +83,55 @@ const TodayRecipe = () => {
           </>
         )
       ) : (
-        <View
-          accessibilityRole="text"
-          accessibilityLabel={_(
-            msg`No menu available. Add recipes or create a menu.`,
+        <View>
+          {recipes.length === 0 ? (
+            <View
+              accessibilityRole="text"
+              accessibilityLabel={_(
+                msg`No menu available. Add recipes or create a menu.`,
+              )}
+            >
+              <Text style={[styles.noMenuTextTitle, { color: colors.text }]}>
+                <Trans>Welcome!</Trans>
+              </Text>
+              <Text style={[styles.noMenuText, { color: colors.text }]}>
+                <Trans>Add your first recipe.</Trans>
+              </Text>
+
+              <DashedButton
+                title={_(msg`Add Recipe`)}
+                onPress={() => navigation.navigate("AddRecipe")}
+                color={colors.button}
+                background={colors.background}
+                style={{ alignSelf: "center", marginTop: 30 }}
+                size={{ paddingHorizontal: 20 }}
+              />
+            </View>
+          ) : (
+            <View
+              accessibilityRole="text"
+              accessibilityLabel={_(
+                msg`No menu available. Add recipes or create a menu.`,
+              )}
+            >
+              <Text style={[styles.noMenuTextTitle, { color: colors.text }]}>
+                <Trans>Well done!</Trans>
+              </Text>
+              <Text style={[styles.noMenuText, { color: colors.text }]}>
+                <Trans>
+                  Add a couple more recipes, then try creating a menu.
+                </Trans>
+              </Text>
+              <DashedButton
+                title={_(msg`Create Menu`)}
+                onPress={() => navigation.navigate("MenuGenerator")}
+                color={colors.button}
+                background={colors.background}
+                style={{ alignSelf: "center", marginTop: 30 }}
+                size={{ paddingHorizontal: 20 }}
+              />
+            </View>
           )}
-        >
-          <Text style={[styles.noMenuTextTitle, { color: colors.text }]}>
-            <Trans>No menu available!</Trans>
-          </Text>
-          <Text style={[styles.noMenuText, { color: colors.text }]}>
-            <Trans>Add recipes or create a menu.</Trans>
-          </Text>
         </View>
       )}
     </View>
@@ -109,7 +147,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderWidth: 2,
     marginBottom: 20,
-    marginHorizontal: 10,
+    marginHorizontal: 20,
   },
   title: {
     fontSize: 24,

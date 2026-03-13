@@ -21,11 +21,7 @@ msgstr " Añadir Ingrediente"
 msgid " Add Step"
 msgstr " Añadir Paso"
 
-#: src/components/Recipes/TodayRecipe.tsx:60
-#~ msgid "\"No menu available. Add recipes or create a menu.\""
-#~ msgstr "No hay menú. Añade recetas o crea un menú."
-
-#: src/screens/Settings.tsx:106
+#: src/screens/Settings.tsx:118
 msgid "☕ Support the project!"
 msgstr "☕ ¡Apoya el proyecto!"
 
@@ -34,18 +30,9 @@ msgstr "☕ ¡Apoya el proyecto!"
 msgid "Add"
 msgstr "Añadir"
 
-#: src/screens/AddRecipe.tsx:284
-msgid "Add a new ingredient"
-msgstr "Añadir ingrediente nuevo"
-
-#: src/screens/AddRecipe.tsx:335
-#: src/screens/AddRecipe.tsx:358
-msgid "Add a new step"
-msgstr "Añadir paso nuevo"
-
-#: src/screens/AddRecipe.tsx:260
-msgid "Add an ingredient"
-msgstr "Añadir ingrediente"
+#: src/components/Recipes/TodayRecipe.tsx:121
+msgid "Add a couple more recipes, then try creating a menu."
+msgstr "Añade más recetas, luego crea un menú."
 
 #: src/components/MenuSettings/ManageLabel.tsx:80
 msgid "Add category..."
@@ -54,14 +41,6 @@ msgstr "Añadir categoría..."
 #: src/screens/RecipeDetailsScreen.tsx:417
 msgid "Add ingredient"
 msgstr "Añadir ingrediente"
-
-#: src/screens/AddRecipe.tsx:293
-msgid "Add Ingredient"
-msgstr "Añadir ingrediente"
-
-#: src/screens/AddRecipe.tsx:251
-msgid "Add ingredient..."
-msgstr "Añadir ingrediente..."
 
 #: src/components/MenuSettings/ManageLabel.tsx:96
 #: src/components/MenuSettings/ManageMealTypes.tsx:100
@@ -72,7 +51,7 @@ msgstr "Añadir tipo de comida"
 msgid "Add meal type..."
 msgstr "Añadir tipo de comida..."
 
-#: src/screens/AddRecipe.tsx:100
+#: src/screens/AddRecipe.tsx:93
 msgid "Add name..."
 msgstr "Añadir nombre..."
 
@@ -80,21 +59,21 @@ msgstr "Añadir nombre..."
 msgid "Add recipe"
 msgstr "Añadir receta"
 
-#: src/components/Recipes/TodayRecipe.tsx:82
-msgid "Add recipes or create a menu."
-msgstr "Añade recetas o crea un menú."
+#: src/components/Recipes/TodayRecipe.tsx:102
+msgid "Add Recipe"
+msgstr "Añadir receta"
+
+#: src/screens/AddRecipe.tsx:77
+msgid "Add Recipes"
+msgstr "Añade recetas"
 
 #: src/screens/RecipeDetailsScreen.tsx:462
 msgid "Add step"
 msgstr "Añadir paso"
 
-#: src/screens/AddRecipe.tsx:367
-msgid "Add Step"
-msgstr "Añadir paso"
-
-#: src/screens/AddRecipe.tsx:325
-msgid "Add step..."
-msgstr "Añadir paso..."
+#: src/components/Recipes/TodayRecipe.tsx:98
+msgid "Add your first recipe."
+msgstr "Añade tu primera receta."
 
 #: src/components/Core/ConfirmDeleteModal.tsx:34
 msgid "Are you sure you want to delete"
@@ -108,22 +87,22 @@ msgstr "Cancelar"
 msgid "Cancel deletion"
 msgstr "Cancelar borrado"
 
-#: src/components/MenuGenerator.tsx:163
 #: src/components/MenuSettings/ManageLabel.tsx:61
+#: src/screens/MenuGenerator.tsx:207
 #: src/screens/Recipes.tsx:85
 msgid "Categories"
 msgstr "Categorías"
 
-#: src/screens/AddRecipe.tsx:169
+#: src/screens/AddRecipe.tsx:161
 #: src/screens/RecipeDetailsScreen.tsx:337
 msgid "Category"
 msgstr "Categoría"
 
-#: src/screens/AddRecipe.tsx:173
+#: src/screens/AddRecipe.tsx:165
 msgid "Category of meal is required"
 msgstr "Categoria de comida, obligatorio"
 
-#: src/screens/Settings.tsx:77
+#: src/screens/Settings.tsx:89
 msgid "Change language"
 msgstr "Cambiar idioma"
 
@@ -139,22 +118,26 @@ msgstr "Cerrar tipos y categorías de comida"
 msgid "Confirm deletion"
 msgstr "Confirmar borrado"
 
-#: src/screens/WeeklyMenu.tsx:186
+#: src/screens/MenuGenerator.tsx:172
+msgid "Create a menu"
+msgstr "Crea un menú"
+
+#: src/screens/WeeklyMenu.tsx:189
 msgid "Create menu"
 msgstr "Crear menú"
 
-#: src/screens/WeeklyMenu.tsx:151
-#: src/screens/WeeklyMenu.tsx:191
+#: src/components/Recipes/TodayRecipe.tsx:126
+msgid "Create Menu"
+msgstr "Crear menú"
+
+#: src/screens/WeeklyMenu.tsx:154
+#: src/screens/WeeklyMenu.tsx:194
 msgid "Create new menu"
 msgstr "Crear menú nuevo"
 
 #: src/components/Core/ConfirmDeleteModal.tsx:46
 msgid "Delete"
 msgstr "Borrar"
-
-#: src/screens/AddRecipe.tsx:265
-msgid "Delete ingredient"
-msgstr "Eliminar ingrediente"
 
 #: src/screens/RecipeDetailsScreen.tsx:160
 msgid "Delete item"
@@ -167,10 +150,6 @@ msgstr "Eliminar categoría de comida"
 #: src/screens/RecipeDetailsScreen.tsx:282
 msgid "Delete recipe"
 msgstr "Eliminar receta"
-
-#: src/screens/AddRecipe.tsx:340
-msgid "Delete step"
-msgstr "Eliminar paso"
 
 #: src/components/MenuSettings/ManageMealTypes.tsx:78
 msgid "Delete type of meal"
@@ -190,15 +169,15 @@ msgstr "Editar categorías"
 msgid "Edit meal types"
 msgstr "Editar tipos de comida"
 
-#: src/screens/WeeklyMenu.tsx:162
+#: src/screens/WeeklyMenu.tsx:165
 msgid "Edit menu"
 msgstr "Editar menú"
 
-#: src/components/Recipes/TodayRecipe.tsx:67
+#: src/components/Recipes/TodayRecipe.tsx:81
 msgid "Edit the menu to add a recipe."
 msgstr "Edita el menú para añadir receta."
 
-#: src/screens/WeeklyMenu.tsx:238
+#: src/screens/WeeklyMenu.tsx:241
 msgid "Edit to add one."
 msgstr "Editar para añadir una."
 
@@ -210,28 +189,28 @@ msgstr "Introduce categoría de comida"
 msgid "Enter meal type"
 msgstr "Introduce tipo de comida"
 
-#: src/components/MenuGenerator.tsx:205
+#: src/screens/MenuGenerator.tsx:263
 msgid "Enter the number of recipes for this category"
 msgstr "Introduce cantidad de recetas para esta categoría"
 
-#: src/screens/AddRecipe.tsx:107
+#: src/screens/AddRecipe.tsx:100
 msgid "Enter the recipe name"
 msgstr "Introduce nombre de receta"
 
-#: src/screens/Settings.tsx:59
+#: src/screens/Settings.tsx:71
 msgid "Export"
 msgstr "Exportar"
 
-#: src/screens/Settings.tsx:64
+#: src/screens/Settings.tsx:76
 msgid "Export user data"
 msgstr "Exportar datos de usuario"
 
-#: src/screens/WeeklyMenu.tsx:162
+#: src/screens/WeeklyMenu.tsx:165
 msgid "Finish editing"
 msgstr "Terminar de editar"
 
-#: src/components/MenuGenerator.tsx:214
-#: src/components/MenuGenerator.tsx:220
+#: src/screens/MenuGenerator.tsx:233
+#: src/screens/MenuGenerator.tsx:239
 msgid "Generate menu"
 msgstr "Generar menú"
 
@@ -239,28 +218,29 @@ msgstr "Generar menú"
 msgid "Go back"
 msgstr "Volver"
 
-#: src/screens/AddRecipe.tsx:86
+#: src/screens/AddRecipe.tsx:73
+#: src/screens/MenuGenerator.tsx:167
 #: src/screens/RecipeDetailsScreen.tsx:273
 msgid "Go Back"
 msgstr "Volver"
 
-#: src/screens/AddRecipe.tsx:82
+#: src/screens/AddRecipe.tsx:69
+#: src/screens/MenuGenerator.tsx:163
 msgid "Go back to recipes"
 msgstr "Volver a recetas"
 
-#: src/navigation/BottomTabNav.tsx:21
+#: src/navigation/BottomTabNav.tsx:23
 msgid "Home"
 msgstr "Inicio"
 
-#: src/screens/Settings.tsx:51
+#: src/screens/Settings.tsx:63
 msgid "Import"
 msgstr "Importar"
 
-#: src/screens/Settings.tsx:56
+#: src/screens/Settings.tsx:68
 msgid "Import user data"
 msgstr "Importar datos de usuario"
 
-#: src/screens/AddRecipe.tsx:220
 #: src/screens/RecipeDetailsScreen.tsx:375
 msgid "Ingredients"
 msgstr "Ingredientes"
@@ -273,53 +253,57 @@ msgstr "Gestionar categorías de comida"
 msgid "Manage types of meals"
 msgstr "Gestionar tipos de comida"
 
-#: src/navigation/BottomTabNav.tsx:25
+#: src/navigation/BottomTabNav.tsx:27
 msgid "Menu"
 msgstr "Menú"
 
-#: src/screens/AddRecipe.tsx:90
-msgid "Name"
-msgstr "Nombre"
+#: src/screens/AddRecipe.tsx:80
+msgid "Name of recipe"
+msgstr "Nombre de la receta"
 
-#: src/screens/AddRecipe.tsx:106
+#: src/screens/AddRecipe.tsx:99
 msgid "Name, required"
 msgstr "Nombre, obligatorio"
 
-#: src/components/Recipes/TodayRecipe.tsx:79
-#: src/screens/WeeklyMenu.tsx:182
+#: src/screens/WeeklyMenu.tsx:185
 msgid "No menu available!"
 msgstr "¡No hay menú!"
 
-#: src/components/Recipes/TodayRecipe.tsx:75
+#: src/components/Recipes/TodayRecipe.tsx:91
+#: src/components/Recipes/TodayRecipe.tsx:114
 msgid "No menu available. Add recipes or create a menu."
 msgstr "No hay menú. Añade recetas o crea un menú."
 
-#: src/components/MenuGenerator.tsx:64
-#: src/components/MenuGenerator.tsx:95
+#: src/screens/MenuGenerator.tsx:84
+#: src/screens/MenuGenerator.tsx:115
 msgid "Not enough recipes."
 msgstr "Faltan recetas."
 
-#: src/components/MenuGenerator.tsx:183
-msgid "Number per category"
-msgstr "Cantidad por categoría"
+#: src/screens/MenuGenerator.tsx:226
+msgid "Numbers of meals in a week"
+msgstr "Número de comidas en una semana"
 
-#: src/components/Recipes/TodayRecipe.tsx:64
+#: src/components/Recipes/TodayRecipe.tsx:78
 msgid "Recipe for today not found."
 msgstr "No se ha encontrado receta para hoy."
 
-#: src/screens/WeeklyMenu.tsx:235
+#: src/screens/WeeklyMenu.tsx:238
 msgid "Recipe not found."
 msgstr "No hay receta."
 
-#: src/navigation/BottomTabNav.tsx:26
+#: src/screens/AddRecipe.tsx:57
+msgid "Recipe successfully added!"
+msgstr "¡Receta añadida!"
+
+#: src/navigation/BottomTabNav.tsx:28
 msgid "Recipes"
 msgstr "Recetas"
 
-#: src/screens/AddRecipe.tsx:372
+#: src/screens/AddRecipe.tsx:211
 msgid "Save"
 msgstr "Guardar"
 
-#: src/screens/AddRecipe.tsx:378
+#: src/screens/AddRecipe.tsx:217
 msgid "Save recipe"
 msgstr "Guardar receta"
 
@@ -327,7 +311,7 @@ msgstr "Guardar receta"
 msgid "Search recipe..."
 msgstr "Buscar receta..."
 
-#: src/screens/WeeklyMenu.tsx:276
+#: src/screens/WeeklyMenu.tsx:279
 msgid "Search..."
 msgstr "Buscar..."
 
@@ -336,44 +320,43 @@ msgstr "Buscar..."
 msgid "See details"
 msgstr "Ver detalles"
 
-#: src/screens/WeeklyMenu.tsx:300
+#: src/screens/WeeklyMenu.tsx:303
 msgid "Select"
 msgstr "Seleccionar"
 
-#: src/navigation/BottomTabNav.tsx:27
+#: src/navigation/BottomTabNav.tsx:29
 msgid "Settings"
 msgstr "Ajustes"
 
-#: src/screens/AddRecipe.tsx:299
 #: src/screens/RecipeDetailsScreen.tsx:426
 msgid "Steps"
 msgstr "Pasos"
 
-#: src/screens/Settings.tsx:103
+#: src/screens/Settings.tsx:115
 msgid "Support me on ko-fi"
 msgstr "Apóyame en ko-fi"
 
-#: src/screens/WeeklyMenu.tsx:252
+#: src/screens/WeeklyMenu.tsx:255
 msgid "tap to change"
 msgstr "tocar para cambiar"
 
-#: src/screens/AddRecipe.tsx:96
-#: src/screens/AddRecipe.tsx:127
-#: src/screens/AddRecipe.tsx:181
+#: src/screens/AddRecipe.tsx:88
+#: src/screens/AddRecipe.tsx:119
+#: src/screens/AddRecipe.tsx:173
 msgid "This field is required."
 msgstr "Esta categoría es obligatoria."
 
-#: src/components/Recipes/TodayRecipe.tsx:47
+#: src/components/Recipes/TodayRecipe.tsx:55
 msgid "Today we eat..."
 msgstr "Hoy toca..."
 
-#: src/components/MenuGenerator.tsx:138
-#: src/screens/AddRecipe.tsx:117
+#: src/screens/AddRecipe.tsx:110
+#: src/screens/MenuGenerator.tsx:182
 #: src/screens/RecipeDetailsScreen.tsx:299
 msgid "Type of meal"
 msgstr "Tipo de comida"
 
-#: src/screens/AddRecipe.tsx:133
+#: src/screens/AddRecipe.tsx:125
 msgid "Type of meal is required"
 msgstr "Tipo de comida, obligatorio"
 
@@ -384,3 +367,11 @@ msgstr "Tipos de comida"
 #: src/screens/Recipes.tsx:77
 msgid "Types of meals"
 msgstr "Tipos de comida"
+
+#: src/components/Recipes/TodayRecipe.tsx:95
+msgid "Welcome!"
+msgstr "¡Buenas!"
+
+#: src/components/Recipes/TodayRecipe.tsx:118
+msgid "Well done!"
+msgstr "¡Bien hecho!"

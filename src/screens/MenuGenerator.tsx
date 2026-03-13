@@ -168,6 +168,10 @@ const MenuGenerator: React.FC = () => {
         </Text>
       </Pressable>
 
+      <Text style={styles.heading} accessibilityRole="header">
+        <Trans>Create a menu</Trans>
+      </Text>
+
       <FlatList
         data={selectedLabels}
         numColumns={2}
@@ -287,6 +291,13 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontFamily: "ShantellSans-SemiBold",
     color: colors.darkOrange,
+  },
+  heading: {
+    fontSize: 22,
+    fontFamily: "ShantellSans-Bold",
+    color: colors.darkBrown,
+    alignSelf: "center",
+    marginBottom: 5,
   },
   sectionTitle: {
     fontSize: 16,

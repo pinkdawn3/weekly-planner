@@ -25,6 +25,7 @@ import { Trans } from "@lingui/react/macro";
 import { msg } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react";
 import { useTranslate } from "../hooks/useTranslations";
+import Toast from "react-native-toast-message";
 
 type AddRecipeNavProp = StackNavigationProp<RootStackParamList, "AddRecipe">;
 
@@ -37,8 +38,6 @@ const AddRecipe: React.FC = () => {
   const {
     control,
     handleSubmit,
-    watch,
-    setValue,
     formState: { errors },
   } = useForm<Recipe>({
     defaultValues: {
@@ -50,26 +49,15 @@ const AddRecipe: React.FC = () => {
     },
   });
 
-  const ingredients = watch("ingredients");
-  const appendIngredient = () => setValue("ingredients", [...ingredients, ""]);
-  const removeIngredient = (index: number) =>
-    setValue(
-      "ingredients",
-      ingredients.filter((_, i) => i !== index),
-    );
-
-  const steps = watch("steps");
-  const appendStep = () => setValue("steps", [...steps, ""]);
-  const removeStep = (index: number) =>
-    setValue(
-      "steps",
-      steps.filter((_, i) => i !== index),
-    );
-
   const onSubmit = (data: Recipe) => {
+    console.log("submit");
+
+    Toast.show({
+      type: "success",
+      text1: _(msg`Recipe successfully added!`),
+    });
     createRecipe(data);
     setRecipes(getAllRecipes());
-    navigation.goBack();
   };
 
   return (
@@ -85,7 +73,10 @@ const AddRecipe: React.FC = () => {
           <Trans>Go Back</Trans>
         </Text>
       </Pressable>
-      <Text style={styles.label} accessibilityRole="header">
+      <Text style={styles.heading} accessibilityRole="header">
+        <Trans>Add Recipes</Trans>
+      </Text>
+      <Text style={styles.label}>
         <Trans>Name of recipe</Trans>
       </Text>
       <Controller
@@ -115,7 +106,7 @@ const AddRecipe: React.FC = () => {
         <HelperText type="error">{errors.name?.message}</HelperText>
       )}
 
-      <Text style={styles.label} accessibilityRole="header">
+      <Text style={styles.label}>
         <Trans>Type of meal</Trans>
       </Text>
       <View style={styles.chipContainer}>
@@ -166,7 +157,7 @@ const AddRecipe: React.FC = () => {
         <HelperText type="error">{errors.mealTypes?.message}</HelperText>
       )}
 
-      <Text style={styles.label} accessibilityRole="header">
+      <Text style={styles.label}>
         <Trans>Category</Trans>
       </Text>
       <View
@@ -248,6 +239,13 @@ const styles = StyleSheet.create({
     fontFamily: "ShantellSans-SemiBold",
     color: colors.darkOrange,
   },
+  heading: {
+    fontSize: 20,
+    fontFamily: "ShantellSans-Bold",
+    color: colors.darkBrown,
+    alignSelf: "center",
+    marginBottom: 20,
+  },
   label: {
     fontSize: 14,
     fontFamily: "ShantellSans-SemiBold",
@@ -264,7 +262,7 @@ const styles = StyleSheet.create({
     color: colors.darkBrown,
   },
   input: {
-    marginBottom: 40,
+    marginBottom: 30,
     borderRadius: 20,
     borderWidth: 2,
     borderColor: colors.lightBrown,
@@ -276,7 +274,7 @@ const styles = StyleSheet.create({
   chipContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginBottom: 20,
+    marginBottom: 15,
   },
   chip: {
     margin: 4,

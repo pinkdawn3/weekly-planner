@@ -1,22 +1,26 @@
+import React, { useContext } from "react";
+import { Text, View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import "react-native-gesture-handler";
+import { useFonts } from "expo-font";
+import Toast from "react-native-toast-message";
+
 import {
   configureFonts,
   MD3DarkTheme,
   MD3LightTheme,
   PaperProvider,
 } from "react-native-paper";
-import React, { useContext } from "react";
+
 import Header from "./src/header/Header";
 import RecipeProvider from "./src/contexts/Recipe/RecipeProvider";
 import AppNavigationContainer from "./src/navigation/NavigationContainer";
 import RootNavigator from "./src/navigation/RootNavigator";
-import { useFonts } from "expo-font";
-import { Text, View } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import { colors } from "./src/theme/colors";
 
 import UserProvider from "./src/contexts/User/UserProvider";
 import { UserContext } from "./src/contexts/User/UserContext";
+import { toastConfig } from "./src/components/Core/ToastConfig";
 
 const fontConfig = {
   fontFamily: "ShantellSans-Regular",
@@ -97,6 +101,7 @@ export default function App() {
             </RecipeProvider>
           </UserProvider>
         </AppNavigationContainer>
+        <Toast config={toastConfig} />
       </SafeAreaProvider>
     </View>
   );

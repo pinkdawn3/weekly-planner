@@ -6,6 +6,9 @@ const translations = {
     es: "Spanish",
     en: "English",
 
+    Spanish: "Spanish",
+    English: "English",
+
     Protein: "Protein",
     Carbs: "Carbs",
     Fibre: "Fibre",
@@ -26,6 +29,9 @@ const translations = {
   es: {
     es: "Español",
     en: "Inglés",
+
+    Spanish: "Español",
+    English: "Inglés",
 
     Protein: "Proteína",
     Carbs: "Hidratos",
