@@ -22,61 +22,55 @@ import UserProvider from "./src/contexts/User/UserProvider";
 import { UserContext } from "./src/contexts/User/UserContext";
 import { toastConfig } from "./src/components/Core/ToastConfig";
 
-const fontConfig = {
-  fontFamily: "ShantellSans-Regular",
-};
+const AppContent = () => {
+  const { theme } = useContext(UserContext);
 
-export const lightTheme = {
-  ...MD3LightTheme,
-  fonts: configureFonts({ config: fontConfig }),
-  colors: {
-    ...MD3LightTheme.colors,
-    secondaryContainer: "#eab295",
-    onSurface: colors.lightBrown, // primary text color
-    onSurfaceVariant: colors.lightBrown, // secondary text color
-    primary: colors.darkOrange,
-    outline: colors.lightBrown,
-  },
-};
+  const fontConfig = {
+    fontFamily: "ShantellSans-Regular",
+  };
 
-export const darkTheme = {
-  ...MD3DarkTheme,
-  fonts: configureFonts({ config: fontConfig }),
-  colors: {
-    ...MD3DarkTheme.colors,
-    secondaryContainer: "#7a4a2a",
-    onSurface: colors.offWhite, // primary text color
-    onSurfaceVariant: colors.offWhite, // secondary text color
-    primary: colors.darkOrange,
-    outline: colors.offWhite,
-  },
-};
+  const lightTheme = {
+    ...MD3LightTheme,
+    fonts: configureFonts({ config: fontConfig }),
+    colors: {
+      ...MD3LightTheme.colors,
+      secondaryContainer: "#eab295",
+      onSurface: colors.lightBrown, // primary text color
+      onSurfaceVariant: colors.lightBrown, // secondary text color
+      primary: colors.darkOrange,
+      outline: colors.lightBrown,
+    },
+  };
 
-const theme = {
-  ...MD3LightTheme,
-  fonts: configureFonts({ config: fontConfig }),
-  colors: {
-    ...MD3LightTheme.colors,
-    secondaryContainer: "#eab295",
+  const darkTheme = {
+    ...MD3DarkTheme,
+    fonts: configureFonts({ config: fontConfig }),
+    colors: {
+      ...MD3DarkTheme.colors,
+      secondaryContainer: "#7a4a2a",
+      onSurface: colors.offWhite, // primary text color
+      onSurfaceVariant: colors.offWhite, // secondary text color
+      primary: colors.darkOrange,
+      outline: colors.offWhite,
+    },
+  };
 
-    onSurface: colors.lightBrown, // primary text color
-    onSurfaceVariant: colors.lightBrown, // secondary text color
+  (Text as any).defaultProps = (Text as any).defaultProps || {};
+  (Text as any).defaultProps.style = {
+    fontFamily: "ShantellSans-Regular",
+    color: "#624942",
+  };
 
-    primary: colors.darkOrange,
-    outline: colors.lightBrown,
-  },
-};
-
-(Text as any).defaultProps = (Text as any).defaultProps || {};
-(Text as any).defaultProps.style = {
-  fontFamily: "ShantellSans-Regular",
-  color: "#624942",
+  return (
+    <PaperProvider theme={theme == "light" ? lightTheme : darkTheme}>
+      <Header />
+      <RootNavigator />
+    </PaperProvider>
+  );
 };
 
 // Main App of the application, with all the Providers and the custom NavigationContainer
 export default function App() {
-  const { language } = useContext(UserContext);
-
   const [fontsLoaded] = useFonts({
     "ShantellSans-Regular": require("./assets/fonts/static/ShantellSans-Regular.ttf"),
     "ShantellSans-Bold": require("./assets/fonts/static/ShantellSans-Bold.ttf"),
@@ -94,10 +88,7 @@ export default function App() {
         <AppNavigationContainer>
           <UserProvider>
             <RecipeProvider>
-              <PaperProvider theme={theme}>
-                <Header />
-                <RootNavigator />
-              </PaperProvider>
+              <AppContent />
             </RecipeProvider>
           </UserProvider>
         </AppNavigationContainer>
