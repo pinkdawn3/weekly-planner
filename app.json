@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "Chef Planner",
-    "slug": "chefplanner",
-    "version": "1.0.0",
+    "slug": "weeklymeal",
+    "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/logo-chefplanner.png",
     "userInterfaceStyle": "light",
@@ -16,12 +16,13 @@
       "supportsTablet": true
     },
     "android": {
+      "versionCode": 9,
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.sunrisemorning.chefplanner"
+      "package": "com.anonymous.weeklymeal"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -73,10 +73,10 @@ const TodayRecipe = () => {
           </>
         ) : (
           <>
-            <Text style={styles.noMenuTextTitle}>
+            <Text style={[styles.noMenuTextTitle, { color: colors.text }]}>
               <Trans>Recipe for today not found.</Trans>
             </Text>
-            <Text style={styles.noMenuText}>
+            <Text style={[styles.noMenuText, { color: colors.text }]}>
               <Trans>Edit the menu to add a recipe.</Trans>
             </Text>
           </>
@@ -88,10 +88,10 @@ const TodayRecipe = () => {
             msg`No menu available. Add recipes or create a menu.`,
           )}
         >
-          <Text style={styles.noMenuTextTitle}>
+          <Text style={[styles.noMenuTextTitle, { color: colors.text }]}>
             <Trans>No menu available!</Trans>
           </Text>
-          <Text style={styles.noMenuText}>
+          <Text style={[styles.noMenuText, { color: colors.text }]}>
             <Trans>Add recipes or create a menu.</Trans>
           </Text>
         </View>
