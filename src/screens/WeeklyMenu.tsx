@@ -4,12 +4,8 @@ import { RecipeContext } from "../contexts/Recipe/RecipeContext";
 import { MealType, MenuRecipe, Recipe } from "../types/recipeType";
 import { Modal, Portal, Provider, Searchbar } from "react-native-paper";
 import { navigate } from "../navigation/NavigationContainer";
-import {
-  updateRecipe,
-  createMenu,
-  getLastMenu,
-} from "../services/db/database.service";
-import MenuGenerator from "../components/MenuGenerator";
+import { createMenu, getLastMenu } from "../services/db/database.service";
+
 import { colors } from "../theme/colors";
 import { Entypo, Feather } from "@expo/vector-icons";
 import DashedButton from "../components/Core/DashedButton";
@@ -19,6 +15,9 @@ import { useLingui } from "@lingui/react";
 import { msg } from "@lingui/core/macro";
 import { useTranslate } from "../hooks/useTranslations";
 import moment from "moment";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../navigation/RootNavigator";
 
 const today = moment().day();
 const daysOfWeek = [
@@ -40,6 +39,7 @@ const WeeklyMenu = () => {
   const { currentMenu, recipes, setCurrentMenu, setMenuCreated } =
     useContext(RecipeContext);
 
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { _ } = useLingui();
   const t = useTranslate();
 
@@ -51,8 +51,6 @@ const WeeklyMenu = () => {
   >(null);
 
   const [searchVisible, setSearchVisible] = useState<boolean>(false);
-  const [MenuGeneratorVisible, setMenuGeneratorVisible] =
-    useState<boolean>(false);
   const [searchText, setSearchText] = useState("");
 
   const showSearchModal = (menuRecipe: MenuRecipe | SlotInfo) => {
@@ -61,8 +59,6 @@ const WeeklyMenu = () => {
   };
 
   const hideSearchModal = () => setSearchVisible(false);
-  const hideMenuGeneratorModal = () => setMenuGeneratorVisible(false);
-  const showMenuGeneratorModal = () => setMenuGeneratorVisible(true);
 
   const containerStyle = {
     backgroundColor: colors.offWhite,
@@ -153,7 +149,7 @@ const WeeklyMenu = () => {
             {/*  Create menu button */}
             <Pressable
               style={styles.menuGeneratorButton}
-              onPress={showMenuGeneratorModal}
+              onPress={() => navigation.navigate("MenuGenerator")}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Create new menu`)}
             >
@@ -194,7 +190,7 @@ const WeeklyMenu = () => {
               color={colors.purple}
               style={{ marginTop: 20 }}
               background={colors.transparentYellow}
-              onPress={showMenuGeneratorModal}
+              onPress={() => navigation.navigate("MenuGenerator")}
               accessibilityLabel={_(msg`Create new menu`)}
             />
           </View>
@@ -319,16 +315,6 @@ const WeeklyMenu = () => {
               </Pressable>
             ))}
           </ScrollView>
-        </Modal>
-      </Portal>
-
-      <Portal>
-        <Modal
-          visible={MenuGeneratorVisible}
-          onDismiss={hideMenuGeneratorModal}
-          contentContainerStyle={containerStyle}
-        >
-          <MenuGenerator onCloseModal={hideMenuGeneratorModal} />
         </Modal>
       </Portal>
     </Provider>

@@ -7,10 +7,12 @@ import RecipeDetailsScreen from "../screens/RecipeDetailsScreen";
 
 import { Recipe } from "../types/recipeType";
 import Settings from "../screens/Settings";
+import MenuGenerator from "../screens/MenuGenerator";
 
 export type RootStackParamList = {
   AddRecipe: undefined;
   BottomTabNav: undefined;
+  MenuGenerator: undefined;
   Settings: undefined;
   RecipeDetailsScreen: { recipe: Recipe };
 };
@@ -26,6 +28,7 @@ const RootNavigator = () => {
       }}
     >
       <Stack.Screen name="AddRecipe" component={AddRecipe} />
+      <Stack.Screen name="MenuGenerator" component={MenuGenerator} />
       <Stack.Screen name="BottomTabNav" component={BottomTabNav} />
       <Stack.Screen name="Settings" component={Settings} />
 

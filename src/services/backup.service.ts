@@ -40,6 +40,20 @@ const importers: Record<number, (data: any) => void> = {
   // 2: (data: ExportData) => { /* transform new data */ }
 };
 
+const filterData = (data: ExportData) => {
+  const mealTypeIds = new Set(getAllMealTypes().map((m) => m.id));
+  const labelIds = new Set(getAllLabels().map((l) => l.id));
+  const recipeIds = new Set(getAllRecipes().map((r) => r.id));
+
+  return {
+    version: data.version,
+    exportedAt: data.exportedAt,
+    mealTypes: data.mealTypes.filter((m) => !mealTypeIds.has(m.id)),
+    labels: data.labels.filter((l) => !labelIds.has(l.id)),
+    recipes: data.recipes.filter((r) => !recipeIds.has(r.id)),
+  };
+};
+
 export const importData = async () => {
   const result = await DocumentPicker.getDocumentAsync({
     type: "application/json",
@@ -48,7 +62,7 @@ export const importData = async () => {
 
   const file = new File(result.assets[0].uri);
   const content = file.text();
-  const data: ExportData = JSON.parse(await content);
+  const data: ExportData = filterData(JSON.parse(await content));
 
   const importer = importers[data.version];
   if (!importer) throw new Error(`Version not supported: ${data.version}`);
