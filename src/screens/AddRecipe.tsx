@@ -40,6 +40,7 @@ const AddRecipe: React.FC = () => {
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<Recipe>({
     defaultValues: {
@@ -67,15 +68,24 @@ const AddRecipe: React.FC = () => {
       steps.filter((_, i) => i !== index),
     );
 
-  const onSubmit = (data: Recipe) => {
-    console.log("submit");
-
+  const onSubmitAndGoBack = (data: Recipe) => {
+    createRecipe(data);
+    setRecipes(getAllRecipes());
     Toast.show({
       type: "success",
       text1: _(msg`Recipe successfully added!`),
     });
+    navigation.goBack();
+  };
+
+  const onSubmitAndAddAnother = (data: Recipe) => {
     createRecipe(data);
     setRecipes(getAllRecipes());
+    Toast.show({
+      type: "success",
+      text1: _(msg`Recipe successfully added!`),
+    });
+    reset(); // resetea el form para añadir otra
   };
 
   return (
@@ -399,10 +409,7 @@ const AddRecipe: React.FC = () => {
           background={colors.transparentYellow}
           style={{ alignSelf: "center", marginTop: 50 }}
           size={{ paddingHorizontal: 50 }}
-          onPress={() => {
-            handleSubmit(onSubmit);
-            navigation.goBack();
-          }}
+          onPress={handleSubmit(onSubmitAndGoBack)}
           accessibilityLabel={_(msg`Save recipe`)}
         />
         <DashedButton
@@ -411,7 +418,7 @@ const AddRecipe: React.FC = () => {
           background={colors.transparentYellow}
           style={{ alignSelf: "center", marginTop: 20 }}
           size={{ paddingHorizontal: 30 }}
-          onPress={handleSubmit(onSubmit)}
+          onPress={handleSubmit(onSubmitAndAddAnother)}
           accessibilityLabel={_(msg`Save recipe`)}
         />
       </ScrollView>
