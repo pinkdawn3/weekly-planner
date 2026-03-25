@@ -12,13 +12,11 @@ import {
 import { TextInput, Chip, HelperText } from "react-native-paper";
 import { RecipeContext } from "../contexts/Recipe/RecipeContext";
 import { Label, MealType, Menu, MenuRecipe } from "../types/recipeType";
-import moment from "moment";
 import {
   createMenu,
   getLastMenu,
   getLastMenus,
 } from "../services/db/database.service";
-import { colors } from "../theme/colors";
 import { Trans } from "@lingui/react/macro";
 import { useLingui } from "@lingui/react";
 import { msg } from "@lingui/core/macro";
@@ -28,8 +26,8 @@ import DashedButton from "../components/Core/DashedButton";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
 import { useNavigation } from "@react-navigation/native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
+import { useColors } from "../theme/useColors";
 
 type MenuGeneratorNavProp = StackNavigationProp<
   RootStackParamList,
@@ -43,6 +41,7 @@ const MenuGenerator: React.FC = () => {
   const navigation = useNavigation<MenuGeneratorNavProp>();
   const { _ } = useLingui();
   const t = useTranslate();
+  const colors = useColors();
 
   const [selectedLabels, setSelectedLabels] = useState(labels);
   const toggleLabel = (label: Label) => {
@@ -154,7 +153,7 @@ const MenuGenerator: React.FC = () => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
+      style={[styles.container, { backgroundColor: colors.background }]}
     >
       <Pressable
         style={styles.backButton}
@@ -162,13 +161,16 @@ const MenuGenerator: React.FC = () => {
         accessibilityRole="button"
         accessibilityLabel={_(msg`Go back to recipes`)}
       >
-        <Feather name="arrow-left" size={24} color={colors.darkOrange} />
-        <Text style={styles.buttonText}>
+        <Feather name="arrow-left" size={24} color={colors.text} />
+        <Text style={[styles.buttonText, { color: colors.text }]}>
           <Trans>Go Back</Trans>
         </Text>
       </Pressable>
 
-      <Text style={styles.heading} accessibilityRole="header">
+      <Text
+        style={[styles.heading, { color: colors.text }]}
+        accessibilityRole="header"
+      >
         <Trans>Create a menu</Trans>
       </Text>
 
@@ -178,7 +180,7 @@ const MenuGenerator: React.FC = () => {
         /*  Type of meal and category chips  */
         ListHeaderComponent={
           <View>
-            <Text style={styles.sectionTitle}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
               <Trans>Type of meal</Trans>
             </Text>
             <View style={styles.chipContainer}>
@@ -190,7 +192,7 @@ const MenuGenerator: React.FC = () => {
                   style={styles.chip}
                   textStyle={{
                     fontFamily: "ShantellSans-Regular",
-                    color: colors.darkBrown,
+                    color: colors.text,
                   }}
                   accessibilityRole="checkbox"
                   accessibilityState={{
@@ -203,7 +205,7 @@ const MenuGenerator: React.FC = () => {
               ))}
             </View>
 
-            <Text style={styles.sectionTitle}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
               <Trans>Categories</Trans>
             </Text>
             <View style={styles.chipContainer}>
@@ -215,14 +217,14 @@ const MenuGenerator: React.FC = () => {
                   style={styles.chip}
                   textStyle={{
                     fontFamily: "ShantellSans-Regular",
-                    color: colors.darkBrown,
+                    color: colors.text,
                   }}
                 >
                   {t(l.name)}
                 </Chip>
               ))}
             </View>
-            <Text style={styles.sectionTitle}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
               <Trans>Numbers of meals in a week</Trans>
             </Text>
           </View>
@@ -231,8 +233,8 @@ const MenuGenerator: React.FC = () => {
         ListFooterComponent={
           <DashedButton
             title={_(msg`Generate menu`)}
-            color={colors.purple}
-            background={colors.offWhite}
+            color={colors.button}
+            background={colors.cardBackground}
             onPress={generateMenu}
             style={{ alignSelf: "center", marginTop: 20 }}
             size={{ paddingHorizontal: 40 }}
@@ -245,9 +247,9 @@ const MenuGenerator: React.FC = () => {
             <View style={styles.inputContainer}>
               <TextInput
                 mode="outlined"
-                outlineColor={colors.lightBrown}
-                activeOutlineColor={colors.lightBrown}
-                textColor={colors.lightBrown}
+                outlineColor={colors.border}
+                activeOutlineColor={colors.border}
+                textColor={colors.border}
                 contentStyle={{
                   fontFamily: "ShantellSans-Regular",
                   fontSize: 15,
@@ -256,7 +258,10 @@ const MenuGenerator: React.FC = () => {
                 value={labelCount[item.id]?.toString() ?? "2"}
                 onChangeText={(value) => updateLabelCount(item.id, value)}
                 keyboardType="numeric"
-                style={styles.input}
+                style={[
+                  styles.input,
+                  { backgroundColor: colors.cardBackground },
+                ]}
                 error={!!errors[item.id]}
                 accessibilityLabel={t(item.name)}
                 accessibilityHint={_(
@@ -277,8 +282,6 @@ const MenuGenerator: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    borderRadius: 10,
-    backgroundColor: colors.transparentYellow,
     flex: 1,
   },
   backButton: {
@@ -290,19 +293,16 @@ const styles = StyleSheet.create({
   buttonText: {
     marginLeft: 5,
     fontFamily: "ShantellSans-SemiBold",
-    color: colors.darkOrange,
   },
   heading: {
     fontSize: 22,
     fontFamily: "ShantellSans-Bold",
-    color: colors.darkBrown,
     alignSelf: "center",
     marginBottom: 5,
   },
   sectionTitle: {
     fontSize: 16,
     fontFamily: "ShantellSans-SemiBold",
-    color: colors.darkBrown,
     marginBottom: 8,
     marginTop: 10,
   },
@@ -313,7 +313,6 @@ const styles = StyleSheet.create({
   },
   chip: {
     margin: 4,
-    backgroundColor: colors.orange,
     borderRadius: 12,
     fontFamily: "ShantellSans-Regular",
   },
@@ -322,7 +321,6 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    backgroundColor: "white",
     borderRadius: 12,
     fontFamily: "ShantellSans-Regular",
     margin: 4,

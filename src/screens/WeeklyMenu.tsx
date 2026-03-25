@@ -18,6 +18,7 @@ import moment from "moment";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
+import { useColors } from "../theme/useColors";
 
 const today = moment().day();
 const daysOfWeek = [
@@ -42,6 +43,7 @@ const WeeklyMenu = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { _ } = useLingui();
   const t = useTranslate();
+  const colors = useColors();
 
   const [editMode, setEditMode] = useState<boolean>(false);
 
@@ -61,11 +63,11 @@ const WeeklyMenu = () => {
   const hideSearchModal = () => setSearchVisible(false);
 
   const containerStyle = {
-    backgroundColor: colors.offWhite,
+    backgroundColor: colors.cardBackground,
     padding: 30,
     marginHorizontal: 20,
     borderRadius: 25,
-    borderColor: colors.lightBrown,
+    borderColor: colors.border,
     borderWidth: 2,
   };
 
@@ -143,22 +145,25 @@ const WeeklyMenu = () => {
 
   return (
     <Provider>
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         {currentMenu && currentMenu.recipes.length > 0 ? (
           <View style={styles.buttonGroup}>
             {/*  Create menu button */}
             <Pressable
-              style={styles.menuGeneratorButton}
+              style={[
+                styles.menuGeneratorButton,
+                { backgroundColor: colors.accent },
+              ]}
               onPress={() => navigation.navigate("MenuGenerator")}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Create new menu`)}
             >
-              <Entypo name="plus" size={24} color={colors.lightBrown} />
+              <Entypo name="plus" size={24} color={colors.text} />
             </Pressable>
 
             {/* Edit menu button */}
             <Pressable
-              style={styles.editMenu}
+              style={[styles.editMenu, { backgroundColor: colors.accent }]}
               onPress={toggleEditMode}
               accessibilityRole="button"
               accessibilityLabel={
@@ -167,13 +172,9 @@ const WeeklyMenu = () => {
               accessibilityState={{ selected: editMode }}
             >
               {editMode ? (
-                <Feather
-                  name="check-circle"
-                  size={24}
-                  color={colors.lightBrown}
-                />
+                <Feather name="check-circle" size={24} color={colors.text} />
               ) : (
-                <Feather name="edit-3" size={24} color={colors.lightBrown} />
+                <Feather name="edit-3" size={24} color={colors.text} />
               )}
             </Pressable>
           </View>
@@ -181,15 +182,15 @@ const WeeklyMenu = () => {
           <View
             style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
           >
-            <Text style={styles.infoText}>
+            <Text style={[styles.infoText, { color: colors.error }]}>
               <Trans>No menu available!</Trans>
             </Text>
 
             <DashedButton
               title={_(msg`Create menu`)}
-              color={colors.purple}
+              color={colors.button}
               style={{ marginTop: 20 }}
-              background={colors.transparentYellow}
+              background={colors.background}
               onPress={() => navigation.navigate("MenuGenerator")}
               accessibilityLabel={_(msg`Create new menu`)}
             />
@@ -205,9 +206,29 @@ const WeeklyMenu = () => {
               const validRecipes = recipes.filter((mr) => mr.recipe);
 
               return (
-                <View key={day} style={cardStyle}>
-                  <View style={styles.weekDayContainer}>
-                    <Text style={styles.weekDay} accessibilityRole="header">
+                <View
+                  key={day}
+                  style={[
+                    cardStyle,
+                    {
+                      backgroundColor: colors.cardBackground,
+                      borderColor: colors.border,
+                    },
+                  ]}
+                >
+                  <View
+                    style={[
+                      styles.weekDayContainer,
+                      {
+                        backgroundColor: colors.cardHeader,
+                        borderColor: colors.border,
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={[styles.weekDay, { color: colors.text }]}
+                      accessibilityRole="header"
+                    >
                       {t(day)}
                     </Text>
                   </View>
@@ -280,17 +301,17 @@ const WeeklyMenu = () => {
             onChangeText={setSearchText}
             value={searchText}
             style={{
-              borderColor: colors.lightBrown,
+              borderColor: colors.border,
               borderWidth: 2,
             }}
             inputStyle={{
-              color: colors.darkBrown,
+              color: colors.text,
               fontFamily: "ShantellSans-Regular",
             }}
             theme={{
               colors: {
-                onSurface: colors.lightBrown,
-                onSurfaceVariant: colors.lightBrown,
+                onSurface: colors.border,
+                onSurfaceVariant: colors.border,
               },
             }}
           />
@@ -305,7 +326,7 @@ const WeeklyMenu = () => {
                 <View style={styles.recipeCard}>
                   <Text
                     style={{
-                      color: colors.lightBrown,
+                      color: colors.border,
                       fontFamily: "ShantellSans-Regular",
                     }}
                   >
@@ -328,22 +349,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingTop: 15,
-    backgroundColor: colors.transparentYellow,
   },
   dayCard: {
-    borderColor: colors.lightBrown,
     borderWidth: 2,
     borderRadius: 25,
     marginTop: 20,
-    backgroundColor: colors.offWhite,
     paddingBottom: 10,
   },
   dayCardEdit: {
-    borderColor: colors.lightBrown,
     borderWidth: 2,
     borderRadius: 25,
     marginTop: 20,
-    backgroundColor: colors.offWhite,
     paddingBottom: 10,
     elevation: 15,
   },
@@ -352,10 +368,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   weekDayContainer: {
-    backgroundColor: colors.pink,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    borderBottomColor: colors.lightBrown,
     borderBottomWidth: 2,
     marginBottom: 10,
   },
@@ -367,18 +381,15 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     fontFamily: "ShantellSans-SemiBold",
-    color: colors.darkBrown,
   },
   mealType: {
     fontSize: 13,
-    color: colors.lightBrown,
     marginBottom: 4,
     fontFamily: "ShantellSans-Regular",
   },
   recipeName: {
     fontSize: 16,
     fontFamily: "ShantellSans-SemiBold",
-    color: colors.darkBrown,
   },
   menuGeneratorButton: {
     alignItems: "center",
@@ -388,8 +399,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 20,
-    backgroundColor: colors.orange,
-    borderColor: colors.lightBrown,
     borderWidth: 2,
   },
   editMenu: {
@@ -400,8 +409,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 20,
-    backgroundColor: colors.orange,
-    borderColor: colors.lightBrown,
     borderWidth: 2,
   },
   buttonText: {
@@ -424,6 +431,5 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 18,
     fontFamily: "ShantellSans-SemiBold",
-    color: colors.red,
   },
 });

@@ -126,6 +126,8 @@ const EditableArrayItem = ({
   const [text, setText] = useState(value);
   const [focused, setFocused] = useState(false);
 
+  const deletePressed = useRef(false);
+
   if (editing) {
     return (
       <View style={styles.arrayItemContainer}>
@@ -134,6 +136,10 @@ const EditableArrayItem = ({
           onChangeText={setText}
           onFocus={() => setFocused(true)}
           onBlur={() => {
+            if (deletePressed.current) {
+              deletePressed.current = false;
+              return;
+            }
             if (text.trim().length > 0) {
               onSave(text);
               setEditing(false);
@@ -154,6 +160,9 @@ const EditableArrayItem = ({
         />
 
         <Pressable
+          onTouchStart={() => {
+            deletePressed.current = true;
+          }}
           onPress={onDelete}
           style={{ paddingBottom: 10, marginLeft: 5 }}
           accessibilityRole="button"
@@ -398,12 +407,12 @@ const RecipeDetailsScreen: React.FC = () => {
                 newArray[index] = value;
                 handleSave("ingredients", newArray);
               }}
-              onDelete={() =>
+              onDelete={() => {
                 handleSave(
                   "ingredients",
                   currentRecipe.ingredients.filter((_, i) => i !== index),
-                )
-              }
+                );
+              }}
               style={styles.detailsText}
             />
           </View>

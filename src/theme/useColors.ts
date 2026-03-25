@@ -46,22 +46,22 @@ const light = {
 };
 
 const dark = {
-  background: colors.darkDarkBrown,
-  backgroundSVG: colors.darkDarkBrown,
+  background: "#31211B",
+  backgroundSVG: "#31211B",
   card: colors.darkLightBrown,
-  cardToday: colors.darkLightBrown,
-  cardBackground: colors.darkLightBrownVariant,
-  cardHeader: colors.darkDarkPurple,
-  text: colors.darkCreme,
-  textVariant: colors.darkCreme,
-  accent: colors.darkLightBrown,
-  accentVariant: colors.darkEvenLighterPurple,
-  button: colors.darkEvenLighterPurple,
-  error: colors.red,
-  textPressable: colors.darkEvenLighterPurple,
-  border: colors.darkCreme,
-  icon: colors.darkCreme,
-  iconVariant: colors.darkCreme,
+  cardToday: "#40332D",
+  cardBackground: "#40332D",
+  cardHeader: "#42323C",
+  text: "#F4E3C1",
+  textVariant: "#A69980",
+  accent: "#523921",
+  accentVariant: "#5B453C",
+  button: " #6E445F",
+  error: "#5A3124",
+  textPressable: "#BF9CD6",
+  border: "#A69980",
+  icon: "#A69980",
+  iconVariant: "#F4E3C1",
 };
 
 export const useColors = () => {

@@ -102,7 +102,7 @@ const TodayRecipe = () => {
                 title={_(msg`Add Recipe`)}
                 onPress={() => navigation.navigate("AddRecipe")}
                 color={colors.button}
-                background={colors.background}
+                background={colors.cardToday}
                 style={{ alignSelf: "center", marginTop: 30 }}
                 size={{ paddingHorizontal: 20 }}
               />
@@ -126,7 +126,7 @@ const TodayRecipe = () => {
                 title={_(msg`Create Menu`)}
                 onPress={() => navigation.navigate("MenuGenerator")}
                 color={colors.button}
-                background={colors.background}
+                background={colors.cardToday}
                 style={{ alignSelf: "center", marginTop: 30 }}
                 size={{ paddingHorizontal: 20 }}
               />

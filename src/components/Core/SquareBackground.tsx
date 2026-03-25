@@ -19,6 +19,7 @@ const SquareBackground = () => {
             y2="0"
             stroke={colors.accent}
             strokeWidth="2.5"
+            opacity={0.5}
           />
           {/* Vertical lines */}
           <Line
@@ -27,6 +28,7 @@ const SquareBackground = () => {
             x2="0"
             y2="25"
             stroke={colors.accent}
+            opacity={0.5}
             strokeWidth="2.5"
           />
         </Pattern>
