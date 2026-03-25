@@ -27,3 +27,9 @@ Here you can specify the types of meal you would like the menu to consider as we
 For example, if I wanted to make a weekly menu for my lunchs in which I want to eat protein 2 times a week, carbs also 2 times a week, fibre 2 times a week and fish 1 time in a week, it would be something like this:
 
 ![Weekly menu generator](docs/weekly-menu-generator.png)
+
+In the end, and will we get something like this:
+
+![Weekly menu example](docs/weekly-menu-example.jpg)
+
+You can create a new menu tapping on the button with the plus sign (on the left), or edit the recipe each day has toggling edit mode with the button with the pencil (on the right).

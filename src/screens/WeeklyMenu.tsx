@@ -152,7 +152,7 @@ const WeeklyMenu = () => {
             <Pressable
               style={[
                 styles.menuGeneratorButton,
-                { backgroundColor: colors.accent },
+                { backgroundColor: colors.accent, borderColor: colors.border },
               ]}
               onPress={() => navigation.navigate("MenuGenerator")}
               accessibilityRole="button"
@@ -163,7 +163,10 @@ const WeeklyMenu = () => {
 
             {/* Edit menu button */}
             <Pressable
-              style={[styles.editMenu, { backgroundColor: colors.accent }]}
+              style={[
+                styles.editMenu,
+                { backgroundColor: colors.accent, borderColor: colors.border },
+              ]}
               onPress={toggleEditMode}
               accessibilityRole="button"
               accessibilityLabel={
@@ -255,10 +258,10 @@ const WeeklyMenu = () => {
                       accessibilityRole="button"
                       accessibilityLabel="Recipe not found, edit menu to replace it"
                     >
-                      <Text style={styles.recipeName}>
+                      <Text style={[styles.recipeName, { color: colors.text }]}>
                         <Trans>Recipe not found.</Trans>
                       </Text>
-                      <Text style={styles.mealType}>
+                      <Text style={[styles.mealType, { color: colors.text }]}>
                         <Trans>Edit to add one.</Trans>
                       </Text>
                     </Pressable>
@@ -275,10 +278,19 @@ const WeeklyMenu = () => {
                         accessibilityRole="button"
                         accessibilityLabel={`${mr.mealType.name}: ${mr.recipe.name}${editMode ? `, ${_(msg`tap to change`)}` : ""}`}
                       >
-                        <Text style={styles.mealType}>
+                        <Text
+                          style={[
+                            styles.mealType,
+                            { color: colors.textVariant },
+                          ]}
+                        >
                           {t(mr.mealType.name)}
                         </Text>
-                        <Text style={styles.recipeName}>{mr.recipe.name}</Text>
+                        <Text
+                          style={[styles.recipeName, { color: colors.text }]}
+                        >
+                          {mr.recipe.name}
+                        </Text>
                       </Pressable>
                     ))
                   )}
