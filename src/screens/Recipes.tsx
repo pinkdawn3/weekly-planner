@@ -9,18 +9,19 @@ import ManageLabels from "../components/MenuSettings/ManageLabel";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
-import { colors } from "../theme/colors";
 import DashedButton from "../components/Core/DashedButton";
 import DottedBackground from "../components/Core/DottedBackground";
 import { Trans } from "@lingui/react/macro";
 import { msg } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react";
+import { useColors } from "../theme/useColors";
 
 const Recipes = () => {
   const { recipes, mealTypes, setMealTypes, labels, setLabels } =
     useContext(RecipeContext);
 
   const { _ } = useLingui();
+  const colors = useColors();
 
   const [mealTypesVisible, setMealTypesVisible] = useState(false);
   const [labelsVisible, setLabelsVisible] = useState(false);
@@ -50,7 +51,7 @@ const Recipes = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       <DottedBackground />
       <View style={{ paddingTop: 20, paddingHorizontal: 20, flex: 1 }}>
         <Portal>
@@ -75,16 +76,16 @@ const Recipes = () => {
         <View style={styles.configButtons}>
           <DashedButton
             title={_(msg`Types of meals`)}
-            color={colors.purple}
-            background={colors.transparentYellow}
+            color={colors.button}
+            background={colors.background}
             onPress={() => setMealTypesVisible(true)}
             accessibilityLabel={_(msg`Manage types of meals`)}
           />
 
           <DashedButton
             title={_(msg`Categories`)}
-            color={colors.purple}
-            background={colors.transparentYellow}
+            color={colors.button}
+            background={colors.background}
             size={{ paddingHorizontal: 30 }}
             onPress={() => setLabelsVisible(true)}
             accessibilityLabel={_(msg`Manage categories of meals`)}
@@ -98,29 +99,43 @@ const Recipes = () => {
           value={searchText}
           style={{
             borderWidth: 2,
-            borderColor: colors.lightBrown,
+            borderColor: colors.textVariant,
             marginBottom: 10,
           }}
-          inputStyle={{ color: colors.darkBrown }}
+          inputStyle={{ color: colors.text }}
           theme={{
             colors: {
-              onSurface: colors.lightBrown,
-              onSurfaceVariant: colors.lightBrown,
+              onSurface: colors.border,
+              onSurfaceVariant: colors.border,
             },
           }}
         />
 
         {/* Floating button to show the add recipe modal */}
         <Pressable
-          style={styles.floatingButtonContainer}
+          style={[
+            styles.floatingButtonContainer,
+            {
+              backgroundColor: colors.accentVariant,
+              borderColor: colors.accentVariant,
+            },
+          ]}
           onPress={() => {
             showAddRecipeScreen();
           }}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Add recipe`)}
         >
-          <View style={styles.innerButton}>
-            <Entypo name="plus" size={24} color={colors.transparentYellow} />
+          <View
+            style={[
+              styles.innerButton,
+              {
+                backgroundColor: colors.accentVariant,
+                borderColor: colors.background,
+              },
+            ]}
+          >
+            <Entypo name="plus" size={24} color={colors.background} />
           </View>
         </Pressable>
 
@@ -133,9 +148,24 @@ const Recipes = () => {
                 onPress={() => showDetailsScreen(recipe)}
                 accessibilityLabel={`${recipe.name}, ${_(msg`See details`)}`}
               >
-                <View style={styles.card}>
-                  <Text style={styles.title}>{recipe.name}</Text>
-                  <Text style={styles.detailsLink}>
+                <View
+                  style={[
+                    styles.card,
+                    {
+                      backgroundColor: colors.cardBackground,
+                      borderColor: colors.border,
+                    },
+                  ]}
+                >
+                  <Text style={[styles.title, { color: colors.text }]}>
+                    {recipe.name}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.detailsLink,
+                      { color: colors.accentVariant },
+                    ]}
+                  >
                     <Trans>See details</Trans>
                   </Text>
                 </View>
@@ -155,27 +185,21 @@ const styles = StyleSheet.create({
   },
   card: {
     width: "100%",
-    backgroundColor: colors.offWhite,
     borderRadius: 20,
     padding: 20,
     marginTop: 20,
     borderWidth: 2,
-    borderColor: colors.lightBrown,
   },
   title: {
     fontSize: 22,
     fontFamily: "ShantellSans-SemiBold",
-    color: colors.darkBrown,
     marginBottom: 8,
   },
   floatingButtonContainer: {
     position: "absolute",
     bottom: 50,
     right: 30,
-
-    backgroundColor: colors.darkOrange,
     borderRadius: 50,
-    borderColor: colors.darkOrange,
     borderWidth: 2,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -188,77 +212,15 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderStyle: "dashed",
     borderRadius: 50,
-    borderColor: colors.transparentYellow,
     padding: 15,
   },
   detailsLink: {
-    color: colors.darkOrange,
     fontFamily: "ShantellSans-Regular",
     marginTop: 10,
   },
-  modalContainer: {
-    backgroundColor: colors.offWhite,
-    padding: 20,
-    marginHorizontal: 20,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  detailsContainer: {
-    alignItems: "center",
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 10,
-  },
-  modalDescription: {
-    fontSize: 18,
-    color: "#666",
-    marginBottom: 20,
-  },
-  modalSectionTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#333",
-    marginTop: 10,
-    marginBottom: 6,
-  },
-  modalText: {
-    fontSize: 16,
-    color: "#555",
-    textAlign: "center",
-    marginBottom: 10,
-  },
-
   configButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 20,
-  },
-  configButton: {
-    flex: 1,
-    marginHorizontal: 5,
-    paddingVertical: 8,
-    alignItems: "center",
-    borderRadius: 20,
-    backgroundColor: "#dbeed0",
-    borderColor: colors.green,
-    borderWidth: 2,
-  },
-  innerBorder: {
-    backgroundColor: "#dbeed0",
-    borderWidth: 2,
-    borderStyle: "dashed",
-    borderColor: colors.yellow,
-  },
-
-  configButtonText: {
-    fontFamily: "ShantellSans-Regular",
-    color: colors.darkBrown,
   },
 });

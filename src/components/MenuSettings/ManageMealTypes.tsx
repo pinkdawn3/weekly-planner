@@ -8,7 +8,6 @@ import {
   getAllMealTypes,
   getAllRecipes,
 } from "../../services/db/database.service";
-import { colors } from "../../theme/colors";
 import DashedButton from "../Core/DashedButton";
 import { useTranslate } from "../../hooks/useTranslations";
 import { useLingui } from "@lingui/react";
@@ -16,6 +15,7 @@ import { Trans } from "@lingui/react/macro";
 import { msg } from "@lingui/core/macro";
 import { RecipeContext } from "../../contexts/Recipe/RecipeContext";
 import ConfirmDeleteModal from "../Core/ConfirmDeleteModal";
+import { useColors } from "../../theme/useColors";
 
 interface ManageMealTypesProps {
   mealTypes: MealType[];
@@ -31,6 +31,7 @@ const ManageMealTypes: React.FC<ManageMealTypesProps> = ({
   const [newName, setNewName] = useState("");
   const t = useTranslate();
   const { _ } = useLingui();
+  const colors = useColors();
 
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -51,7 +52,12 @@ const ManageMealTypes: React.FC<ManageMealTypesProps> = ({
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: colors.cardBackground, borderColor: colors.border },
+      ]}
+    >
       <ConfirmDeleteModal
         visible={confirmVisible}
         onDismiss={() => setConfirmVisible(false)}
@@ -61,13 +67,14 @@ const ManageMealTypes: React.FC<ManageMealTypesProps> = ({
         }}
         itemName={selectedName}
       />
-
-      <Text style={styles.title}>
-        <Trans>Types of meal</Trans>
+      <Text style={[styles.title, { color: colors.text }]}>
+        <Trans>Categories</Trans>
       </Text>
       {mealTypes.map((mt) => (
         <View key={mt.id} style={styles.listItem}>
-          <Text style={styles.itemText}>{t(mt.name)}</Text>
+          <Text style={[styles.itemText, { color: colors.text }]}>
+            {t(mt.name)}
+          </Text>
           <Pressable
             onPress={() => {
               setSelectedId(mt.id);
@@ -75,27 +82,28 @@ const ManageMealTypes: React.FC<ManageMealTypesProps> = ({
               setConfirmVisible(true);
             }}
             accessibilityRole="button"
-            accessibilityLabel={_(msg`Delete type of meal`)}
+            accessibilityLabel={_(msg`Delete meal category`)}
           >
             <Ionicons name="trash-outline" size={20} color="#f28966" />
           </Pressable>
         </View>
       ))}
       <TextInput
-        placeholder={_(msg`Add meal type...`)}
-        placeholderTextColor={colors.lightBrown}
+        placeholder={_(msg`Add category...`)}
+        placeholderTextColor={colors.text}
         value={newName}
         onChangeText={setNewName}
-        style={styles.input}
+        style={[styles.input, { borderColor: colors.border }]}
         accessibilityLabel={newName}
-        accessibilityHint={_(msg`Enter meal type`)}
+        accessibilityHint={_(msg`Enter meal category`)}
       />
+
       <DashedButton
         title={_(msg`Add`)}
-        color={colors.purple}
+        color={colors.button}
         style={{ alignSelf: "center", marginTop: 20 }}
         size={{ paddingHorizontal: 30 }}
-        background={colors.offWhite}
+        background={colors.cardBackground}
         onPress={handleAdd}
         accessibilityLabel={_(msg`Add meal category`)}
       />
@@ -107,16 +115,13 @@ export default ManageMealTypes;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.offWhite,
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: colors.lightBrown,
     margin: 40,
     padding: 20,
   },
   title: {
     fontSize: 18,
-    color: colors.darkBrown,
     marginBottom: 15,
     alignSelf: "center",
     fontFamily: "ShantellSans-SemiBold",
@@ -129,7 +134,6 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 16,
-    color: colors.darkBrown,
     fontFamily: "ShantellSans-Regular",
   },
   input: {
@@ -137,7 +141,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 15,
     borderWidth: 1.5,
-    borderColor: colors.lightBrown,
     paddingHorizontal: 10,
     fontFamily: "ShantellSans-Regular",
   },

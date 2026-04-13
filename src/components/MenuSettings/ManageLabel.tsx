@@ -8,7 +8,6 @@ import {
   getAllLabels,
   getAllRecipes,
 } from "../../services/db/database.service";
-import { colors } from "../../theme/colors";
 import DashedButton from "../Core/DashedButton";
 import { Trans } from "@lingui/react/macro";
 import { useTranslate } from "../../hooks/useTranslations";
@@ -16,6 +15,7 @@ import { useLingui } from "@lingui/react";
 import { msg } from "@lingui/core/macro";
 import { RecipeContext } from "../../contexts/Recipe/RecipeContext";
 import ConfirmDeleteModal from "../Core/ConfirmDeleteModal";
+import { useColors } from "../../theme/useColors";
 
 interface ManageLabelsProps {
   labels: Label[];
@@ -27,6 +27,7 @@ const ManageLabels: React.FC<ManageLabelsProps> = ({ labels, onUpdate }) => {
   const [newName, setNewName] = useState("");
   const t = useTranslate();
   const { _ } = useLingui();
+  const colors = useColors();
 
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -47,7 +48,12 @@ const ManageLabels: React.FC<ManageLabelsProps> = ({ labels, onUpdate }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: colors.cardBackground, borderColor: colors.border },
+      ]}
+    >
       <ConfirmDeleteModal
         visible={confirmVisible}
         onDismiss={() => setConfirmVisible(false)}
@@ -57,12 +63,14 @@ const ManageLabels: React.FC<ManageLabelsProps> = ({ labels, onUpdate }) => {
         }}
         itemName={selectedName}
       />
-      <Text style={styles.title}>
+      <Text style={[styles.title, { color: colors.text }]}>
         <Trans>Categories</Trans>
       </Text>
       {labels.map((l) => (
         <View key={l.id} style={styles.listItem}>
-          <Text style={styles.itemText}>{t(l.name)}</Text>
+          <Text style={[styles.itemText, { color: colors.text }]}>
+            {t(l.name)}
+          </Text>
           <Pressable
             onPress={() => {
               setSelectedId(l.id);
@@ -78,20 +86,20 @@ const ManageLabels: React.FC<ManageLabelsProps> = ({ labels, onUpdate }) => {
       ))}
       <TextInput
         placeholder={_(msg`Add category...`)}
-        placeholderTextColor={colors.lightBrown}
+        placeholderTextColor={colors.text}
         value={newName}
         onChangeText={setNewName}
-        style={styles.input}
+        style={[styles.input, { borderColor: colors.border }]}
         accessibilityLabel={newName}
         accessibilityHint={_(msg`Enter meal category`)}
       />
 
       <DashedButton
         title={_(msg`Add`)}
-        color={colors.purple}
+        color={colors.button}
         style={{ alignSelf: "center", marginTop: 20 }}
         size={{ paddingHorizontal: 30 }}
-        background={colors.offWhite}
+        background={colors.cardBackground}
         onPress={handleAdd}
         accessibilityLabel={_(msg`Add meal category`)}
       />
@@ -103,16 +111,13 @@ export default ManageLabels;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.offWhite,
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: colors.lightBrown,
     margin: 40,
     padding: 20,
   },
   title: {
     fontSize: 18,
-    color: colors.darkBrown,
     marginBottom: 15,
     alignSelf: "center",
     fontFamily: "ShantellSans-SemiBold",
@@ -125,7 +130,6 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 16,
-    color: colors.darkBrown,
     fontFamily: "ShantellSans-Regular",
   },
   input: {
@@ -133,7 +137,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 15,
     borderWidth: 1.5,
-    borderColor: colors.lightBrown,
     paddingHorizontal: 10,
     fontFamily: "ShantellSans-Regular",
   },

@@ -6,7 +6,6 @@ import { Modal, Portal, Provider, Searchbar } from "react-native-paper";
 import { navigate } from "../navigation/NavigationContainer";
 import { createMenu, getLastMenu } from "../services/db/database.service";
 
-import { colors } from "../theme/colors";
 import { Entypo, Feather } from "@expo/vector-icons";
 import DashedButton from "../components/Core/DashedButton";
 

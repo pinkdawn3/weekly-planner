@@ -14,18 +14,16 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
 import { createRecipe, getAllRecipes } from "../services/db/database.service";
-import { colors } from "../theme/colors";
-
 import { Controller, useForm } from "react-hook-form";
 import DashedButton from "../components/Core/DashedButton";
 import { Trans } from "@lingui/react/macro";
-
 import { msg } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react";
 import { useTranslate } from "../hooks/useTranslations";
 import Toast from "react-native-toast-message";
 import { Entypo, Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useColors } from "../theme/useColors";
 
 type AddRecipeNavProp = StackNavigationProp<RootStackParamList, "AddRecipe">;
 
@@ -34,6 +32,7 @@ const AddRecipe: React.FC = () => {
   const navigation = useNavigation<AddRecipeNavProp>();
   const { _ } = useLingui();
   const t = useTranslate();
+  const colors = useColors();
 
   const {
     control,
@@ -89,7 +88,9 @@ const AddRecipe: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <ScrollView showsVerticalScrollIndicator={false}>
         <Pressable
           style={styles.backButton}
@@ -97,15 +98,18 @@ const AddRecipe: React.FC = () => {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Go back to recipes`)}
         >
-          <Feather name="arrow-left" size={24} color={colors.darkOrange} />
-          <Text style={styles.buttonText}>
+          <Feather name="arrow-left" size={24} color={colors.textPressable} />
+          <Text style={[styles.buttonText, { color: colors.textPressable }]}>
             <Trans>Go Back</Trans>
           </Text>
         </Pressable>
-        <Text style={styles.heading} accessibilityRole="header">
+        <Text
+          style={[styles.heading, { color: colors.text }]}
+          accessibilityRole="header"
+        >
           <Trans>Add Recipes</Trans>
         </Text>
-        <Text style={styles.label}>
+        <Text style={[styles.label, { color: colors.text }]}>
           <Trans>Name of recipe</Trans>
         </Text>
         <Controller
@@ -120,11 +124,14 @@ const AddRecipe: React.FC = () => {
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               placeholder={_(msg`Add name...`)}
-              placeholderTextColor={colors.lightBrown}
+              placeholderTextColor={colors.textVariant}
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
-              style={styles.input}
+              style={[
+                styles.input,
+                { color: colors.text, borderColor: colors.border },
+              ]}
               accessibilityLabel={_(msg`Name, required`)}
               accessibilityHint={_(msg`Enter the recipe name`)}
             />
@@ -135,7 +142,7 @@ const AddRecipe: React.FC = () => {
           <HelperText type="error">{errors.name?.message}</HelperText>
         )}
 
-        <Text style={styles.label}>
+        <Text style={[styles.label, { color: colors.text }]}>
           <Trans>Type of meal</Trans>
         </Text>
         <View style={styles.chipContainer}>
@@ -165,8 +172,8 @@ const AddRecipe: React.FC = () => {
                           : [...(value || []), mt];
                         onChange(newValue);
                       }}
-                      style={styles.chip}
-                      textStyle={{ color: colors.darkBrown }}
+                      style={[styles.chip, { backgroundColor: colors.accent }]}
+                      textStyle={{ color: colors.text }}
                       accessibilityRole="checkbox"
                       accessibilityState={{
                         checked: value.some((s) => s.id === mt.id),
@@ -186,7 +193,7 @@ const AddRecipe: React.FC = () => {
           <HelperText type="error">{errors.mealTypes?.message}</HelperText>
         )}
 
-        <Text style={styles.label}>
+        <Text style={[styles.label, { color: colors.text }]}>
           <Trans>Category</Trans>
         </Text>
         <View
@@ -216,8 +223,8 @@ const AddRecipe: React.FC = () => {
                           : [...(value || []), label];
                         onChange(newValue); //
                       }}
-                      style={styles.chip}
-                      textStyle={{ color: colors.darkBrown }}
+                      style={[styles.chip, { backgroundColor: colors.accent }]}
+                      textStyle={{ color: colors.text }}
                       accessibilityRole="checkbox"
                       accessibilityState={{
                         checked: value.some((s) => s.id === label.id),
@@ -237,12 +244,17 @@ const AddRecipe: React.FC = () => {
         )}
 
         {/* Optional parameters: ingredients and steps */}
-        <Text style={styles.label}>
+        <Text style={[styles.label, { color: colors.text }]}>
           <Trans>Optional</Trans>
         </Text>
-        <View style={styles.optionalContainer}>
+        <View
+          style={[styles.optionalContainer, { borderColor: colors.border }]}
+        >
           {/* Ingredientes */}
-          <Text style={styles.label} accessibilityRole="header">
+          <Text
+            style={[styles.label, { color: colors.text }]}
+            accessibilityRole="header"
+          >
             <Trans>Ingredients</Trans>
           </Text>
 
@@ -269,7 +281,7 @@ const AddRecipe: React.FC = () => {
                     <Entypo
                       name="triangle-right"
                       size={24}
-                      color={colors.lightBrown}
+                      color={colors.textVariant}
                     />
                   </View>
                   <TextInput
@@ -294,7 +306,7 @@ const AddRecipe: React.FC = () => {
                       <Entypo
                         name="trash"
                         size={24}
-                        color={colors.lightBrown}
+                        color={colors.textVariant}
                       />
                     </View>
                   </Pressable>
@@ -316,16 +328,25 @@ const AddRecipe: React.FC = () => {
             <Entypo
               name="plus"
               size={24}
-              color={colors.lightBrown}
-              style={styles.addButton}
+              color={colors.textVariant}
+              style={[
+                styles.addButton,
+                {
+                  borderColor: colors.border,
+                  backgroundColor: colors.buttonVariant,
+                },
+              ]}
             />
-            <Text style={styles.text}>
+            <Text style={[styles.text, { color: colors.text }]}>
               <Trans>Add Ingredient</Trans>
             </Text>
           </Pressable>
 
           {/* Pasos */}
-          <Text style={styles.label} accessibilityRole="header">
+          <Text
+            style={[styles.label, { color: colors.text }]}
+            accessibilityRole="header"
+          >
             <Trans>Steps</Trans>
           </Text>
           {steps.map((step, index) => (
@@ -348,7 +369,9 @@ const AddRecipe: React.FC = () => {
                   {/* Padding bottom to match the native padding of the text input
             component */}
                   <View style={{ paddingBottom: 15 }}>
-                    <Text style={styles.enum}>{index + 1 + "."}</Text>
+                    <Text style={[styles.enum, { color: colors.textVariant }]}>
+                      {index + 1 + "."}
+                    </Text>
                   </View>
                   <TextInput
                     style={[styles.input, { flex: 1 }]}
@@ -373,7 +396,7 @@ const AddRecipe: React.FC = () => {
                       <Entypo
                         name="trash"
                         size={24}
-                        color={colors.lightBrown}
+                        color={colors.textVariant}
                       />
                     </View>
                   </Pressable>
@@ -394,10 +417,16 @@ const AddRecipe: React.FC = () => {
             <Entypo
               name="plus"
               size={24}
-              color={colors.lightBrown}
-              style={styles.addButton}
+              color={colors.textVariant}
+              style={[
+                styles.addButton,
+                {
+                  borderColor: colors.border,
+                  backgroundColor: colors.buttonVariant,
+                },
+              ]}
             />
-            <Text style={styles.text}>
+            <Text style={[styles.text, { color: colors.text }]}>
               <Trans>Add Step</Trans>
             </Text>
           </Pressable>
@@ -405,8 +434,8 @@ const AddRecipe: React.FC = () => {
 
         <DashedButton
           title={_(msg`Save`)}
-          color={colors.purple}
-          background={colors.transparentYellow}
+          color={colors.button}
+          background={colors.background}
           style={{ alignSelf: "center", marginTop: 50 }}
           size={{ paddingHorizontal: 50 }}
           onPress={handleSubmit(onSubmitAndGoBack)}
@@ -414,8 +443,8 @@ const AddRecipe: React.FC = () => {
         />
         <DashedButton
           title={_(msg`Save and add another`)}
-          color={colors.purple}
-          background={colors.transparentYellow}
+          color={colors.button}
+          background={colors.background}
           style={{ alignSelf: "center", marginTop: 20 }}
           size={{ paddingHorizontal: 30 }}
           onPress={handleSubmit(onSubmitAndAddAnother)}
@@ -430,7 +459,6 @@ export default AddRecipe;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.transparentYellow,
     padding: 20,
     flex: 1,
   },
@@ -438,7 +466,6 @@ const styles = StyleSheet.create({
     padding: 20,
     borderWidth: 1.5,
     borderRadius: 20,
-    borderColor: colors.lightBrown,
   },
   backButton: {
     flexDirection: "row",
@@ -449,38 +476,31 @@ const styles = StyleSheet.create({
   buttonText: {
     marginLeft: 5,
     fontFamily: "ShantellSans-SemiBold",
-    color: colors.darkOrange,
   },
   heading: {
     fontSize: 20,
     fontFamily: "ShantellSans-Bold",
-    color: colors.darkBrown,
     alignSelf: "center",
     marginBottom: 20,
   },
   label: {
     fontSize: 14,
     fontFamily: "ShantellSans-SemiBold",
-    color: colors.darkBrown,
     marginBottom: 5,
   },
   enum: {
     fontFamily: "ShantellSans-Italic",
-    color: colors.lightBrown,
     fontSize: 20,
   },
   text: {
     fontFamily: "ShantellSans-Italic",
-    color: colors.darkBrown,
   },
   input: {
     marginBottom: 30,
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: colors.lightBrown,
     paddingHorizontal: 10,
     backgroundColor: "white",
-    color: colors.darkBrown,
     fontFamily: "ShantellSans-Regular",
   },
   chipContainer: {
@@ -490,13 +510,10 @@ const styles = StyleSheet.create({
   },
   chip: {
     margin: 4,
-    backgroundColor: colors.orange,
   },
   addButton: {
-    backgroundColor: colors.pink,
     borderWidth: 2,
     borderRadius: 10,
-    borderColor: colors.lightBrown,
     marginRight: 10,
   },
 });
